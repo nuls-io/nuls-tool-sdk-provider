@@ -32,6 +32,8 @@ import io.nuls.core.core.annotation.Component;
 import io.nuls.core.rpc.model.*;
 import io.nuls.model.ErrorData;
 import io.nuls.model.RpcClientResult;
+import io.nuls.model.annotation.Api;
+import io.nuls.model.annotation.ApiOperation;
 import io.nuls.model.form.AccountCreateForm;
 import io.nuls.utils.ResultUtil;
 
@@ -48,12 +50,14 @@ import java.util.Map;
  */
 @Path("/api/account")
 @Component
+@Api
 public class AccountResource {
 
     AccountService accountService = ServiceManager.get(AccountService.class);
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "批量创建账户")
     @Parameters({
             @Parameter(parameterDes = "批量创建账户", requestType = @TypeDescriptor(value = AccountCreateForm.class))
     })

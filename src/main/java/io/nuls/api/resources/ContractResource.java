@@ -34,6 +34,8 @@ import io.nuls.core.core.annotation.Component;
 import io.nuls.core.rpc.model.*;
 import io.nuls.model.ErrorData;
 import io.nuls.model.RpcClientResult;
+import io.nuls.model.annotation.Api;
+import io.nuls.model.annotation.ApiOperation;
 import io.nuls.model.form.contract.ContractCall;
 import io.nuls.model.form.contract.ContractCreate;
 import io.nuls.model.form.contract.ContractDelete;
@@ -51,6 +53,7 @@ import java.util.Map;
  */
 @Path("/api/contract")
 @Component
+@Api
 public class ContractResource {
 
     ContractProvider contractProvider = ServiceManager.get(ContractProvider.class);
@@ -58,6 +61,7 @@ public class ContractResource {
     @POST
     @Path("/create")
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "单笔转账")
     @Parameters({
             @Parameter(parameterDes = "创建合约", requestType = @TypeDescriptor(value = ContractCreate.class))
     })
@@ -86,6 +90,7 @@ public class ContractResource {
     @POST
     @Path("/call")
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "单笔转账")
     @Parameters({
             @Parameter(parameterDes = "调用合约", requestType = @TypeDescriptor(value = ContractCall.class))
     })
@@ -120,6 +125,7 @@ public class ContractResource {
     @POST
     @Path("/delete")
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "单笔转账")
     @Parameters({
             @Parameter(parameterDes = "删除合约", requestType = @TypeDescriptor(value = ContractDelete.class))
     })

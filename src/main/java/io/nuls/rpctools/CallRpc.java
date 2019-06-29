@@ -19,7 +19,7 @@ import java.util.function.Function;
  */
 public interface CallRpc {
 
-    default  <T,R> T callRpc(String module, String method, Map<String, Object> params, Function<R, T> callback) {
+    default  <T,R> R callRpc(String module, String method, Map<String, Object> params, Function<T, R> callback) {
         Log.debug("call {} rpc , method : {},param : {}",module,method,params);
         Response cmdResp = null;
         try {
@@ -45,7 +45,7 @@ public interface CallRpc {
                 throw new NulsRuntimeException(CommonCodeConstanst.SYS_UNKOWN_EXCEPTION, "unknown error");
             }
         }
-        return callback.apply((R) ((HashMap) cmdResp.getResponseData()).get(method));
+        return callback.apply((T) ((HashMap) cmdResp.getResponseData()).get(method));
     }
 
 }

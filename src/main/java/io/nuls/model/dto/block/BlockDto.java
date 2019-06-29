@@ -21,43 +21,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package io.nuls.utils;
+package io.nuls.model.dto.block;
 
-import io.nuls.base.api.provider.Result;
-import io.nuls.core.constant.CommonCodeConstanst;
-import io.nuls.core.constant.ErrorCode;
+import io.nuls.base.data.Block;
+import io.nuls.base.data.Transaction;
 import io.nuls.core.exception.NulsException;
-import io.nuls.model.ErrorData;
-import io.nuls.model.RpcClientResult;
+import io.nuls.core.rpc.model.ApiModel;
+import io.nuls.core.rpc.model.ApiModelProperty;
+import io.nuls.model.dto.TransactionDto;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author: PierreLuo
- * @date: 2019-06-28
+ * @date: 2019-06-29
  */
-public class ResultUtil {
+@Data
+@NoArgsConstructor
+@ApiModel(description = "blockJSON 区块信息(包含区块头信息, 交易信息), 只返回对应的部分数据")
+public class BlockDto {
 
-    public static RpcClientResult getRpcClientResult(Result result) {
-        if(result.isFailed()) {
-            return RpcClientResult.getFailed(new ErrorData(result.getStatus(), result.getMessage()));
-        }
-        Object obj;
-        do {
-            if((obj = result.getData()) != null) {
-                break;
-            } else if((obj = result.getList()) != null){
-                break;
-            } else {
-                obj = "success";
-            }
-        } while (false);
-        return RpcClientResult.getSuccess(obj);
-    }
+    @ApiModelProperty(description = "区块头信息, 只返回对应的部分数据")
+    private BlockHeaderDto header;
+    @ApiModelProperty(description = "交易列表")
+    private List<TransactionDto> txs;
 
-    public static RpcClientResult getNulsExceptionResult(NulsException e) {
-        ErrorCode errorCode = e.getErrorCode();
-        if(errorCode != null) {
-            return RpcClientResult.getFailed(new ErrorData(errorCode.getCode(), errorCode.getMsg()));
+    public BlockDto(Block block) throws NulsException {
+        this.header = new BlockHeaderDto(block.getHeader());
+        this.txs = new LinkedList<>();
+        List<Transaction> txList = block.getTxs();
+        if(txList == null || txList.isEmpty()) {
+            return;
         }
-        return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.DATA_ERROR.getCode(), e.getMessage()));
+        for(Transaction tx : txList) {
+            this.txs.add(new TransactionDto(tx));
+        }
     }
 }

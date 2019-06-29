@@ -34,6 +34,8 @@ import io.nuls.core.core.annotation.Component;
 import io.nuls.core.rpc.model.*;
 import io.nuls.model.ErrorData;
 import io.nuls.model.RpcClientResult;
+import io.nuls.model.annotation.Api;
+import io.nuls.model.annotation.ApiOperation;
 import io.nuls.model.form.TransferForm;
 import io.nuls.utils.ResultUtil;
 
@@ -49,6 +51,7 @@ import java.util.Map;
  */
 @Path("/api/accountledger")
 @Component
+@Api
 public class AccountLedgerResource {
 
     @Autowired
@@ -59,6 +62,7 @@ public class AccountLedgerResource {
     @POST
     @Path("/transfer")
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "单笔转账")
     @Parameters({
             @Parameter(parameterDes = "单笔转账", requestType = @TypeDescriptor(value = TransferForm.class))
     })

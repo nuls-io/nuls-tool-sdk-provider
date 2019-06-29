@@ -39,6 +39,8 @@ import io.nuls.core.core.annotation.Component;
 import io.nuls.core.rpc.model.*;
 import io.nuls.model.ErrorData;
 import io.nuls.model.RpcClientResult;
+import io.nuls.model.annotation.Api;
+import io.nuls.model.annotation.ApiOperation;
 import io.nuls.model.form.TransferForm;
 import io.nuls.model.form.consensus.CreateAgentForm;
 import io.nuls.model.form.consensus.DepositForm;
@@ -59,6 +61,7 @@ import java.util.Map;
  */
 @Path("/api/consensus")
 @Component
+@Api
 public class ConsensusResource {
 
     @Autowired
@@ -69,6 +72,7 @@ public class ConsensusResource {
     @POST
     @Path("/agent")
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "Create an agent for consensus! 创建共识(代理)节点")
     @Parameters({
             @Parameter(parameterDes = "Create an agent for consensus! 创建共识(代理)节点", requestType = @TypeDescriptor(value = CreateAgentForm.class))
     })
@@ -99,6 +103,7 @@ public class ConsensusResource {
     @POST
     @Path("/agent/stop")
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "注销共识节点")
     @Parameters({
             @Parameter(parameterDes = "注销共识节点", requestType = @TypeDescriptor(value = StopAgentForm.class))
     })
@@ -125,6 +130,7 @@ public class ConsensusResource {
     @POST
     @Path("/deposit")
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "deposit nuls to a bank! 申请参与共识")
     @Parameters({
             @Parameter(parameterDes = "deposit nuls to a bank! 申请参与共识", requestType = @TypeDescriptor(value = DepositForm.class))
     })
@@ -153,6 +159,7 @@ public class ConsensusResource {
     @POST
     @Path("/withdraw")
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "退出共识")
     @Parameters({
             @Parameter(parameterDes = "退出共识", requestType = @TypeDescriptor(value = WithdrawForm.class))
     })
