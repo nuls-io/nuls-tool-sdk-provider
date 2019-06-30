@@ -26,6 +26,9 @@ package io.nuls.api.resources;
 import io.nuls.api.config.Config;
 import io.nuls.base.api.provider.Result;
 import io.nuls.base.api.provider.ServiceManager;
+import io.nuls.base.api.provider.ledger.LedgerProvider;
+import io.nuls.base.api.provider.ledger.facade.AccountBalanceInfo;
+import io.nuls.base.api.provider.ledger.facade.GetBalanceReq;
 import io.nuls.base.api.provider.transaction.TransferService;
 import io.nuls.base.api.provider.transaction.facade.TransferReq;
 import io.nuls.core.constant.CommonCodeConstanst;
@@ -36,12 +39,13 @@ import io.nuls.model.ErrorData;
 import io.nuls.model.RpcClientResult;
 import io.nuls.model.annotation.Api;
 import io.nuls.model.annotation.ApiOperation;
+import io.nuls.model.dto.AccountBalanceDto;
+import io.nuls.model.dto.TransactionDto;
 import io.nuls.model.form.TransferForm;
+import io.nuls.rpctools.TransactionTools;
 import io.nuls.utils.ResultUtil;
 
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.Map;
 
@@ -55,9 +59,12 @@ import java.util.Map;
 public class AccountLedgerResource {
 
     @Autowired
-    private Config config;
+    Config config;
 
     TransferService transferService = ServiceManager.get(TransferService.class);
+    LedgerProvider ledgerProvider = ServiceManager.get(LedgerProvider.class);
+    @Autowired
+    TransactionTools transactionTools;
 
     @POST
     @Path("/transfer")
@@ -80,9 +87,49 @@ public class AccountLedgerResource {
         Result<String> result = transferService.transfer(builder.build());
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
         if(clientResult.isSuccess()) {
-            String hash = (String) clientResult.getData();
-            return clientResult.resultMap().map("value", hash).mapToData();
+            return clientResult.resultMap().map("value", clientResult.getData()).mapToData();
         }
+        return clientResult;
+    }
+
+    @GET
+    @Path("/balance/{address}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "查询账户余额")
+    @Parameters({
+            @Parameter(parameterName = "address", requestType = @TypeDescriptor(value = String.class), parameterDes = "账户地址")
+    })
+    @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = AccountBalanceDto.class))
+    public RpcClientResult getBalance(@PathParam("address") String address) {
+        if (address == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+        }
+        Integer assetChainId = config.getChainId();
+        Integer assetId = config.getAssetsId();
+        GetBalanceReq req = new GetBalanceReq(assetId,assetChainId,address);
+        req.setChainId(config.getChainId());
+        Result<AccountBalanceInfo> result = ledgerProvider.getBalance(req);
+        RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
+        if(clientResult.isSuccess()) {
+            clientResult.setData(new AccountBalanceDto((AccountBalanceInfo) clientResult.getData()));
+        }
+        return clientResult;
+    }
+
+    @GET
+    @Path("/tx/{hash}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "根据hash获取交易，先查未确认，查不到再查已确认")
+    @Parameters({
+            @Parameter(parameterName = "hash", requestType = @TypeDescriptor(value = String.class), parameterDes = "交易hash")
+    })
+    @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = TransactionDto.class))
+    public RpcClientResult getTx(@PathParam("hash") String hash) {
+        if (hash == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+        }
+        Result<TransactionDto> result = transactionTools.getTx(config.getChainId(), hash);
+        RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
         return clientResult;
     }
 

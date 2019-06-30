@@ -150,7 +150,7 @@ public class BlockResource {
                 clientResult.setData(new BlockDto((Block) clientResult.getData()));
             } catch (NulsException e) {
                 Log.error(e);
-                return ResultUtil.getNulsExceptionResult(e);
+                return ResultUtil.getNulsExceptionRpcClientResult(e);
             }
         }
         return clientResult;
@@ -175,7 +175,7 @@ public class BlockResource {
                 clientResult.setData(new BlockDto((Block) clientResult.getData()));
             } catch (NulsException e) {
                 Log.error(e);
-                return ResultUtil.getNulsExceptionResult(e);
+                return ResultUtil.getNulsExceptionRpcClientResult(e);
             }
         }
         return clientResult;
@@ -200,7 +200,7 @@ public class BlockResource {
                 clientResult.setData(new BlockDto((Block) clientResult.getData()));
             } catch (NulsException e) {
                 Log.error(e);
-                return ResultUtil.getNulsExceptionResult(e);
+                return ResultUtil.getNulsExceptionRpcClientResult(e);
             }
         }
         return clientResult;

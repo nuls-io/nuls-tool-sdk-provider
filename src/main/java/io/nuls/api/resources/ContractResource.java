@@ -23,27 +23,34 @@
  */
 package io.nuls.api.resources;
 
+import io.nuls.api.config.Config;
 import io.nuls.base.api.provider.Result;
 import io.nuls.base.api.provider.ServiceManager;
 import io.nuls.base.api.provider.contract.ContractProvider;
 import io.nuls.base.api.provider.contract.facade.CallContractReq;
 import io.nuls.base.api.provider.contract.facade.CreateContractReq;
 import io.nuls.base.api.provider.contract.facade.DeleteContractReq;
+import io.nuls.base.api.provider.ledger.facade.AccountBalanceInfo;
+import io.nuls.base.api.provider.ledger.facade.GetBalanceReq;
 import io.nuls.core.constant.CommonCodeConstanst;
+import io.nuls.core.core.annotation.Autowired;
 import io.nuls.core.core.annotation.Component;
 import io.nuls.core.rpc.model.*;
 import io.nuls.model.ErrorData;
 import io.nuls.model.RpcClientResult;
 import io.nuls.model.annotation.Api;
 import io.nuls.model.annotation.ApiOperation;
+import io.nuls.model.dto.AccountBalanceDto;
+import io.nuls.model.dto.ContractInfoDto;
+import io.nuls.model.dto.ContractResultDto;
+import io.nuls.model.dto.ContractTokenInfoDto;
 import io.nuls.model.form.contract.ContractCall;
 import io.nuls.model.form.contract.ContractCreate;
 import io.nuls.model.form.contract.ContractDelete;
+import io.nuls.rpctools.ContractTools;
 import io.nuls.utils.ResultUtil;
 
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.Map;
 
@@ -57,6 +64,10 @@ import java.util.Map;
 public class ContractResource {
 
     ContractProvider contractProvider = ServiceManager.get(ContractProvider.class);
+    @Autowired
+    ContractTools contractTools;
+    @Autowired
+    Config config;
 
     @POST
     @Path("/create")
@@ -145,6 +156,58 @@ public class ContractResource {
             String hash = (String) clientResult.getData();
             return clientResult.resultMap().map("txHash", hash).mapToData();
         }
+        return clientResult;
+    }
+
+    @GET
+    @Path("/balance/token/{contractAddress}/{address}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "获取账户地址的指定token余额")
+    @Parameters({
+            @Parameter(parameterName = "contractAddress", requestType = @TypeDescriptor(value = String.class), parameterDes = "合约地址"),
+            @Parameter(parameterName = "address", requestType = @TypeDescriptor(value = String.class), parameterDes = "账户地址")
+    })
+    @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = ContractTokenInfoDto.class))
+    public RpcClientResult getBalance(@PathParam("contractAddress") String contractAddress, @PathParam("address") String address) {
+        if (address == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+        }
+        Result<ContractTokenInfoDto> result = contractTools.getTokenBalance(config.getChainId(), contractAddress, address);
+        RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
+        return clientResult;
+    }
+
+    @GET
+    @Path("/info/{address}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "获取智能合约详细信息")
+    @Parameters({
+            @Parameter(parameterName = "address", requestType = @TypeDescriptor(value = String.class), parameterDes = "合约地址")
+    })
+    @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = ContractInfoDto.class))
+    public RpcClientResult getContractInfo(@PathParam("address") String address) {
+        if (address == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+        }
+        Result<ContractInfoDto> result = contractTools.getContractInfo(config.getChainId(), address);
+        RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
+        return clientResult;
+    }
+
+    @GET
+    @Path("/result/{hash}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "获取智能合约执行结果")
+    @Parameters({
+            @Parameter(parameterName = "hash", requestType = @TypeDescriptor(value = String.class), parameterDes = "交易hash")
+    })
+    @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = ContractTokenInfoDto.class))
+    public RpcClientResult getContractResult(@PathParam("hash") String hash) {
+        if (hash == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+        }
+        Result<ContractResultDto> result = contractTools.getContractResult(config.getChainId(), hash);
+        RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
         return clientResult;
     }
 }

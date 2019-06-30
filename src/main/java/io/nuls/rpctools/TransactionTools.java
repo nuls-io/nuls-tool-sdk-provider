@@ -1,13 +1,22 @@
 package io.nuls.rpctools;
 
 import io.nuls.base.RPCUtil;
+import io.nuls.base.api.provider.Result;
+import io.nuls.base.basic.NulsByteBuffer;
 import io.nuls.base.data.Transaction;
+import io.nuls.core.constant.TxStatusEnum;
 import io.nuls.core.core.annotation.Component;
+import io.nuls.core.crypto.HexUtil;
 import io.nuls.core.exception.NulsException;
+import io.nuls.core.exception.NulsRuntimeException;
 import io.nuls.core.log.Log;
+import io.nuls.core.parse.MapUtils;
 import io.nuls.core.rpc.info.Constants;
 import io.nuls.core.rpc.model.ModuleE;
+import io.nuls.model.dto.ContractTokenInfoDto;
+import io.nuls.model.dto.TransactionDto;
 import io.nuls.rpctools.vo.TxRegisterDetail;
+import io.nuls.utils.ResultUtil;
 
 import java.io.IOException;
 import java.util.*;
@@ -60,6 +69,62 @@ public class TransactionTools implements CallRpc {
             Log.error("", e);
         }
         return true;
+    }
+
+    public Result<TransactionDto> getTx(int chainId, String txHash) {
+        Map<String, Object> params = new HashMap(4);
+        params.put(Constants.CHAIN_ID, chainId);
+        params.put("txHash", txHash);
+        try {
+            return callRpc(ModuleE.TX.abbr, "tx_getTxClient", params,(Function<Map<String,Object>, Result<TransactionDto>>)  res->{
+                if(res == null){
+                    return null;
+                }
+                String txStr = (String) res.get("tx");
+                Long height = (Long) res.get("height");
+                String status = (String) res.get("status");
+                Transaction tx = new Transaction();
+                try {
+                    tx.parse(new NulsByteBuffer(HexUtil.decode(txStr)));
+                    TransactionDto txDto = new TransactionDto(tx);
+                    txDto.setBlockHeight(height);
+                    txDto.setStatus(TxStatusEnum.getStatus(Integer.parseInt(status)));
+                    return new Result(txDto);
+                } catch (NulsException e) {
+                    return ResultUtil.getNulsExceptionResult(e);
+                }
+            });
+        } catch (NulsRuntimeException e) {
+            return Result.fail(e.getCode(), e.getMessage());
+        }
+    }
+
+    public Result<TransactionDto> getConfirmedTx(int chainId, String txHash) {
+        Map<String, Object> params = new HashMap(4);
+        params.put(Constants.CHAIN_ID, chainId);
+        params.put("txHash", txHash);
+        try {
+            return callRpc(ModuleE.TX.abbr, "tx_getConfirmedTxClient", params,(Function<Map<String,Object>, Result<TransactionDto>>)  res->{
+                if(res == null){
+                    return null;
+                }
+                String txStr = (String) res.get("tx");
+                Long height = (Long) res.get("height");
+                Integer status = Integer.parseInt(res.get("status") + "");
+                Transaction tx = new Transaction();
+                try {
+                    tx.parse(new NulsByteBuffer(HexUtil.decode(txStr)));
+                    TransactionDto txDto = new TransactionDto(tx);
+                    txDto.setBlockHeight(height);
+                    txDto.setStatus(TxStatusEnum.getStatus(status));
+                    return new Result(txDto);
+                } catch (NulsException e) {
+                    return ResultUtil.getNulsExceptionResult(e);
+                }
+            });
+        } catch (NulsRuntimeException e) {
+            return Result.fail(e.getCode(), e.getMessage());
+        }
     }
 
 }

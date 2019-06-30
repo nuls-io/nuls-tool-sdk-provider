@@ -53,11 +53,19 @@ public class ResultUtil {
         return RpcClientResult.getSuccess(obj);
     }
 
-    public static RpcClientResult getNulsExceptionResult(NulsException e) {
+    public static RpcClientResult getNulsExceptionRpcClientResult(NulsException e) {
         ErrorCode errorCode = e.getErrorCode();
         if(errorCode != null) {
-            return RpcClientResult.getFailed(new ErrorData(errorCode.getCode(), errorCode.getMsg()));
+            return RpcClientResult.getFailed(new ErrorData(errorCode.getCode(), e.format()));
         }
         return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.DATA_ERROR.getCode(), e.getMessage()));
+    }
+
+    public static Result getNulsExceptionResult(NulsException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        if(errorCode != null) {
+            return Result.fail(errorCode.getCode(), e.format());
+        }
+        return Result.fail(CommonCodeConstanst.DATA_ERROR.getCode(), e.getMessage());
     }
 }

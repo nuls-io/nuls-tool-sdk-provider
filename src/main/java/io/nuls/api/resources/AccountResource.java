@@ -23,26 +23,34 @@
  */
 package io.nuls.api.resources;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import io.nuls.api.config.Context;
 import io.nuls.base.api.provider.Result;
 import io.nuls.base.api.provider.ServiceManager;
 import io.nuls.base.api.provider.account.AccountService;
-import io.nuls.base.api.provider.account.facade.CreateAccountReq;
+import io.nuls.base.api.provider.account.facade.*;
 import io.nuls.core.constant.CommonCodeConstanst;
 import io.nuls.core.core.annotation.Component;
+import io.nuls.core.crypto.HexUtil;
+import io.nuls.core.parse.JSONUtils;
 import io.nuls.core.rpc.model.*;
 import io.nuls.model.ErrorData;
 import io.nuls.model.RpcClientResult;
 import io.nuls.model.annotation.Api;
 import io.nuls.model.annotation.ApiOperation;
-import io.nuls.model.form.AccountCreateForm;
+import io.nuls.model.dto.AccountKeyStoreDto;
+import io.nuls.model.form.*;
+import io.nuls.utils.Log;
 import io.nuls.utils.ResultUtil;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.io.*;
 import java.util.List;
 import java.util.Map;
+
+import static io.nuls.api.config.Context.getChainId;
 
 /**
  * @author: PierreLuo
@@ -73,10 +81,203 @@ public class AccountResource {
         Result<String> result = accountService.createAccount(req);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
         if(clientResult.isSuccess()) {
-            List<String> list = (List<String>) clientResult.getData();
-            return clientResult.resultMap().map("list", list).mapToData();
+            return clientResult.resultMap().map("list", clientResult.getData()).mapToData();
         }
         return clientResult;
     }
 
+    @PUT
+    @Path("/password/{address}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "[修改密码] 根据原密码修改账户密码")
+    @Parameters({
+            @Parameter(parameterDes = "账户地址", requestType = @TypeDescriptor(value = String.class)),
+            @Parameter(parameterDes = "账户密码信息", requestType = @TypeDescriptor(value = AccountUpdatePasswordForm.class))
+    })
+    @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "value", valueType = Boolean.class, description = "是否修改成功")
+    }))
+    public RpcClientResult updatePassword(@PathParam("address") String address, AccountUpdatePasswordForm form) {
+        if (address == null || form == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+        }
+        UpdatePasswordReq req = new UpdatePasswordReq(address, form.getPassword(), form.getNewPassword());
+        req.setChainId(getChainId());
+        Result<Boolean> result = accountService.updatePassword(req);
+        RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
+        if(clientResult.isSuccess()) {
+            return clientResult.resultMap().map("value", clientResult.getData()).mapToData();
+        }
+        return clientResult;
+    }
+
+    @POST
+    @Path("/import/pri")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "根据私钥导入账户")
+    @Parameters({
+            @Parameter(parameterDes = "根据私钥导入账户", requestType = @TypeDescriptor(value = AccountPriKeyPasswordForm.class))
+    })
+    @ResponseData(name = "返回值", description = "返回账户地址", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "value", description = "账户地址")
+    }))
+    public RpcClientResult create(AccountPriKeyPasswordForm form) {
+        if (form == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+        }
+        ImportAccountByPrivateKeyReq req = new ImportAccountByPrivateKeyReq(form.getPassword(), form.getPriKey(), form.getOverwrite());
+        req.setChainId(getChainId());
+        Result<String> result = accountService.importAccountByPrivateKey(req);
+        RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
+        if(clientResult.isSuccess()) {
+            return clientResult.resultMap().map("value", clientResult.getData()).mapToData();
+        }
+        return clientResult;
+    }
+
+    @POST
+    @Path("/import/keystore")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @ApiOperation(description = "根据AccountKeyStore导入账户")
+    @Parameters({
+            @Parameter(parameterDes = "根据私钥导入账户", requestType = @TypeDescriptor(value = InputStream.class))
+    })
+    @ResponseData(name = "返回值", description = "返回账户地址", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "value", description = "账户地址")
+    }))
+    public RpcClientResult importAccountByKeystoreFile(@FormDataParam("keystore") InputStream in,
+                                                       @FormDataParam("password") String password,
+                                                       @FormDataParam("overwrite") Boolean overwrite) {
+        if(in == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+        }
+        Result<AccountKeyStoreDto> dtoResult = this.getAccountKeyStoreDto(in);
+        if(dtoResult.isFailed()) {
+            return RpcClientResult.getFailed(new ErrorData(dtoResult.getStatus(), dtoResult.getMessage()));
+        }
+        AccountKeyStoreDto dto = dtoResult.getData();
+        try {
+            ImportAccountByKeyStoreReq req = new ImportAccountByKeyStoreReq(password, HexUtil.encode(JSONUtils.obj2json(dto).getBytes()), overwrite);
+            req.setChainId(getChainId());
+            Result<String> result = accountService.importAccountByKeyStore(req);
+            RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
+            if(clientResult.isSuccess()) {
+                return clientResult.resultMap().map("value", clientResult.getData()).mapToData();
+            }
+            return clientResult;
+        } catch (JsonProcessingException e) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.DATA_ERROR.getCode(), e.getMessage()));
+        }
+    }
+
+    @POST
+    @Path("/import/keystore/path")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "根据keystore文件路径导入账户")
+    @Parameters({
+            @Parameter(parameterDes = "根据keystore文件路径导入账户", requestType = @TypeDescriptor(value = AccountKeyStoreImportForm.class))
+    })
+    @ResponseData(name = "返回值", description = "返回账户地址", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "value", description = "账户地址")
+    }))
+    public RpcClientResult imporAccountByKeystoreFilePath(AccountKeyStoreImportForm form) {
+        if(form == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+        }
+        String keystore = accountService.getAccountKeystoreDto(form.getPath());
+        ImportAccountByKeyStoreReq req = new ImportAccountByKeyStoreReq(form.getPassword(), HexUtil.encode(keystore.getBytes()), form.getOverwrite());
+        req.setChainId(getChainId());
+        Result<String> result = accountService.importAccountByKeyStore(req);
+        RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
+        if(clientResult.isSuccess()) {
+            return clientResult.resultMap().map("value", clientResult.getData()).mapToData();
+        }
+        return clientResult;
+    }
+
+    @POST
+    @Path("/export/{address}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "账户备份，导出AccountKeyStore文件到指定目录")
+    @Parameters({
+            @Parameter(parameterDes = "账户地址", requestType = @TypeDescriptor(value = String.class)),
+            @Parameter(parameterDes = "keystone导出信息", requestType = @TypeDescriptor(value = AccountKeyStoreBackup.class))
+    })
+    @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "path", description = "导出的文件路径")
+    }))
+    public RpcClientResult exportAccountKeyStore(@PathParam("address") String address, AccountKeyStoreBackup form) {
+        if (address == null || form == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+        }
+        BackupAccountReq req = new BackupAccountReq(form.getPassword(), address, form.getPath());
+        req.setChainId(getChainId());
+        Result<String> result = accountService.backupAccount(req);
+        RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
+        if(clientResult.isSuccess()) {
+            return clientResult.resultMap().map("path", clientResult.getData()).mapToData();
+        }
+        return clientResult;
+    }
+
+    @POST
+    @Path("/prikey/{address}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "账户备份，导出账户私钥，只能导出本地创建或导入的账户")
+    @Parameters({
+            @Parameter(parameterDes = "账户地址", requestType = @TypeDescriptor(value = String.class)),
+            @Parameter(parameterDes = "账户密码信息", requestType = @TypeDescriptor(value = AccountPasswordForm.class))
+    })
+    @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "value", description = "私钥")
+    }))
+    public RpcClientResult getPrikey(@PathParam("address") String address, AccountPasswordForm form) {
+        if (address == null || form == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+        }
+        GetAccountPrivateKeyByAddressReq req = new GetAccountPrivateKeyByAddressReq(form.getPassword(), address);
+        req.setChainId(getChainId());
+        Result<String> result = accountService.getAccountPrivateKey(req);
+        RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
+        if(clientResult.isSuccess()) {
+            return clientResult.resultMap().map("value", clientResult.getData()).mapToData();
+        }
+        return clientResult;
+    }
+
+    private Result<AccountKeyStoreDto> getAccountKeyStoreDto(InputStream in) {
+        StringBuilder ks = new StringBuilder();
+        InputStreamReader inputStreamReader = null;
+        BufferedReader bufferedReader = null;
+        String str;
+        try {
+            inputStreamReader = new InputStreamReader(in);
+            bufferedReader = new BufferedReader(inputStreamReader);
+            while ((str = bufferedReader.readLine()) != null) {
+                if (!str.isEmpty()) {
+                    ks.append(str);
+                }
+            }
+            AccountKeyStoreDto accountKeyStoreDto = JSONUtils.json2pojo(ks.toString(), AccountKeyStoreDto.class);
+            return new Result(accountKeyStoreDto);
+        } catch (Exception e) {
+            return Result.fail(CommonCodeConstanst.FILE_OPERATION_FAILD.getCode(), "key store file error");
+        } finally {
+            if (bufferedReader != null) {
+                try {
+                    bufferedReader.close();
+                } catch (IOException e) {
+                    Log.error(e);
+                }
+            }
+            if (inputStreamReader != null) {
+                try {
+                    inputStreamReader.close();
+                } catch (IOException e) {
+                    Log.error(e);
+                }
+            }
+        }
+    }
 }
