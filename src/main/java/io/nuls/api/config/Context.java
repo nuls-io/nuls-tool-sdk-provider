@@ -41,4 +41,8 @@ public class Context {
         }
         return config.getChainId();
     }
+
+    public static boolean isChainExist(int chainId) {
+        return getChainId() == chainId;
+    }
 }
