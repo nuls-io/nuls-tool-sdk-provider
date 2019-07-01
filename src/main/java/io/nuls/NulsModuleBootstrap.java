@@ -1,9 +1,12 @@
 package io.nuls;
 
 import io.nuls.api.RpcServerManager;
+import io.nuls.base.api.provider.Provider;
+import io.nuls.base.api.provider.ServiceManager;
 import io.nuls.core.core.annotation.Autowired;
 import io.nuls.core.core.annotation.Service;
 import io.nuls.core.core.annotation.Value;
+import io.nuls.core.core.config.ConfigurationLoader;
 import io.nuls.core.rpc.info.HostInfo;
 import io.nuls.core.rpc.modulebootstrap.Module;
 import io.nuls.core.rpc.modulebootstrap.NulsRpcModuleBootstrap;
@@ -28,6 +31,11 @@ public abstract class NulsModuleBootstrap extends RpcModule {
         if (args == null || args.length == 0) {
             args = new String[]{"ws://" + HostInfo.getLocalIP() + ":7771"};
         }
+        ConfigurationLoader configurationLoader = new ConfigurationLoader();
+        configurationLoader.load();
+        Provider.ProviderType providerType = Provider.ProviderType.valueOf(configurationLoader.getValue("providerType"));
+        int defaultChainId = Integer.parseInt(configurationLoader.getValue("chainId"));
+        ServiceManager.init(defaultChainId, providerType);
         NulsRpcModuleBootstrap.run("io.nuls",args);
         RpcServerManager.getInstance().startServer("0.0.0.0", 9898);
     }
