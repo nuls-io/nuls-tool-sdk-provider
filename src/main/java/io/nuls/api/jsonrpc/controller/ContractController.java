@@ -159,9 +159,24 @@ public class ContractController {
     @RpcMethod("getContractMethod")
     public RpcResult getContractMethod(List<Object> params) {
         VerifyUtils.verifyParams(params, 3);
-        int chainId = (int) params.get(0);
-        String contractAddress = (String) params.get(1);
-        String methodName = (String) params.get(2);
+        int chainId;
+        String contractAddress;
+        String methodName;
+        try {
+            chainId = (int) params.get(0);
+        } catch (Exception e) {
+            return RpcResult.paramError("[chainId] is invalid");
+        }
+        try {
+            contractAddress = (String) params.get(1);
+        } catch (Exception e) {
+            return RpcResult.paramError("[contractAddress] is invalid");
+        }
+        try {
+            methodName = (String) params.get(2);
+        } catch (Exception e) {
+            return RpcResult.paramError("[methodName] is invalid");
+        }
         String methodDesc = null;
         if (params.size() > 3) {
             methodDesc = (String) params.get(3);
@@ -208,53 +223,21 @@ public class ContractController {
      */
     @RpcMethod("getContractMethodArgsTypes")
     public RpcResult getContractMethodArgsTypes(List<Object> params) {
-        VerifyUtils.verifyParams(params, 3);
-        int chainId;
-        String contractAddress;
-        String methodName;
-        try {
-            chainId = (int) params.get(0);
-        } catch (Exception e) {
-            return RpcResult.paramError("[chainId] is invalid");
+        RpcResult result = this.getContractMethod(params);
+        if(result.getError() != null) {
+            return result;
         }
-        try {
-            contractAddress = (String) params.get(1);
-        } catch (Exception e) {
-            return RpcResult.paramError("[contractAddress] is invalid");
-        }
-        try {
-            methodName = (String) params.get(2);
-        } catch (Exception e) {
-            return RpcResult.paramError("[methodName] is invalid");
-        }
-        if (!AddressTool.validAddress(chainId, contractAddress)) {
-            return RpcResult.paramError("[contractAddress] is invalid");
-        }
-
-        if (!Context.isChainExist(chainId)) {
+        ProgramMethod resultMethod = (ProgramMethod) result.getResult();
+        if (resultMethod == null) {
             return RpcResult.dataNotFound();
+        }
+        List<String> argsTypes;
+        List<ProgramMethodArg> args = resultMethod.getArgs();
+        argsTypes = new ArrayList<>();
+        for (ProgramMethodArg arg : args) {
+            argsTypes.add(arg.getType());
         }
         RpcResult rpcResult = new RpcResult();
-        Result<ContractInfoDto> contractInfoDtoResult = contractTools.getContractInfo(chainId, contractAddress);
-        if (contractInfoDtoResult.isFailed()) {
-            return rpcResult.setError(new RpcResultError(contractInfoDtoResult.getStatus(), contractInfoDtoResult.getMessage(), null));
-        }
-        ContractInfoDto contractInfo = contractInfoDtoResult.getData();
-        List<ProgramMethod> methods = contractInfo.getMethod();
-        List<String> argsTypes = null;
-        for (ProgramMethod method : methods) {
-            if (method.getName().equals(methodName)) {
-                List<ProgramMethodArg> args = method.getArgs();
-                argsTypes = new ArrayList<>();
-                for (ProgramMethodArg arg : args) {
-                    argsTypes.add(arg.getType());
-                }
-                break;
-            }
-        }
-        if (argsTypes == null) {
-            return RpcResult.dataNotFound();
-        }
         rpcResult.setResult(argsTypes);
         return rpcResult;
     }
