@@ -27,20 +27,24 @@ public interface CallRpc {
             Log.debug("result : {}",cmdResp);
         } catch (Exception e) {
             Log.warn("Calling remote interface failed. module:{} - interface:{} - message:{}", module, method, e.getMessage());
-            throw new NulsRuntimeException(CommonCodeConstanst.FAILED);
+            throw new NulsRuntimeException(CommonCodeConstanst.FAILED, e.getMessage());
         }
         if (!cmdResp.isSuccess()) {
-            Log.warn("Calling remote interface failed. module:{} - interface:{} - ResponseComment:{}", module, method, cmdResp.getResponseComment());
+            String comment = cmdResp.getResponseComment();
+            if(StringUtils.isBlank(comment)) {
+                comment = "";
+            }
+            Log.warn("Calling remote interface failed. module:{} - interface:{} - ResponseComment:{}", module, method, comment);
             if(cmdResp.getResponseStatus() == Response.FAIL){
                 //business error
                 String errorCode = cmdResp.getResponseErrorCode();
                 if(StringUtils.isBlank(errorCode)){
-                    throw new NulsRuntimeException(CommonCodeConstanst.SYS_UNKOWN_EXCEPTION);
+                    throw new NulsRuntimeException(CommonCodeConstanst.SYS_UNKOWN_EXCEPTION, comment);
                 }
-                throw new NulsRuntimeException(ErrorCode.init(errorCode));
+                throw new NulsRuntimeException(ErrorCode.init(errorCode), comment);
             }else{
-                if(StringUtils.isNotBlank(cmdResp.getResponseComment())) {
-                    throw new NulsRuntimeException(CommonCodeConstanst.FAILED, cmdResp.getResponseComment());
+                if(StringUtils.isNotBlank(comment)) {
+                    throw new NulsRuntimeException(CommonCodeConstanst.FAILED, comment);
                 }
                 throw new NulsRuntimeException(CommonCodeConstanst.SYS_UNKOWN_EXCEPTION, "unknown error");
             }

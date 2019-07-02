@@ -29,16 +29,4 @@ public class MyModule {
         return RpcModuleState.Running;
     }
 
-    /**
-     * 申明需要依赖的其他模块
-     * @return
-     */
-    public Module[] declareDependent() {
-        return new Module[]{
-//                Module.build(ModuleE.LG),
-//                Module.build(ModuleE.TX),
-//                Module.build(ModuleE.NW)
-        };
-    }
-
 }
