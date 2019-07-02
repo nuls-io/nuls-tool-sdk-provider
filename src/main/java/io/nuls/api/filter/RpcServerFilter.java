@@ -57,11 +57,11 @@ public class RpcServerFilter implements ContainerRequestFilter, ContainerRespons
 
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
-        Enumeration<String> headerNames = request.getHeaderNames();
-        while (headerNames.hasMoreElements()) {
-            String name = headerNames.nextElement();
-            System.out.println(String.format("head name [%s], value [%s]", name, request.getHeader(name)));
-        }
+        //Enumeration<String> headerNames = request.getHeaderNames();
+        //while (headerNames.hasMoreElements()) {
+        //    String name = headerNames.nextElement();
+        //    System.out.println(String.format("head name [%s], value [%s]", name, request.getHeader(name)));
+        //}
     }
 
     @Override
