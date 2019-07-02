@@ -32,23 +32,41 @@ public class TransactionTools implements CallRpc {
 
 
     /**
-     * 发起新交易
+     * 验证新交易
      */
-    public Boolean newTx(int chainId,Transaction tx) throws NulsException, IOException {
+    public Result validateTx(int chainId, String txStr) {
         Map<String, Object> params = new HashMap<>(2);
         params.put("chainId", chainId);
-        params.put("tx", RPCUtil.encode(tx.serialize()));
-        return callRpc(ModuleE.TX.abbr, "tx_newTx", params, res -> true);
+        params.put("tx", txStr);
+        try {
+            return callRpc(ModuleE.TX.abbr, "tx_verifyTx", params, (Function<Map<String, Object>, Result>) res -> new Result(res));
+        } catch (NulsRuntimeException e) {
+            return Result.fail(e.getCode(), e.getMessage());
+        }
+    }
+
+    /**
+     * 广播新交易
+     */
+    public Result newTx(int chainId, String txStr) {
+        Map<String, Object> params = new HashMap<>(2);
+        params.put("chainId", chainId);
+        params.put("tx", txStr);
+        try {
+            return callRpc(ModuleE.TX.abbr, "tx_newTx", params, (Function<Map<String, Object>, Result>) res -> new Result(res));
+        } catch (NulsRuntimeException e) {
+            return Result.fail(e.getCode(), e.getMessage());
+        }
     }
 
     /**
      * 向交易模块注册交易
      * Register transactions with the transaction module
      */
-    public boolean registerTx(int chainId,String moduleName,int... txTyps) {
+    public boolean registerTx(int chainId, String moduleName, int... txTyps) {
         try {
             List<TxRegisterDetail> txRegisterDetailList = new ArrayList<>();
-            Arrays.stream(txTyps).forEach(txType->{
+            Arrays.stream(txTyps).forEach(txType -> {
                 TxRegisterDetail detail = new TxRegisterDetail();
                 detail.setSystemTx(false);
                 detail.setTxType(txType);
@@ -63,8 +81,8 @@ public class TransactionTools implements CallRpc {
             params.put(Constants.CHAIN_ID, chainId);
             params.put("moduleCode", moduleName);
             params.put("list", txRegisterDetailList);
-            params.put("delList",List.of());
-            return callRpc(ModuleE.TX.abbr, "tx_register", params,(Function<Map<String,Object>, Boolean>)  res -> (Boolean) res.get("value"));
+            params.put("delList", List.of());
+            return callRpc(ModuleE.TX.abbr, "tx_register", params, (Function<Map<String, Object>, Boolean>) res -> (Boolean) res.get("value"));
         } catch (Exception e) {
             Log.error("", e);
         }
@@ -76,8 +94,8 @@ public class TransactionTools implements CallRpc {
         params.put(Constants.CHAIN_ID, chainId);
         params.put("txHash", txHash);
         try {
-            return callRpc(ModuleE.TX.abbr, "tx_getTxClient", params,(Function<Map<String,Object>, Result<TransactionDto>>)  res->{
-                if(res == null){
+            return callRpc(ModuleE.TX.abbr, "tx_getTxClient", params, (Function<Map<String, Object>, Result<TransactionDto>>) res -> {
+                if (res == null) {
                     return null;
                 }
                 String txStr = (String) res.get("tx");
@@ -104,8 +122,8 @@ public class TransactionTools implements CallRpc {
         params.put(Constants.CHAIN_ID, chainId);
         params.put("txHash", txHash);
         try {
-            return callRpc(ModuleE.TX.abbr, "tx_getConfirmedTxClient", params,(Function<Map<String,Object>, Result<TransactionDto>>)  res->{
-                if(res == null){
+            return callRpc(ModuleE.TX.abbr, "tx_getConfirmedTxClient", params, (Function<Map<String, Object>, Result<TransactionDto>>) res -> {
+                if (res == null) {
                     return null;
                 }
                 String txStr = (String) res.get("tx");
