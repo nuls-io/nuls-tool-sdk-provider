@@ -9,3 +9,5 @@ APP_NAME=nuls-sdk-provider
 VERSION=1.0.0
 Managed=1
 
+[nuls-sdk-provider]
+moduleDynamicDependent=smart-contract,cross-chain

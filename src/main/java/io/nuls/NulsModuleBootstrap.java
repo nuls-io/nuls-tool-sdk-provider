@@ -8,6 +8,7 @@ import io.nuls.core.core.annotation.Service;
 import io.nuls.core.core.annotation.Value;
 import io.nuls.core.core.config.ConfigurationLoader;
 import io.nuls.core.rpc.info.HostInfo;
+import io.nuls.core.rpc.model.ModuleE;
 import io.nuls.core.rpc.modulebootstrap.Module;
 import io.nuls.core.rpc.modulebootstrap.NulsRpcModuleBootstrap;
 import io.nuls.core.rpc.modulebootstrap.RpcModule;
@@ -40,9 +41,16 @@ public abstract class NulsModuleBootstrap extends RpcModule {
         RpcServerManager.getInstance().startServer("0.0.0.0", 9898);
     }
 
+
     @Override
     public Module[] declareDependent() {
-        return myModule.declareDependent();
+        return new Module[]{
+                new Module(ModuleE.CS.abbr, ROLE),
+                new Module(ModuleE.BL.abbr, ROLE),
+                new Module(ModuleE.AC.abbr, ROLE),
+                new Module(ModuleE.TX.abbr, ROLE),
+                new Module(ModuleE.LG.abbr, ROLE)
+        };
     }
 
     @Override
