@@ -99,14 +99,14 @@ public class TransactionTools implements CallRpc {
                     return null;
                 }
                 String txStr = (String) res.get("tx");
-                Long height = (Long) res.get("height");
-                String status = (String) res.get("status");
+                Long height = Long.parseLong(res.get("height").toString()) ;
+                Integer status = (Integer) res.get("status");
                 Transaction tx = new Transaction();
                 try {
                     tx.parse(new NulsByteBuffer(HexUtil.decode(txStr)));
                     TransactionDto txDto = new TransactionDto(tx);
                     txDto.setBlockHeight(height);
-                    txDto.setStatus(TxStatusEnum.getStatus(Integer.parseInt(status)));
+                    txDto.setStatus(TxStatusEnum.getStatus(status));
                     return new Result(txDto);
                 } catch (NulsException e) {
                     return ResultUtil.getNulsExceptionResult(e);
@@ -127,8 +127,8 @@ public class TransactionTools implements CallRpc {
                     return null;
                 }
                 String txStr = (String) res.get("tx");
-                Long height = (Long) res.get("height");
-                Integer status = Integer.parseInt(res.get("status") + "");
+                Long height = Long.parseLong(res.get("height").toString()) ;
+                Integer status = (Integer) res.get("status");
                 Transaction tx = new Transaction();
                 try {
                     tx.parse(new NulsByteBuffer(HexUtil.decode(txStr)));
