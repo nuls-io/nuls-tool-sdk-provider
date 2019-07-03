@@ -29,6 +29,8 @@ import io.nuls.core.core.annotation.Controller;
 import io.nuls.core.core.annotation.RpcMethod;
 import io.nuls.core.exception.NulsException;
 import io.nuls.core.model.StringUtils;
+import io.nuls.model.annotation.Api;
+import io.nuls.model.annotation.ApiType;
 import io.nuls.model.dto.ContractResultDto;
 import io.nuls.model.jsonrpc.RpcErrorCode;
 import io.nuls.model.jsonrpc.RpcResult;
@@ -46,6 +48,7 @@ import java.util.Map;
  * @date: 2019-07-01
  */
 @Controller
+@Api(type = ApiType.JSONRPC)
 public class ContractController {
 
     @Autowired

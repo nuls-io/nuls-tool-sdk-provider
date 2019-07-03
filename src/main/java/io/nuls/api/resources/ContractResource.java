@@ -198,7 +198,7 @@ public class ContractResource {
     @Parameters({
             @Parameter(parameterName = "hash", requestType = @TypeDescriptor(value = String.class), parameterDes = "交易hash")
     })
-    @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = ContractTokenInfoDto.class))
+    @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = ContractResultDto.class))
     public RpcClientResult getContractResult(@PathParam("hash") String hash) {
         if (hash == null) {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
