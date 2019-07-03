@@ -47,7 +47,7 @@ public class ResultUtil {
             } else if((obj = result.getList()) != null){
                 break;
             } else {
-                obj = "success";
+                obj = null;
             }
         } while (false);
         return RpcClientResult.getSuccess(obj);
