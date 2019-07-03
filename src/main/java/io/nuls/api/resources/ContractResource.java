@@ -30,8 +30,6 @@ import io.nuls.base.api.provider.contract.ContractProvider;
 import io.nuls.base.api.provider.contract.facade.CallContractReq;
 import io.nuls.base.api.provider.contract.facade.CreateContractReq;
 import io.nuls.base.api.provider.contract.facade.DeleteContractReq;
-import io.nuls.base.api.provider.ledger.facade.AccountBalanceInfo;
-import io.nuls.base.api.provider.ledger.facade.GetBalanceReq;
 import io.nuls.core.constant.CommonCodeConstanst;
 import io.nuls.core.core.annotation.Autowired;
 import io.nuls.core.core.annotation.Component;
@@ -40,7 +38,6 @@ import io.nuls.model.ErrorData;
 import io.nuls.model.RpcClientResult;
 import io.nuls.model.annotation.Api;
 import io.nuls.model.annotation.ApiOperation;
-import io.nuls.model.dto.AccountBalanceDto;
 import io.nuls.model.dto.ContractInfoDto;
 import io.nuls.model.dto.ContractResultDto;
 import io.nuls.model.dto.ContractTokenInfoDto;
@@ -189,7 +186,7 @@ public class ContractResource {
         if (address == null) {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
         }
-        Result<ContractInfoDto> result = contractTools.getContractInfo(config.getChainId(), address);
+        Result<Map> result = contractTools.getContractInfo(config.getChainId(), address);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
         return clientResult;
     }

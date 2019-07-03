@@ -23,19 +23,18 @@ package io.nuls.api.jsonrpc.controller;
 import io.nuls.api.config.Context;
 import io.nuls.base.api.provider.Result;
 import io.nuls.base.basic.AddressTool;
+import io.nuls.core.constant.CommonCodeConstanst;
 import io.nuls.core.core.annotation.Autowired;
 import io.nuls.core.core.annotation.Controller;
 import io.nuls.core.core.annotation.RpcMethod;
 import io.nuls.core.exception.NulsException;
 import io.nuls.core.model.StringUtils;
-import io.nuls.model.dto.ContractInfoDto;
 import io.nuls.model.dto.ContractResultDto;
-import io.nuls.model.dto.ProgramMethod;
-import io.nuls.model.dto.ProgramMethodArg;
 import io.nuls.model.jsonrpc.RpcErrorCode;
 import io.nuls.model.jsonrpc.RpcResult;
 import io.nuls.model.jsonrpc.RpcResultError;
 import io.nuls.rpctools.ContractTools;
+import io.nuls.utils.Log;
 import io.nuls.utils.VerifyUtils;
 
 import java.util.ArrayList;
@@ -77,12 +76,11 @@ public class ContractController {
             return RpcResult.dataNotFound();
         }
         RpcResult rpcResult = new RpcResult();
-        Result<ContractInfoDto> contractInfoDtoResult = contractTools.getContractInfo(chainId, contractAddress);
+        Result<Map> contractInfoDtoResult = contractTools.getContractInfo(chainId, contractAddress);
         if (contractInfoDtoResult.isFailed()) {
             return rpcResult.setError(new RpcResultError(contractInfoDtoResult.getStatus(), contractInfoDtoResult.getMessage(), null));
         }
-        ContractInfoDto contractInfo = contractInfoDtoResult.getData();
-        rpcResult.setResult(contractInfo);
+        rpcResult.setResult(contractInfoDtoResult.getData());
         return rpcResult;
     }
 
@@ -192,30 +190,35 @@ public class ContractController {
             return RpcResult.paramError("[methodName] is invalid");
         }
         RpcResult rpcResult = new RpcResult();
-        Result<ContractInfoDto> contractInfoDtoResult = contractTools.getContractInfo(chainId, contractAddress);
+        Result<Map> contractInfoDtoResult = contractTools.getContractInfo(chainId, contractAddress);
         if (contractInfoDtoResult.isFailed()) {
             return rpcResult.setError(new RpcResultError(contractInfoDtoResult.getStatus(), contractInfoDtoResult.getMessage(), null));
         }
-        ContractInfoDto contractInfo = contractInfoDtoResult.getData();
-        List<ProgramMethod> methods = contractInfo.getMethod();
-        ProgramMethod resultMethod = null;
-        boolean isEmptyMethodDesc = StringUtils.isBlank(methodDesc);
-        for (ProgramMethod method : methods) {
-            if (method.getName().equals(methodName)) {
-                if (isEmptyMethodDesc) {
-                    resultMethod = method;
-                    break;
-                } else if (methodDesc.equals(method.getDesc())) {
-                    resultMethod = method;
-                    break;
+        Map contractInfo = contractInfoDtoResult.getData();
+        try {
+            List<Map<String, Object>> methods =(List<Map<String, Object>>) contractInfo.get("method");
+            Map resultMethod = null;
+            boolean isEmptyMethodDesc = StringUtils.isBlank(methodDesc);
+            for (Map<String, Object> method : methods) {
+                if (methodName.equals(method.get("name"))) {
+                    if (isEmptyMethodDesc) {
+                        resultMethod = method;
+                        break;
+                    } else if (methodDesc.equals(method.get("desc"))) {
+                        resultMethod = method;
+                        break;
+                    }
                 }
             }
+            if (resultMethod == null) {
+                return RpcResult.dataNotFound();
+            }
+            rpcResult.setResult(resultMethod);
+            return rpcResult;
+        } catch (Exception e) {
+            Log.error(e);
+            return RpcResult.failed(CommonCodeConstanst.DATA_ERROR, e.getMessage());
         }
-        if (resultMethod == null) {
-            return RpcResult.dataNotFound();
-        }
-        rpcResult.setResult(resultMethod);
-        return rpcResult;
     }
 
     /**
@@ -227,19 +230,24 @@ public class ContractController {
         if(result.getError() != null) {
             return result;
         }
-        ProgramMethod resultMethod = (ProgramMethod) result.getResult();
+        Map resultMethod = (Map) result.getResult();
         if (resultMethod == null) {
             return RpcResult.dataNotFound();
         }
         List<String> argsTypes;
-        List<ProgramMethodArg> args = resultMethod.getArgs();
-        argsTypes = new ArrayList<>();
-        for (ProgramMethodArg arg : args) {
-            argsTypes.add(arg.getType());
+        try {
+            List<Map<String, Object>> args = (List<Map<String, Object>>) resultMethod.get("args");
+            argsTypes = new ArrayList<>();
+            for (Map<String, Object> arg : args) {
+                argsTypes.add((String) arg.get("type"));
+            }
+            RpcResult rpcResult = new RpcResult();
+            rpcResult.setResult(argsTypes);
+            return rpcResult;
+        } catch (Exception e) {
+            Log.error(e);
+            return RpcResult.failed(CommonCodeConstanst.DATA_ERROR, e.getMessage());
         }
-        RpcResult rpcResult = new RpcResult();
-        rpcResult.setResult(argsTypes);
-        return rpcResult;
     }
 
     /**

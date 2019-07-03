@@ -1,21 +1,14 @@
 package io.nuls.rpctools;
 
-import io.nuls.api.constant.CommandConstant;
 import io.nuls.base.api.provider.Result;
 import io.nuls.core.core.annotation.Component;
-import io.nuls.core.exception.NulsException;
 import io.nuls.core.exception.NulsRuntimeException;
 import io.nuls.core.parse.MapUtils;
 import io.nuls.core.rpc.info.Constants;
 import io.nuls.core.rpc.model.ModuleE;
-import io.nuls.core.rpc.model.message.Response;
-import io.nuls.core.rpc.util.RpcCall;
-import io.nuls.model.dto.ContractInfoDto;
 import io.nuls.model.dto.ContractResultDto;
 import io.nuls.model.dto.ContractTokenInfoDto;
-import io.nuls.rpctools.vo.AccountBalance;
 
-import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -37,7 +30,7 @@ public class ContractTools implements CallRpc {
         try {
             return  callRpc(ModuleE.SC.abbr, TOKEN_BALANCE, params,(Function<Map<String,Object>, Result<ContractTokenInfoDto>>)  res->{
                 if(res == null){
-                    return null;
+                    return new Result();
                 }
                 return new Result(MapUtils.mapToBean(res, new ContractTokenInfoDto()));
             });
@@ -46,16 +39,16 @@ public class ContractTools implements CallRpc {
         }
     }
 
-    public Result<ContractInfoDto> getContractInfo(int chainId, String contractAddress) {
+    public Result<Map> getContractInfo(int chainId, String contractAddress) {
         Map<String, Object> params = new HashMap(4);
         params.put(Constants.CHAIN_ID, chainId);
         params.put("contractAddress", contractAddress);
         try {
-            return  callRpc(ModuleE.SC.abbr, CONTRACT_INFO, params,(Function<Map<String,Object>, Result<ContractInfoDto>>)  res->{
+            return  callRpc(ModuleE.SC.abbr, CONTRACT_INFO, params,(Function<Map<String,Object>, Result<Map>>)  res->{
                 if(res == null){
-                    return null;
+                    return new Result();
                 }
-                return new Result(MapUtils.mapToBean(res, new ContractInfoDto()));
+                return new Result(res);
             });
         } catch (NulsRuntimeException e) {
             return Result.fail(e.getCode(), e.getMessage());
@@ -69,7 +62,7 @@ public class ContractTools implements CallRpc {
         try {
             return  callRpc(ModuleE.SC.abbr, CONTRACT_RESULT, params,(Function<Map<String,Object>, Result<ContractResultDto>>) res->{
                 if(res == null){
-                    return null;
+                    return new Result();
                 }
                 return new Result(MapUtils.mapToBean(res, new ContractResultDto()));
             });
@@ -85,7 +78,7 @@ public class ContractTools implements CallRpc {
         try {
             return  callRpc(ModuleE.SC.abbr, CONSTRUCTOR, params,(Function<Map<String,Object>, Result<Map>>) res->{
                 if(res == null){
-                    return null;
+                    return new Result();
                 }
                 return new Result(res);
             });
@@ -110,6 +103,7 @@ public class ContractTools implements CallRpc {
             });
         } catch (NulsRuntimeException e) {
             map.put("success", false);
+            map.put("code", e.getCode());
             map.put("msg", e.getMessage());
             return new Result(map);
         }
@@ -135,6 +129,7 @@ public class ContractTools implements CallRpc {
             });
         } catch (NulsRuntimeException e) {
             map.put("success", false);
+            map.put("code", e.getCode());
             map.put("msg", e.getMessage());
             return new Result(map);
         }
@@ -153,6 +148,7 @@ public class ContractTools implements CallRpc {
             });
         } catch (NulsRuntimeException e) {
             map.put("success", false);
+            map.put("code", e.getCode());
             map.put("msg", e.getMessage());
             return new Result(map);
         }
