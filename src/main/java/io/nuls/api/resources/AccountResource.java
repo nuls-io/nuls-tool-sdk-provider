@@ -197,6 +197,31 @@ public class AccountResource {
     }
 
     @POST
+    @Path("/import/keystore/string")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "根据keystore字符串导入账户")
+    @Parameters({
+            @Parameter(parameterDes = "根据keystore字符串导入账户", requestType = @TypeDescriptor(value = AccountKeyStoreStringImportForm.class))
+    })
+    @ResponseData(name = "返回值", description = "返回账户地址", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "value", description = "账户地址")
+    }))
+    public RpcClientResult imporAccountByKeystoreString(AccountKeyStoreStringImportForm form) {
+        if(form == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+        }
+        String keystore = form.getKeystoreString();
+        ImportAccountByKeyStoreReq req = new ImportAccountByKeyStoreReq(form.getPassword(), HexUtil.encode(keystore.getBytes()), form.getOverwrite());
+        req.setChainId(getChainId());
+        Result<String> result = accountService.importAccountByKeyStore(req);
+        RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
+        if(clientResult.isSuccess()) {
+            return clientResult.resultMap().map("value", clientResult.getData()).mapToData();
+        }
+        return clientResult;
+    }
+
+    @POST
     @Path("/export/{address}")
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(description = "账户备份，导出AccountKeyStore文件到指定目录")
