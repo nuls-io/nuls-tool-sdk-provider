@@ -83,12 +83,12 @@ public class BlockResource {
     })
     @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = BlockHeaderDto.class))
     public RpcClientResult getBlockHeaderByHeight(@PathParam("height") Long height) {
-        if (height == null) {
+        if (height == null || height < 0) {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
         }
         Result<BlockHeaderData> result = blockService.getBlockHeaderByHeight(new GetBlockHeaderByHeightReq(height));
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
-        if(clientResult.isSuccess()) {
+        if (clientResult.isSuccess() && clientResult.getData() != null) {
             BlockHeaderDto dto = new BlockHeaderDto();
             Object data = clientResult.getData();
             BeanCopierManager.beanCopier("BlockHeaderData2BlockHeaderDto", data, dto);
@@ -111,7 +111,7 @@ public class BlockResource {
         }
         Result<BlockHeaderData> result = blockService.getBlockHeaderByHash(new GetBlockHeaderByHashReq(hash));
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
-        if(clientResult.isSuccess()) {
+        if (clientResult.isSuccess() && clientResult.getData() != null) {
             BlockHeaderDto dto = new BlockHeaderDto();
             Object data = clientResult.getData();
             BeanCopierManager.beanCopier("BlockHeaderData2BlockHeaderDto", data, dto);
@@ -128,7 +128,7 @@ public class BlockResource {
     public RpcClientResult getBestBlockHeader() {
         Result<BlockHeaderData> result = blockService.getBlockHeaderByLastHeight(new GetBlockHeaderByLastHeightReq());
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
-        if(clientResult.isSuccess()) {
+        if (clientResult.isSuccess()) {
             BlockHeaderDto dto = new BlockHeaderDto();
             Object data = clientResult.getData();
             BeanCopierManager.beanCopier("BlockHeaderData2BlockHeaderDto", data, dto);
@@ -145,7 +145,7 @@ public class BlockResource {
     public RpcClientResult getBestBlock() {
         Result<Block> result = blockTools.getBestBlock(Context.getChainId());
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
-        if(clientResult.isSuccess()) {
+        if (clientResult.isSuccess()) {
             try {
                 clientResult.setData(new BlockDto((Block) clientResult.getData()));
             } catch (NulsException e) {
@@ -165,14 +165,16 @@ public class BlockResource {
     })
     @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = BlockHeaderDto.class))
     public RpcClientResult getBlockByHeight(@PathParam("height") Long height) {
-        if (height == null) {
+        if (height == null || height < 0) {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
         }
         Result<Block> result = blockTools.getBlockByHeight(Context.getChainId(), height);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
-        if(clientResult.isSuccess()) {
+        if (clientResult.isSuccess()) {
             try {
-                clientResult.setData(new BlockDto((Block) clientResult.getData()));
+                if (clientResult.getData() != null) {
+                    clientResult.setData(new BlockDto((Block) clientResult.getData()));
+                }
             } catch (NulsException e) {
                 Log.error(e);
                 return ResultUtil.getNulsExceptionRpcClientResult(e);
@@ -195,9 +197,11 @@ public class BlockResource {
         }
         Result<Block> result = blockTools.getBlockByHash(Context.getChainId(), hash);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
-        if(clientResult.isSuccess()) {
+        if (clientResult.isSuccess()) {
             try {
-                clientResult.setData(new BlockDto((Block) clientResult.getData()));
+                if (clientResult.getData() != null) {
+                    clientResult.setData(new BlockDto((Block) clientResult.getData()));
+                }
             } catch (NulsException e) {
                 Log.error(e);
                 return ResultUtil.getNulsExceptionRpcClientResult(e);
