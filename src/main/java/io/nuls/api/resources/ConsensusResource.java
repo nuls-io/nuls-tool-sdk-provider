@@ -86,7 +86,7 @@ public class ConsensusResource {
     }))
     public RpcClientResult createAgent(CreateAgentForm form) {
         if (form == null) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
         }
         CreateAgentReq req = new CreateAgentReq(
                 form.getAgentAddress(),
@@ -116,7 +116,7 @@ public class ConsensusResource {
     }))
     public RpcClientResult stopAgent(StopAgentForm form) {
         if (form == null) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
         }
         StopAgentReq req = new StopAgentReq(
                 form.getAddress(),
@@ -142,7 +142,7 @@ public class ConsensusResource {
     }))
     public RpcClientResult depositToAgent(DepositForm form) {
         if (form == null) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
         }
         DepositToAgentReq req = new DepositToAgentReq(
                 form.getAddress(),
@@ -171,7 +171,7 @@ public class ConsensusResource {
     }))
     public RpcClientResult withdraw(WithdrawForm form) {
         if (form == null) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
         }
         WithdrawReq req = new WithdrawReq(
                 form.getAddress(),
@@ -200,7 +200,7 @@ public class ConsensusResource {
     }))
     public RpcClientResult createAgentOffline(ConsensusDto form) {
         if (form == null) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
         }
         io.nuls.core.basic.Result result = NulsSDKTool.createConsensusTx(form);
         return ResultUtil.getRpcClientResult(result);
@@ -220,7 +220,7 @@ public class ConsensusResource {
     }))
     public RpcClientResult stopAgentOffline(StopConsensusDto form) {
         if (form == null) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
         }
         io.nuls.core.basic.Result result = NulsSDKTool.createStopConsensusTx(form);
         return ResultUtil.getRpcClientResult(result);
@@ -240,7 +240,7 @@ public class ConsensusResource {
     }))
     public RpcClientResult depositToAgentOffline(DepositDto form) {
         if (form == null) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
         }
         io.nuls.core.basic.Result result = NulsSDKTool.createDepositTx(form);
         return ResultUtil.getRpcClientResult(result);
@@ -260,7 +260,7 @@ public class ConsensusResource {
     }))
     public RpcClientResult withdrawOffline(WithDrawDto form) {
         if (form == null) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
         }
         io.nuls.core.basic.Result result = NulsSDKTool.createWithdrawDepositTx(form);
         return ResultUtil.getRpcClientResult(result);

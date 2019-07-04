@@ -81,7 +81,7 @@ public class AccountResource {
     }))
     public RpcClientResult create(AccountCreateForm form) {
         if (form == null) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
         }
         CreateAccountReq req = new CreateAccountReq(form.getCount(), form.getPassword());
         req.setChainId(config.getChainId());
@@ -105,8 +105,11 @@ public class AccountResource {
             @Key(name = "value", valueType = Boolean.class, description = "是否修改成功")
     }))
     public RpcClientResult updatePassword(@PathParam("address") String address, AccountUpdatePasswordForm form) {
-        if (address == null || form == null) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+        if (form == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
+        }
+        if (address == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "address is empty"));
         }
         UpdatePasswordReq req = new UpdatePasswordReq(address, form.getPassword(), form.getNewPassword());
         req.setChainId(config.getChainId());
@@ -130,7 +133,7 @@ public class AccountResource {
     }))
     public RpcClientResult create(AccountPriKeyPasswordForm form) {
         if (form == null) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
         }
         ImportAccountByPrivateKeyReq req = new ImportAccountByPrivateKeyReq(form.getPassword(), form.getPriKey(), form.getOverwrite());
         req.setChainId(config.getChainId());
@@ -157,7 +160,7 @@ public class AccountResource {
                                                        @FormDataParam("password") String password,
                                                        @FormDataParam("overwrite") Boolean overwrite) {
         if(in == null) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "inputStream is empty"));
         }
         Result<AccountKeyStoreDto> dtoResult = this.getAccountKeyStoreDto(in);
         if(dtoResult.isFailed()) {
@@ -190,7 +193,7 @@ public class AccountResource {
     }))
     public RpcClientResult imporAccountByKeystoreFilePath(AccountKeyStoreImportForm form) {
         if(form == null) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
         }
         String keystore = accountService.getAccountKeystoreDto(form.getPath());
         ImportAccountByKeyStoreReq req = new ImportAccountByKeyStoreReq(form.getPassword(), HexUtil.encode(keystore.getBytes()), form.getOverwrite());
@@ -215,7 +218,7 @@ public class AccountResource {
     }))
     public RpcClientResult imporAccountByKeystoreString(AccountKeyStoreStringImportForm form) {
         if(form == null) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
         }
         String keystore = form.getKeystoreString();
         ImportAccountByKeyStoreReq req = new ImportAccountByKeyStoreReq(form.getPassword(), HexUtil.encode(keystore.getBytes()), form.getOverwrite());
@@ -240,8 +243,11 @@ public class AccountResource {
             @Key(name = "path", description = "导出的文件路径")
     }))
     public RpcClientResult exportAccountKeyStore(@PathParam("address") String address, AccountKeyStoreBackup form) {
-        if (address == null || form == null) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+        if (form == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
+        }
+        if (address == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "address is empty"));
         }
         BackupAccountReq req = new BackupAccountReq(form.getPassword(), address, form.getPath());
         req.setChainId(config.getChainId());
@@ -265,8 +271,11 @@ public class AccountResource {
             @Key(name = "value", description = "私钥")
     }))
     public RpcClientResult getPrikey(@PathParam("address") String address, AccountPasswordForm form) {
-        if (address == null || form == null) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+        if (form == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
+        }
+        if (address == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "address is empty"));
         }
         GetAccountPrivateKeyByAddressReq req = new GetAccountPrivateKeyByAddressReq(form.getPassword(), address);
         req.setChainId(config.getChainId());
@@ -290,7 +299,7 @@ public class AccountResource {
     }))
     public RpcClientResult createOffline(AccountCreateForm form) {
         if (form == null) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
         }
         io.nuls.core.basic.Result<List<AccountDto>> result = NulsSDKTool.createOffLineAccount(form.getCount(), form.getPassword());
         return ResultUtil.getRpcClientResult(result);

@@ -39,6 +39,7 @@ import io.nuls.v2.model.annotation.ApiOperation;
 import io.nuls.model.dto.TransactionDto;
 import io.nuls.rpctools.TransactionTools;
 import io.nuls.utils.ResultUtil;
+import io.nuls.v2.util.ValidateUtil;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -69,8 +70,8 @@ public class TransactionResource {
     })
     @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = TransactionDto.class))
     public RpcClientResult getTx(@PathParam("hash") String hash) {
-        if (hash == null) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+        if (hash == null || ValidateUtil.validHash(hash)) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "hash is invalid"));
         }
         Result<TransactionDto> result = transactionTools.getConfirmedTx(config.getChainId(), hash);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
