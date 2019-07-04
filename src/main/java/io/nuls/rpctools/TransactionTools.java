@@ -106,7 +106,7 @@ public class TransactionTools implements CallRpc {
                     tx.parse(new NulsByteBuffer(HexUtil.decode(txStr)));
                     TransactionDto txDto = new TransactionDto(tx);
                     txDto.setBlockHeight(height);
-                    txDto.setStatus(TxStatusEnum.getStatus(status));
+                    txDto.setStatus(status);
                     return new Result(txDto);
                 } catch (NulsException e) {
                     return ResultUtil.getNulsExceptionResult(e);
@@ -134,7 +134,7 @@ public class TransactionTools implements CallRpc {
                     tx.parse(new NulsByteBuffer(HexUtil.decode(txStr)));
                     TransactionDto txDto = new TransactionDto(tx);
                     txDto.setBlockHeight(height);
-                    txDto.setStatus(TxStatusEnum.getStatus(status));
+                    txDto.setStatus(status);
                     return new Result(txDto);
                 } catch (NulsException e) {
                     return ResultUtil.getNulsExceptionResult(e);

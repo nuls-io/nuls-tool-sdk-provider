@@ -28,6 +28,8 @@ import io.nuls.base.data.Transaction;
 import io.nuls.core.exception.NulsException;
 import io.nuls.core.rpc.model.ApiModel;
 import io.nuls.core.rpc.model.ApiModelProperty;
+import io.nuls.core.rpc.model.TypeDescriptor;
+import io.nuls.model.dto.ProgramMethodArg;
 import io.nuls.model.dto.TransactionDto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -47,7 +49,7 @@ public class BlockDto {
 
     @ApiModelProperty(description = "区块头信息, 只返回对应的部分数据")
     private BlockHeaderDto header;
-    @ApiModelProperty(description = "交易列表")
+    @ApiModelProperty(description = "交易列表", type = @TypeDescriptor(value = List.class, collectionElement = TransactionDto.class))
     private List<TransactionDto> txs;
 
     public BlockDto(Block block) throws NulsException {

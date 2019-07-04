@@ -35,6 +35,7 @@ import io.nuls.core.model.ByteUtils;
 import io.nuls.core.model.DateUtils;
 import io.nuls.core.rpc.model.ApiModel;
 import io.nuls.core.rpc.model.ApiModelProperty;
+import io.nuls.core.rpc.model.TypeDescriptor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -62,19 +63,19 @@ public class TransactionDto {
     @ApiModelProperty(description = "交易签名")
     private String transactionSignature;
     @ApiModelProperty(description = "交易状态 0:unConfirm(待确认), 1:confirm(已确认)")
-    private TxStatusEnum status = TxStatusEnum.UNCONFIRM;
+    private int status = 0;
     @ApiModelProperty(description = "交易大小")
     private int size;
     @ApiModelProperty(description = "在区块中的顺序，存储在rocksDB中是无序的，保存区块时赋值，取出后根据此值排序")
     private int inBlockIndex;
-    @ApiModelProperty(description = "输入")
+    @ApiModelProperty(description = "输入", type = @TypeDescriptor(value = List.class, collectionElement = CoinFromDto.class))
     private List<CoinFromDto> form;
-    @ApiModelProperty(description = "输出")
+    @ApiModelProperty(description = "输出", type = @TypeDescriptor(value = List.class, collectionElement = CoinToDto.class))
     private List<CoinToDto> to;
 
     public TransactionDto(Transaction transaction) throws NulsException {
         this.blockHeight = transaction.getBlockHeight();
-        this.status = transaction.getStatus();
+        this.status = transaction.getStatus().getStatus();
         this.hash = transaction.getHash().toString();
         this.remark = ByteUtils.asString(transaction.getRemark());
         this.inBlockIndex = transaction.getInBlockIndex();

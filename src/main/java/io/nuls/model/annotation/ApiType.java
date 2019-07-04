@@ -23,18 +23,39 @@
  */
 package io.nuls.model.annotation;
 
-import java.lang.annotation.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author: PierreLuo
- * @date: 2019-06-29
+ * @date: 2019-07-01
  */
-@Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
-@Inherited
-public @interface Api {
+public enum ApiType {
+    // 0 - JSONRPC, 1 - RESTFUL, 2 - SDK
+    JSONRPC(0),
+    RESTFUL(1),
+    SDK(2);
 
-    String description() default "";
+    private int status;
+    private static Map<Integer, ApiType> map;
 
-    ApiType type() default ApiType.RESTFUL;
+    private ApiType(int status) {
+        this.status = status;
+        putStatus(status, this);
+    }
+
+    public int status() {
+        return status;
+    }
+
+    private static ApiType putStatus(int status, ApiType statusEnum) {
+        if(map == null) {
+            map = new HashMap<>(8);
+        }
+        return map.put(status, statusEnum);
+    }
+
+    public static ApiType getStatus(int status) {
+        return map.get(status);
+    }
 }
