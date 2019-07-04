@@ -43,6 +43,7 @@ import io.nuls.model.dto.AccountKeyStoreDto;
 import io.nuls.model.form.*;
 import io.nuls.utils.Log;
 import io.nuls.utils.ResultUtil;
+import io.nuls.v2.util.NulsSDKTool;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import javax.ws.rs.*;
@@ -75,7 +76,7 @@ public class AccountResource {
             @Parameter(parameterName = "批量创建账户", parameterDes = "批量创建账户表单", requestType = @TypeDescriptor(value = AccountCreateForm.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
-            @Key(name = "list", valueType = List.class, valueElement = String.class, description = "交易hash")
+            @Key(name = "list", valueType = List.class, valueElement = String.class, description = "账户地址")
     }))
     public RpcClientResult create(AccountCreateForm form) {
         if (form == null) {
@@ -274,6 +275,24 @@ public class AccountResource {
             return clientResult.resultMap().map("value", clientResult.getData()).mapToData();
         }
         return clientResult;
+    }
+
+    @POST
+    @Path("/offline")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "离线 - 批量创建账户")
+    @Parameters({
+            @Parameter(parameterName = "离线批量创建账户", parameterDes = "离线批量创建账户表单", requestType = @TypeDescriptor(value = AccountCreateForm.class))
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "list", valueType = List.class, valueElement = String.class, description = "账户地址")
+    }))
+    public RpcClientResult createOffline(AccountCreateForm form) {
+        if (form == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+        }
+        io.nuls.core.basic.Result<List<String>> result = NulsSDKTool.createAccount(form.getCount(), form.getPassword());
+        return ResultUtil.getRpcClientResult(result);
     }
 
     private Result<AccountKeyStoreDto> getAccountKeyStoreDto(InputStream in) {
