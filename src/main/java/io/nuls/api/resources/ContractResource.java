@@ -293,7 +293,6 @@ public class ContractResource {
         return ResultUtil.getRpcClientResult(result);
     }
 
-
     @POST
     @Path("/call/offline")
     @Produces(MediaType.APPLICATION_JSON)
