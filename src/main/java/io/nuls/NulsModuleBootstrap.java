@@ -13,6 +13,8 @@ import io.nuls.core.rpc.modulebootstrap.Module;
 import io.nuls.core.rpc.modulebootstrap.NulsRpcModuleBootstrap;
 import io.nuls.core.rpc.modulebootstrap.RpcModule;
 import io.nuls.core.rpc.modulebootstrap.RpcModuleState;
+import io.nuls.v2.NulsSDKBootStrap;
+import io.nuls.v2.SDKContext;
 
 /**
  * @Author: zhoulijun
@@ -39,6 +41,8 @@ public abstract class NulsModuleBootstrap extends RpcModule {
         ServiceManager.init(defaultChainId, providerType);
         NulsRpcModuleBootstrap.run("io.nuls",args);
         RpcServerManager.getInstance().startServer("0.0.0.0", 9898);
+        NulsSDKBootStrap.init(defaultChainId);
+        SDKContext.nuls_chain_id = defaultChainId;
     }
 
 

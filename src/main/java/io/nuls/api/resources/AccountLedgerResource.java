@@ -37,13 +37,13 @@ import io.nuls.core.core.annotation.Component;
 import io.nuls.core.rpc.model.*;
 import io.nuls.model.ErrorData;
 import io.nuls.model.RpcClientResult;
-import io.nuls.model.annotation.Api;
-import io.nuls.model.annotation.ApiOperation;
 import io.nuls.model.dto.AccountBalanceDto;
 import io.nuls.model.dto.TransactionDto;
 import io.nuls.model.form.TransferForm;
 import io.nuls.rpctools.TransactionTools;
 import io.nuls.utils.ResultUtil;
+import io.nuls.v2.model.annotation.Api;
+import io.nuls.v2.model.annotation.ApiOperation;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
