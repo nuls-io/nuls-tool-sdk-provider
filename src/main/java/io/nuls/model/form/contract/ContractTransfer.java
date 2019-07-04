@@ -30,17 +30,21 @@ import io.nuls.model.form.Base;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigInteger;
+
 @Data
 @NoArgsConstructor
-@ApiModel
-public class ContractDelete extends Base {
+@ApiModel(description = "从账户地址向合约地址转账(主链资产)的合约交易")
+public class ContractTransfer extends Base {
 
-    @ApiModelProperty(description = "交易创建者", required = true)
-    private String sender;
-    @ApiModelProperty(description = "智能合约地址", required = true)
-    private String contractAddress;
-    @ApiModelProperty(description = "交易创建者账户密码", required = true)
+    @ApiModelProperty(description = "转出者账户地址", required = true)
+    private String fromAddress;
+    @ApiModelProperty(description = "转出者账户地址密码", required = true)
     private String password;
+    @ApiModelProperty(description = "转入的合约地址", required = true)
+    private String toAddress;
+    @ApiModelProperty(description = "转出的主链资产金额", required = true)
+    private BigInteger amount;
     @ApiModelProperty(description = "备注", required = false)
     private String remark;
 

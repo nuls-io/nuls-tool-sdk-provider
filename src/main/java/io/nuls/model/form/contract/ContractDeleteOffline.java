@@ -30,10 +30,14 @@ import io.nuls.model.form.Base;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * @author: PierreLuo
+ * @date: 2019-07-04
+ */
 @Data
 @NoArgsConstructor
 @ApiModel
-public class ContractDelete extends Base {
+public class ContractDeleteOffline extends Base {
 
     @ApiModelProperty(description = "交易创建者", required = true)
     private String sender;

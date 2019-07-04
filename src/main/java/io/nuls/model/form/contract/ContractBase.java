@@ -29,12 +29,16 @@ import io.nuls.base.api.provider.BaseReq;
 import io.nuls.core.rpc.model.ApiModel;
 import io.nuls.core.rpc.model.ApiModelProperty;
 import io.nuls.model.form.Base;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @desription:
  * @author: PierreLuo
  * @date: 2018/4/21
  */
+@Data
+@NoArgsConstructor
 @ApiModel(name = "智能合约表单数据")
 public class ContractBase extends Base {
     @ApiModelProperty(description = "交易创建者")
@@ -48,43 +52,4 @@ public class ContractBase extends Base {
     @ApiModelProperty(description = "备注", required = false)
     private String remark;
 
-    public String getSender() {
-        return sender;
-    }
-
-    public void setSender(String sender) {
-        this.sender = sender;
-    }
-
-    public long getGasLimit() {
-        return gasLimit;
-    }
-
-    public void setGasLimit(long gasLimit) {
-        this.gasLimit = gasLimit;
-    }
-
-    public long getPrice() {
-        return price;
-    }
-
-    public void setPrice(long price) {
-        this.price = price;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
 }

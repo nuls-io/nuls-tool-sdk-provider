@@ -27,28 +27,28 @@ import io.nuls.api.config.Config;
 import io.nuls.base.api.provider.Result;
 import io.nuls.base.api.provider.ServiceManager;
 import io.nuls.base.api.provider.contract.ContractProvider;
-import io.nuls.base.api.provider.contract.facade.CallContractReq;
-import io.nuls.base.api.provider.contract.facade.CreateContractReq;
-import io.nuls.base.api.provider.contract.facade.DeleteContractReq;
+import io.nuls.base.api.provider.contract.facade.*;
 import io.nuls.core.constant.CommonCodeConstanst;
 import io.nuls.core.core.annotation.Autowired;
 import io.nuls.core.core.annotation.Component;
 import io.nuls.core.rpc.model.*;
 import io.nuls.model.ErrorData;
 import io.nuls.model.RpcClientResult;
+import io.nuls.model.form.contract.*;
 import io.nuls.v2.model.annotation.Api;
 import io.nuls.v2.model.annotation.ApiOperation;
 import io.nuls.model.dto.ContractInfoDto;
 import io.nuls.model.dto.ContractResultDto;
 import io.nuls.model.dto.ContractTokenInfoDto;
-import io.nuls.model.form.contract.ContractCall;
-import io.nuls.model.form.contract.ContractCreate;
-import io.nuls.model.form.contract.ContractDelete;
 import io.nuls.rpctools.ContractTools;
 import io.nuls.utils.ResultUtil;
+import io.nuls.v2.model.dto.ContractConstructorInfoDto;
+import io.nuls.v2.service.ContractService;
+import io.nuls.v2.util.NulsSDKTool;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.math.BigInteger;
 import java.util.Map;
 
 /**
@@ -69,9 +69,9 @@ public class ContractResource {
     @POST
     @Path("/create")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "单笔转账")
+    @ApiOperation(description = "发布合约")
     @Parameters({
-            @Parameter(parameterName = "创建合约", parameterDes = "创建合约表单", requestType = @TypeDescriptor(value = ContractCreate.class))
+            @Parameter(parameterName = "发布合约", parameterDes = "发布合约表单", requestType = @TypeDescriptor(value = ContractCreate.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map对象，包含两个属性", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "txHash", description = "发布合约的交易hash"),
@@ -98,7 +98,7 @@ public class ContractResource {
     @POST
     @Path("/call")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "单笔转账")
+    @ApiOperation(description = "调用合约")
     @Parameters({
             @Parameter(parameterName = "调用合约", parameterDes = "调用合约表单", requestType = @TypeDescriptor(value = ContractCall.class))
     })
@@ -106,7 +106,7 @@ public class ContractResource {
             @Key(name = "txHash", description = "调用合约的交易hash")
     }))
     public RpcClientResult callContract(ContractCall call) {
-        if (call == null || call.getValue() < 0 || call.getGasLimit() < 0 || call.getPrice() < 0) {
+        if (call == null || call.getValue() == null || call.getValue().compareTo(BigInteger.ZERO) < 0 || call.getGasLimit() < 0 || call.getPrice() < 0) {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
         }
         CallContractReq req = new CallContractReq();
@@ -115,7 +115,7 @@ public class ContractResource {
         req.setPassword(call.getPassword());
         req.setPrice(call.getPrice());
         req.setGasLimit(call.getGasLimit());
-        req.setValue(call.getValue());
+        req.setValue(call.getValue().longValue());
         req.setMethodName(call.getMethodName());
         req.setMethodDesc(call.getMethodDesc());
         req.setContractAddress(call.getContractAddress());
@@ -131,9 +131,71 @@ public class ContractResource {
     }
 
     @POST
+    @Path("/tokentransfer")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "token转账")
+    @Parameters({
+            @Parameter(parameterName = "token转账", parameterDes = "token转账表单", requestType = @TypeDescriptor(value = ContractTokenTransfer.class))
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "txHash", description = "交易hash")
+    }))
+    public RpcClientResult tokentransfer(ContractTokenTransfer form) {
+        if (form == null || form.getAmount() == null || form.getAmount().compareTo(BigInteger.ZERO) < 0) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+        }
+        TokenTransferReq req = new TokenTransferReq();
+        req.setChainId(config.getChainId());
+        req.setAddress(form.getFromAddress());
+        req.setPassword(form.getPassword());
+        req.setToAddress(form.getToAddress());
+        req.setContractAddress(form.getContractAddress());
+        req.setAmount(form.getAmount().toString());
+        req.setRemark(form.getRemark());
+        Result<String> result = contractProvider.tokenTransfer(req);
+        RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
+        if(clientResult.isSuccess()) {
+            String hash = (String) clientResult.getData();
+            return clientResult.resultMap().map("txHash", hash).mapToData();
+        }
+        return clientResult;
+    }
+
+
+    @POST
+    @Path("/transfer2contract")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "从账户地址向合约地址转账(主链资产)的合约交易")
+    @Parameters({
+        @Parameter(parameterName = "向合约地址转账", parameterDes = "向合约地址转账表单", requestType = @TypeDescriptor(value = ContractTransfer.class))
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+        @Key(name = "txHash", description = "交易hash")
+    }))
+    public RpcClientResult tokentransfer(ContractTransfer form) {
+        if (form == null || form.getAmount() == null || form.getAmount().compareTo(BigInteger.ZERO) < 0) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+        }
+        TransferToContractReq req = new TransferToContractReq(
+                form.getFromAddress(),
+                form.getToAddress(),
+                form.getAmount(),
+                form.getPassword(),
+                form.getRemark());
+        req.setChainId(config.getChainId());
+        Result<String> result = contractProvider.transferToContract(req);
+        RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
+        if(clientResult.isSuccess()) {
+            String hash = (String) clientResult.getData();
+            return clientResult.resultMap().map("txHash", hash).mapToData();
+        }
+        return clientResult;
+    }
+
+    @POST
     @Path("/delete")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "单笔转账")
+    @ApiOperation(description = "删除合约")
     @Parameters({
             @Parameter(parameterName = "删除合约", parameterDes = "删除合约表单", requestType = @TypeDescriptor(value = ContractDelete.class))
     })
@@ -182,7 +244,7 @@ public class ContractResource {
             @Parameter(parameterName = "address", parameterDes = "合约地址")
     })
     @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = ContractInfoDto.class))
-    public RpcClientResult getContractInfo(@PathParam("address") String address) {
+    public RpcClientResult getContractDetailInfo(@PathParam("address") String address) {
         if (address == null) {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
         }
@@ -206,5 +268,113 @@ public class ContractResource {
         Result<Map> result = contractTools.getContractResult(config.getChainId(), hash);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
         return clientResult;
+    }
+
+
+    @POST
+    @Path("/create/offline")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "离线组装 - 发布合约的交易")
+    @Parameters(value = {
+        @Parameter(parameterName = "发布合约离线交易", parameterDes = "发布合约离线交易表单", requestType = @TypeDescriptor(value = ContractCreateOffline.class))
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+        @Key(name = "hash", description = "交易hash"),
+        @Key(name = "txHex", description = "交易序列化字符串"),
+        @Key(name = "contractAddress", description = "生成的合约地址")
+    }))
+    public RpcClientResult createTxOffline(ContractCreateOffline form) {
+        io.nuls.core.basic.Result<Map> result = NulsSDKTool.createTxOffline(
+                form.getSender(),
+                form.getAlias(),
+                form.getContractCode(),
+                form.getArgs(),
+                form.getRemark());
+        return ResultUtil.getRpcClientResult(result);
+    }
+
+
+    @POST
+    @Path("/call/offline")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "离线组装 - 调用合约的交易")
+    @Parameters(value = {
+        @Parameter(parameterName = "调用合约离线交易", parameterDes = "调用合约离线交易表单", requestType = @TypeDescriptor(value = ContractCallOffline.class))
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+        @Key(name = "hash", description = "交易hash"),
+        @Key(name = "txHex", description = "交易序列化字符串")
+    }))
+    public RpcClientResult callTxOffline(ContractCallOffline form) {
+        io.nuls.core.basic.Result<Map> result = NulsSDKTool.callTxOffline(
+                form.getSender(),
+                form.getValue(),
+                form.getContractAddress(),
+                form.getMethodName(),
+                form.getMethodDesc(),
+                form.getArgs(),
+                form.getRemark());
+        return ResultUtil.getRpcClientResult(result);
+    }
+
+
+    @POST
+    @Path("/delete/offline")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "离线组装 - 删除合约交易")
+    @Parameters(value = {
+        @Parameter(parameterName = "删除合约离线交易", parameterDes = "删除合约离线交易表单", requestType = @TypeDescriptor(value = ContractDeleteOffline.class))
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+        @Key(name = "hash", description = "交易hash"),
+        @Key(name = "txHex", description = "交易序列化字符串")
+    }))
+    public RpcClientResult deleteTxOffline(ContractDeleteOffline form) {
+        io.nuls.core.basic.Result<Map> result = NulsSDKTool.deleteTxOffline(
+                form.getSender(),
+                form.getContractAddress(),
+                form.getRemark());
+        return ResultUtil.getRpcClientResult(result);
+    }
+
+    @POST
+    @Path("/tokentransfer/offline")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "离线组装 - token转账交易")
+    @Parameters(value = {
+        @Parameter(parameterName = "token转账离线交易", parameterDes = "token转账离线交易表单", requestType = @TypeDescriptor(value = ContractTokenTransferOffline.class))
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+        @Key(name = "hash", description = "交易hash"),
+        @Key(name = "txHex", description = "交易序列化字符串")
+    }))
+    public RpcClientResult tokenTransferOffline(ContractTokenTransferOffline form) {
+        io.nuls.core.basic.Result<Map> result = NulsSDKTool.tokenTransfer(
+                form.getFromAddress(),
+                form.getToAddress(),
+                form.getContractAddress(),
+                form.getAmount(),
+                form.getRemark());
+        return ResultUtil.getRpcClientResult(result);
+    }
+
+    @POST
+    @Path("/transfer2contract/offline")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "离线组装 - 从账户地址向合约地址转账(主链资产)的合约交易")
+    @Parameters(value = {
+        @Parameter(parameterName = "向合约地址转账离线交易", parameterDes = "向合约地址转账离线交易表单", requestType = @TypeDescriptor(value = ContractTransferOffline.class))
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+        @Key(name = "hash", description = "交易hash"),
+        @Key(name = "txHex", description = "交易序列化字符串")
+    }))
+    public RpcClientResult tokenToContractOffline(ContractTransferOffline form) {
+        io.nuls.core.basic.Result<Map> result = NulsSDKTool.tokenToContract(
+                form.getFromAddress(),
+                form.getToAddress(),
+                form.getAmount(),
+                form.getRemark());
+        return ResultUtil.getRpcClientResult(result);
     }
 }

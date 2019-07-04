@@ -24,24 +24,42 @@
  */
 package io.nuls.model.form.contract;
 
+
 import io.nuls.core.rpc.model.ApiModel;
 import io.nuls.core.rpc.model.ApiModelProperty;
 import io.nuls.model.form.Base;
+import io.nuls.utils.ContractUtil;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigInteger;
+
+/**
+ * @author: PierreLuo
+ * @date: 2019-07-04
+ */
 @Data
 @NoArgsConstructor
 @ApiModel
-public class ContractDelete extends Base {
+public class ContractCallOffline extends Base {
 
-    @ApiModelProperty(description = "交易创建者", required = true)
+    @ApiModelProperty(description = "交易创建者")
     private String sender;
     @ApiModelProperty(description = "智能合约地址", required = true)
     private String contractAddress;
-    @ApiModelProperty(description = "交易创建者账户密码", required = true)
-    private String password;
+    @ApiModelProperty(description = "调用者向合约地址转入的主网资产金额，没有此业务时填0")
+    private BigInteger value;
+    @ApiModelProperty(description = "方法名", required = true)
+    private String methodName;
+    @ApiModelProperty(description = "方法描述，若合约内方法没有重载，则此参数可以为空", required = false)
+    private String methodDesc;
+    @ApiModelProperty(description = "参数列表", required = false)
+    private Object[] args;
     @ApiModelProperty(description = "备注", required = false)
     private String remark;
+
+    public String[][] getArgs(String[] types) {
+        return ContractUtil.twoDimensionalArray(args, types);
+    }
 
 }

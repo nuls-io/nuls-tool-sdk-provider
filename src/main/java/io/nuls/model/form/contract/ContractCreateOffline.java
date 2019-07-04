@@ -24,24 +24,37 @@
  */
 package io.nuls.model.form.contract;
 
+
 import io.nuls.core.rpc.model.ApiModel;
 import io.nuls.core.rpc.model.ApiModelProperty;
 import io.nuls.model.form.Base;
+import io.nuls.utils.ContractUtil;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * @author: PierreLuo
+ * @date: 2019-07-04
+ */
 @Data
 @NoArgsConstructor
 @ApiModel
-public class ContractDelete extends Base {
+public class ContractCreateOffline extends Base {
 
-    @ApiModelProperty(description = "交易创建者", required = true)
+    @ApiModelProperty(description = "交易创建者")
     private String sender;
-    @ApiModelProperty(description = "智能合约地址", required = true)
-    private String contractAddress;
-    @ApiModelProperty(description = "交易创建者账户密码", required = true)
-    private String password;
+    @ApiModelProperty(description = "合约别名")
+    private String alias;
+    @ApiModelProperty(description = "智能合约代码(字节码的Hex编码字符串)")
+    private String contractCode;
+    @ApiModelProperty(description = "参数列表", required = false)
+    private Object[] args;
     @ApiModelProperty(description = "备注", required = false)
     private String remark;
+
+
+    public String[][] getArgs(String[] types) {
+        return ContractUtil.twoDimensionalArray(args, types);
+    }
 
 }

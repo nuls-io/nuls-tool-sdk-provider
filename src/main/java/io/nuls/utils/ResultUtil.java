@@ -27,6 +27,7 @@ import io.nuls.base.api.provider.Result;
 import io.nuls.core.constant.CommonCodeConstanst;
 import io.nuls.core.constant.ErrorCode;
 import io.nuls.core.exception.NulsException;
+import io.nuls.core.model.StringUtils;
 import io.nuls.model.ErrorData;
 import io.nuls.model.RpcClientResult;
 
@@ -51,6 +52,21 @@ public class ResultUtil {
             }
         } while (false);
         return RpcClientResult.getSuccess(obj);
+    }
+
+    public static RpcClientResult getRpcClientResult(io.nuls.core.basic.Result result) {
+        if(result.isFailed()) {
+            String msg = result.getMsg();
+            if(msg == null) {
+                msg = "";
+            }
+            ErrorCode errorCode = result.getErrorCode();
+            if(errorCode == null) {
+                errorCode = CommonCodeConstanst.DATA_ERROR;
+            }
+            return RpcClientResult.getFailed(new ErrorData(errorCode.getCode(), errorCode.getMsg() + ";" + msg));
+        }
+        return RpcClientResult.getSuccess(result.getData());
     }
 
     public static RpcClientResult getNulsExceptionRpcClientResult(NulsException e) {
