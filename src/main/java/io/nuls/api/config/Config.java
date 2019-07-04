@@ -2,6 +2,8 @@ package io.nuls.api.config;
 
 import io.nuls.base.api.provider.Provider;
 import io.nuls.core.basic.InitializingBean;
+import io.nuls.core.basic.ModuleConfig;
+import io.nuls.core.core.annotation.Component;
 import io.nuls.core.core.annotation.Configuration;
 import io.nuls.core.core.annotation.Value;
 import io.nuls.core.exception.NulsException;
@@ -11,8 +13,11 @@ import io.nuls.core.exception.NulsException;
  * @Time: 2019-03-07 16:56
  * @Description:
  */
+@Component
 @Configuration(domain = "sdk_provider")
-public class Config implements InitializingBean {
+public class Config implements ModuleConfig {
+
+    private String providerType;
 
     private Integer mainChainId;
 
@@ -60,7 +65,11 @@ public class Config implements InitializingBean {
         this.mainChainId = mainChainId;
     }
 
-    @Override
-    public void afterPropertiesSet() throws NulsException {
+    public String getProviderType() {
+        return providerType;
+    }
+
+    public void setProviderType(String providerType) {
+        this.providerType = providerType;
     }
 }
