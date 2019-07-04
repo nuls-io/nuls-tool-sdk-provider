@@ -221,7 +221,7 @@ public class DocTool {
                 for (Method method : methods) {
                     Annotation annotation = method.getAnnotation(ApiOperation.class);
                     if (annotation == null) {
-                        return;
+                        continue;
                     }
                     ApiOperation cmdAnnotation = (ApiOperation) annotation;
                     CmdDes cmdDes = new CmdDes();
