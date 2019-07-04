@@ -33,29 +33,30 @@ import io.nuls.base.api.provider.block.facade.BlockHeaderData;
 import io.nuls.base.api.provider.block.facade.GetBlockHeaderByHashReq;
 import io.nuls.base.api.provider.block.facade.GetBlockHeaderByHeightReq;
 import io.nuls.base.api.provider.block.facade.GetBlockHeaderByLastHeightReq;
-import io.nuls.base.api.provider.transaction.TransferService;
-import io.nuls.base.api.provider.transaction.facade.TransferReq;
 import io.nuls.base.data.Block;
 import io.nuls.core.constant.CommonCodeConstanst;
-import io.nuls.core.constant.ErrorCode;
 import io.nuls.core.core.annotation.Autowired;
 import io.nuls.core.core.annotation.Component;
 import io.nuls.core.exception.NulsException;
-import io.nuls.core.rpc.model.*;
+import io.nuls.core.rpc.model.Parameter;
+import io.nuls.core.rpc.model.Parameters;
+import io.nuls.core.rpc.model.ResponseData;
+import io.nuls.core.rpc.model.TypeDescriptor;
 import io.nuls.model.ErrorData;
 import io.nuls.model.RpcClientResult;
 import io.nuls.model.annotation.Api;
 import io.nuls.model.annotation.ApiOperation;
 import io.nuls.model.dto.block.BlockDto;
 import io.nuls.model.dto.block.BlockHeaderDto;
-import io.nuls.model.form.TransferForm;
 import io.nuls.rpctools.BlockTools;
 import io.nuls.utils.Log;
 import io.nuls.utils.ResultUtil;
 
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.util.Map;
 
 /**
  * @author: PierreLuo
@@ -86,7 +87,9 @@ public class BlockResource {
         if (height == null || height < 0) {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
         }
-        Result<BlockHeaderData> result = blockService.getBlockHeaderByHeight(new GetBlockHeaderByHeightReq(height));
+        GetBlockHeaderByHeightReq req = new GetBlockHeaderByHeightReq(height);
+        req.setChainId(config.getChainId());
+        Result<BlockHeaderData> result = blockService.getBlockHeaderByHeight(req);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
         if (clientResult.isSuccess() && clientResult.getData() != null) {
             BlockHeaderDto dto = new BlockHeaderDto();
@@ -109,7 +112,9 @@ public class BlockResource {
         if (hash == null) {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
         }
-        Result<BlockHeaderData> result = blockService.getBlockHeaderByHash(new GetBlockHeaderByHashReq(hash));
+        GetBlockHeaderByHashReq req = new GetBlockHeaderByHashReq(hash);
+        req.setChainId(config.getChainId());
+        Result<BlockHeaderData> result = blockService.getBlockHeaderByHash(req);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
         if (clientResult.isSuccess() && clientResult.getData() != null) {
             BlockHeaderDto dto = new BlockHeaderDto();
@@ -126,7 +131,9 @@ public class BlockResource {
     @ApiOperation(description = "查询最新区块头信息")
     @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = BlockHeaderDto.class))
     public RpcClientResult getBestBlockHeader() {
-        Result<BlockHeaderData> result = blockService.getBlockHeaderByLastHeight(new GetBlockHeaderByLastHeightReq());
+        GetBlockHeaderByLastHeightReq req = new GetBlockHeaderByLastHeightReq();
+        req.setChainId(config.getChainId());
+        Result<BlockHeaderData> result = blockService.getBlockHeaderByLastHeight(req);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
         if (clientResult.isSuccess()) {
             BlockHeaderDto dto = new BlockHeaderDto();
@@ -168,7 +175,7 @@ public class BlockResource {
         if (height == null || height < 0) {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
         }
-        Result<Block> result = blockTools.getBlockByHeight(Context.getChainId(), height);
+        Result<Block> result = blockTools.getBlockByHeight(config.getChainId(), height);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
         if (clientResult.isSuccess()) {
             try {
@@ -195,7 +202,7 @@ public class BlockResource {
         if (hash == null) {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
         }
-        Result<Block> result = blockTools.getBlockByHash(Context.getChainId(), hash);
+        Result<Block> result = blockTools.getBlockByHash(config.getChainId(), hash);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
         if (clientResult.isSuccess()) {
             try {

@@ -90,7 +90,7 @@ public class ConsensusResource {
                 form.getCommissionRate(),
                 new BigInteger(form.getDeposit()),
                 form.getPassword());
-        req.setChainId(form.getChainId());
+        req.setChainId(config.getChainId());
         Result<String> result = consensusProvider.createAgent(req);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
         if(clientResult.isSuccess()) {
@@ -116,7 +116,7 @@ public class ConsensusResource {
         StopAgentReq req = new StopAgentReq(
                 form.getAddress(),
                 form.getPassword());
-        req.setChainId(form.getChainId());
+        req.setChainId(config.getChainId());
         Result<String> result = consensusProvider.stopAgent(req);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
         if(clientResult.isSuccess()) {
@@ -144,7 +144,7 @@ public class ConsensusResource {
                 form.getAgentHash(),
                 new BigInteger(form.getDeposit()),
                 form.getPassword());
-        req.setChainId(form.getChainId());
+        req.setChainId(config.getChainId());
         Result<String> result = consensusProvider.depositToAgent(req);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
         if(clientResult.isSuccess()) {
@@ -171,7 +171,7 @@ public class ConsensusResource {
                 form.getAddress(),
                 form.getTxHash(),
                 form.getPassword());
-        req.setChainId(form.getChainId());
+        req.setChainId(config.getChainId());
         Result<String> result = consensusProvider.withdraw(req);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
         if(clientResult.isSuccess()) {

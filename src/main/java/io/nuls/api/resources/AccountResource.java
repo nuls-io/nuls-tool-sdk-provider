@@ -24,12 +24,13 @@
 package io.nuls.api.resources;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.nuls.api.config.Context;
+import io.nuls.api.config.Config;
 import io.nuls.base.api.provider.Result;
 import io.nuls.base.api.provider.ServiceManager;
 import io.nuls.base.api.provider.account.AccountService;
 import io.nuls.base.api.provider.account.facade.*;
 import io.nuls.core.constant.CommonCodeConstanst;
+import io.nuls.core.core.annotation.Autowired;
 import io.nuls.core.core.annotation.Component;
 import io.nuls.core.crypto.HexUtil;
 import io.nuls.core.parse.JSONUtils;
@@ -46,11 +47,12 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
-
-import static io.nuls.api.config.Context.getChainId;
 
 /**
  * @author: PierreLuo
@@ -60,6 +62,9 @@ import static io.nuls.api.config.Context.getChainId;
 @Component
 @Api
 public class AccountResource {
+
+    @Autowired
+    Config config;
 
     AccountService accountService = ServiceManager.get(AccountService.class);
 
@@ -77,7 +82,7 @@ public class AccountResource {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
         }
         CreateAccountReq req = new CreateAccountReq(form.getCount(), form.getPassword());
-        req.setChainId(form.getChainId());
+        req.setChainId(config.getChainId());
         Result<String> result = accountService.createAccount(req);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
         if(clientResult.isSuccess()) {
@@ -102,7 +107,7 @@ public class AccountResource {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
         }
         UpdatePasswordReq req = new UpdatePasswordReq(address, form.getPassword(), form.getNewPassword());
-        req.setChainId(getChainId());
+        req.setChainId(config.getChainId());
         Result<Boolean> result = accountService.updatePassword(req);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
         if(clientResult.isSuccess()) {
@@ -126,7 +131,7 @@ public class AccountResource {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
         }
         ImportAccountByPrivateKeyReq req = new ImportAccountByPrivateKeyReq(form.getPassword(), form.getPriKey(), form.getOverwrite());
-        req.setChainId(getChainId());
+        req.setChainId(config.getChainId());
         Result<String> result = accountService.importAccountByPrivateKey(req);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
         if(clientResult.isSuccess()) {
@@ -159,7 +164,7 @@ public class AccountResource {
         AccountKeyStoreDto dto = dtoResult.getData();
         try {
             ImportAccountByKeyStoreReq req = new ImportAccountByKeyStoreReq(password, HexUtil.encode(JSONUtils.obj2json(dto).getBytes()), overwrite);
-            req.setChainId(getChainId());
+            req.setChainId(config.getChainId());
             Result<String> result = accountService.importAccountByKeyStore(req);
             RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
             if(clientResult.isSuccess()) {
@@ -187,7 +192,7 @@ public class AccountResource {
         }
         String keystore = accountService.getAccountKeystoreDto(form.getPath());
         ImportAccountByKeyStoreReq req = new ImportAccountByKeyStoreReq(form.getPassword(), HexUtil.encode(keystore.getBytes()), form.getOverwrite());
-        req.setChainId(getChainId());
+        req.setChainId(config.getChainId());
         Result<String> result = accountService.importAccountByKeyStore(req);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
         if(clientResult.isSuccess()) {
@@ -212,7 +217,7 @@ public class AccountResource {
         }
         String keystore = form.getKeystoreString();
         ImportAccountByKeyStoreReq req = new ImportAccountByKeyStoreReq(form.getPassword(), HexUtil.encode(keystore.getBytes()), form.getOverwrite());
-        req.setChainId(getChainId());
+        req.setChainId(config.getChainId());
         Result<String> result = accountService.importAccountByKeyStore(req);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
         if(clientResult.isSuccess()) {
@@ -237,7 +242,7 @@ public class AccountResource {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
         }
         BackupAccountReq req = new BackupAccountReq(form.getPassword(), address, form.getPath());
-        req.setChainId(getChainId());
+        req.setChainId(config.getChainId());
         Result<String> result = accountService.backupAccount(req);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
         if(clientResult.isSuccess()) {
@@ -262,7 +267,7 @@ public class AccountResource {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
         }
         GetAccountPrivateKeyByAddressReq req = new GetAccountPrivateKeyByAddressReq(form.getPassword(), address);
-        req.setChainId(getChainId());
+        req.setChainId(config.getChainId());
         Result<String> result = accountService.getAccountPrivateKey(req);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
         if(clientResult.isSuccess()) {
