@@ -34,16 +34,14 @@ import io.nuls.core.core.annotation.Component;
 import io.nuls.core.rpc.model.*;
 import io.nuls.model.ErrorData;
 import io.nuls.model.RpcClientResult;
-import io.nuls.model.form.contract.*;
-import io.nuls.v2.model.annotation.Api;
-import io.nuls.v2.model.annotation.ApiOperation;
 import io.nuls.model.dto.ContractInfoDto;
 import io.nuls.model.dto.ContractResultDto;
 import io.nuls.model.dto.ContractTokenInfoDto;
+import io.nuls.model.form.contract.*;
 import io.nuls.rpctools.ContractTools;
 import io.nuls.utils.ResultUtil;
-import io.nuls.v2.model.dto.ContractConstructorInfoDto;
-import io.nuls.v2.service.ContractService;
+import io.nuls.v2.model.annotation.Api;
+import io.nuls.v2.model.annotation.ApiOperation;
 import io.nuls.v2.util.NulsSDKTool;
 
 import javax.ws.rs.*;
@@ -78,8 +76,14 @@ public class ContractResource {
             @Key(name = "contractAddress", description = "生成的合约地址")
     }))
     public RpcClientResult createContract(ContractCreate create) {
-        if (create == null || create.getGasLimit() < 0 || create.getPrice() < 0) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+        if (create == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form data is empty"));
+        }
+        if (create.getGasLimit() < 0) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), String.format("gasLimit [%s] is invalid", create.getGasLimit())));
+        }
+        if (create.getPrice() < 0) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), String.format("price [%s] is invalid", create.getPrice())));
         }
         CreateContractReq req = new CreateContractReq();
         req.setChainId(config.getChainId());
@@ -106,8 +110,17 @@ public class ContractResource {
             @Key(name = "txHash", description = "调用合约的交易hash")
     }))
     public RpcClientResult callContract(ContractCall call) {
-        if (call == null || call.getValue() == null || call.getValue().compareTo(BigInteger.ZERO) < 0 || call.getGasLimit() < 0 || call.getPrice() < 0) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+        if (call.getValue() == null || call.getValue().compareTo(BigInteger.ZERO) < 0) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "value is invalid"));
+        }
+        if (call == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form data is empty"));
+        }
+        if (call.getGasLimit() < 0) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), String.format("gasLimit [%s] is invalid", call.getGasLimit())));
+        }
+        if (call.getPrice() < 0) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), String.format("price [%s] is invalid", call.getPrice())));
         }
         CallContractReq req = new CallContractReq();
         req.setChainId(config.getChainId());
