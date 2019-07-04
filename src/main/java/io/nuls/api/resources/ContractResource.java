@@ -284,7 +284,7 @@ public class ContractResource {
         @Key(name = "contractAddress", description = "生成的合约地址")
     }))
     public RpcClientResult createTxOffline(ContractCreateOffline form) {
-        io.nuls.core.basic.Result<Map> result = NulsSDKTool.createTxOffline(
+        io.nuls.core.basic.Result<Map> result = NulsSDKTool.createContractTx(
                 form.getSender(),
                 form.getAlias(),
                 form.getContractCode(),
@@ -306,7 +306,7 @@ public class ContractResource {
         @Key(name = "txHex", description = "交易序列化字符串")
     }))
     public RpcClientResult callTxOffline(ContractCallOffline form) {
-        io.nuls.core.basic.Result<Map> result = NulsSDKTool.callTxOffline(
+        io.nuls.core.basic.Result<Map> result = NulsSDKTool.callContractTxOffline(
                 form.getSender(),
                 form.getValue(),
                 form.getContractAddress(),
@@ -330,7 +330,7 @@ public class ContractResource {
         @Key(name = "txHex", description = "交易序列化字符串")
     }))
     public RpcClientResult deleteTxOffline(ContractDeleteOffline form) {
-        io.nuls.core.basic.Result<Map> result = NulsSDKTool.deleteTxOffline(
+        io.nuls.core.basic.Result<Map> result = NulsSDKTool.deleteContractTxOffline(
                 form.getSender(),
                 form.getContractAddress(),
                 form.getRemark());
