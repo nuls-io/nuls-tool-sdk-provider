@@ -82,7 +82,7 @@ public class ContractResource {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
         }
         CreateContractReq req = new CreateContractReq();
-        req.setChainId(create.getChainId());
+        req.setChainId(config.getChainId());
         req.setSender(create.getSender());
         req.setPassword(create.getPassword());
         req.setPrice(create.getPrice());
@@ -110,7 +110,7 @@ public class ContractResource {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
         }
         CallContractReq req = new CallContractReq();
-        req.setChainId(call.getChainId());
+        req.setChainId(config.getChainId());
         req.setSender(call.getSender());
         req.setPassword(call.getPassword());
         req.setPrice(call.getPrice());
@@ -145,7 +145,7 @@ public class ContractResource {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
         }
         DeleteContractReq req = new DeleteContractReq(delete.getSender(), delete.getContractAddress(), delete.getPassword());
-        req.setChainId(delete.getChainId());
+        req.setChainId(config.getChainId());
         req.setRemark(delete.getRemark());
         Result<String> result = contractProvider.deleteContract(req);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
