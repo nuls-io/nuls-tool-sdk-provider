@@ -43,6 +43,7 @@ import io.nuls.model.dto.AccountKeyStoreDto;
 import io.nuls.model.form.*;
 import io.nuls.utils.Log;
 import io.nuls.utils.ResultUtil;
+import io.nuls.v2.model.dto.AccountDto;
 import io.nuls.v2.util.NulsSDKTool;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -285,13 +286,13 @@ public class AccountResource {
             @Parameter(parameterName = "离线批量创建账户", parameterDes = "离线批量创建账户表单", requestType = @TypeDescriptor(value = AccountCreateForm.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
-            @Key(name = "list", valueType = List.class, valueElement = String.class, description = "账户地址")
+            @Key(name = "list", valueType = List.class, valueElement = AccountDto.class, description = "账户keystore列表")
     }))
     public RpcClientResult createOffline(AccountCreateForm form) {
         if (form == null) {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
         }
-        io.nuls.core.basic.Result<List<String>> result = NulsSDKTool.createAccount(form.getCount(), form.getPassword());
+        io.nuls.core.basic.Result<List<AccountDto>> result = NulsSDKTool.createOffLineAccount(form.getCount(), form.getPassword());
         return ResultUtil.getRpcClientResult(result);
     }
 

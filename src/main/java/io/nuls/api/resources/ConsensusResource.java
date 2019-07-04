@@ -47,6 +47,11 @@ import io.nuls.model.form.consensus.DepositForm;
 import io.nuls.model.form.consensus.StopAgentForm;
 import io.nuls.model.form.consensus.WithdrawForm;
 import io.nuls.utils.ResultUtil;
+import io.nuls.v2.model.dto.ConsensusDto;
+import io.nuls.v2.model.dto.DepositDto;
+import io.nuls.v2.model.dto.StopConsensusDto;
+import io.nuls.v2.model.dto.WithDrawDto;
+import io.nuls.v2.util.NulsSDKTool;
 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -153,6 +158,7 @@ public class ConsensusResource {
         return clientResult;
     }
 
+
     @POST
     @Path("/withdraw")
     @Produces(MediaType.APPLICATION_JSON)
@@ -178,6 +184,86 @@ public class ConsensusResource {
             return clientResult.resultMap().map("value", clientResult.getData()).mapToData();
         }
         return clientResult;
+    }
+
+
+    @POST
+    @Path("/agent/offline")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "离线组装 - 创建共识(代理)节点")
+    @Parameters({
+            @Parameter(parameterName = "离线创建共识(代理)节点", parameterDes = "离线创建共识(代理)节点表单", requestType = @TypeDescriptor(value = ConsensusDto.class))
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "hash", description = "交易hash"),
+            @Key(name = "txHex", description = "交易序列化字符串")
+    }))
+    public RpcClientResult createAgentOffline(ConsensusDto form) {
+        if (form == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+        }
+        io.nuls.core.basic.Result result = NulsSDKTool.createConsensusTx(form);
+        return ResultUtil.getRpcClientResult(result);
+    }
+
+
+    @POST
+    @Path("/agent/stop/offline")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "离线组装 - 注销共识节点")
+    @Parameters({
+            @Parameter(parameterName = "离线注销共识节点", parameterDes = "离线注销共识节点表单", requestType = @TypeDescriptor(value = StopConsensusDto.class))
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "hash", description = "交易hash"),
+            @Key(name = "txHex", description = "交易序列化字符串")
+    }))
+    public RpcClientResult stopAgentOffline(StopConsensusDto form) {
+        if (form == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+        }
+        io.nuls.core.basic.Result result = NulsSDKTool.createStopConsensusTx(form);
+        return ResultUtil.getRpcClientResult(result);
+    }
+
+
+    @POST
+    @Path("/deposit/offline")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "离线组装 - 申请参与共识")
+    @Parameters({
+            @Parameter(parameterName = "离线申请参与共识", parameterDes = "离线申请参与共识表单", requestType = @TypeDescriptor(value = DepositDto.class))
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "hash", description = "交易hash"),
+            @Key(name = "txHex", description = "交易序列化字符串")
+    }))
+    public RpcClientResult depositToAgentOffline(DepositDto form) {
+        if (form == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+        }
+        io.nuls.core.basic.Result result = NulsSDKTool.createDepositTx(form);
+        return ResultUtil.getRpcClientResult(result);
+    }
+
+
+    @POST
+    @Path("/withdraw/offline")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "离线组装 - 退出共识")
+    @Parameters({
+            @Parameter(parameterName = "离线退出共识", parameterDes = "离线退出共识表单", requestType = @TypeDescriptor(value = WithDrawDto.class))
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "hash", description = "交易hash"),
+            @Key(name = "txHex", description = "交易序列化字符串")
+    }))
+    public RpcClientResult withdrawOffline(WithDrawDto form) {
+        if (form == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+        }
+        io.nuls.core.basic.Result result = NulsSDKTool.createWithdrawDepositTx(form);
+        return ResultUtil.getRpcClientResult(result);
     }
 
 }
