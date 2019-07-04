@@ -55,16 +55,16 @@ public class ContractTools implements CallRpc {
         }
     }
 
-    public Result<ContractResultDto> getContractResult(int chainId, String hash) {
+    public Result<Map> getContractResult(int chainId, String hash) {
         Map<String, Object> params = new HashMap(4);
         params.put(Constants.CHAIN_ID, chainId);
         params.put("hash", hash);
         try {
-            return  callRpc(ModuleE.SC.abbr, CONTRACT_RESULT, params,(Function<Map<String,Object>, Result<ContractResultDto>>) res->{
+            return  callRpc(ModuleE.SC.abbr, CONTRACT_RESULT, params,(Function<Map<String,Object>, Result<Map>>) res->{
                 if(res == null){
                     return new Result();
                 }
-                return new Result(MapUtils.mapToBean(res, new ContractResultDto()));
+                return new Result(res);
             });
         } catch (NulsRuntimeException e) {
             return Result.fail(e.getCode(), e.getMessage());

@@ -29,9 +29,14 @@ import io.nuls.core.core.annotation.Controller;
 import io.nuls.core.core.annotation.RpcMethod;
 import io.nuls.core.exception.NulsException;
 import io.nuls.core.model.StringUtils;
+import io.nuls.core.rpc.model.*;
 import io.nuls.model.annotation.Api;
+import io.nuls.model.annotation.ApiOperation;
 import io.nuls.model.annotation.ApiType;
+import io.nuls.model.dto.ContractConstructorInfoDto;
+import io.nuls.model.dto.ContractInfoDto;
 import io.nuls.model.dto.ContractResultDto;
+import io.nuls.model.dto.ProgramMethod;
 import io.nuls.model.jsonrpc.RpcErrorCode;
 import io.nuls.model.jsonrpc.RpcResult;
 import io.nuls.model.jsonrpc.RpcResultError;
@@ -39,6 +44,7 @@ import io.nuls.rpctools.ContractTools;
 import io.nuls.utils.Log;
 import io.nuls.utils.VerifyUtils;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +61,12 @@ public class ContractController {
     private ContractTools contractTools;
 
     @RpcMethod("getContract")
+    @ApiOperation(description = "获取智能合约详细信息")
+    @Parameters(value = {
+        @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
+        @Parameter(parameterName = "contractAddress", parameterDes = "合约地址")
+    })
+    @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = ContractInfoDto.class))
     public RpcResult getContract(List<Object> params) {
         VerifyUtils.verifyParams(params, 2);
         int chainId;
@@ -88,6 +100,11 @@ public class ContractController {
     }
 
     @RpcMethod("getContractTxResult")
+    @ApiOperation(description = "获取智能合约执行结果")
+    @Parameters({
+        @Parameter(parameterName = "hash", parameterDes = "交易hash")
+    })
+    @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = ContractResultDto.class))
     public RpcResult getContractResult(List<Object> params) {
         VerifyUtils.verifyParams(params, 2);
         int chainId;
@@ -107,20 +124,23 @@ public class ContractController {
             return RpcResult.dataNotFound();
         }
         RpcResult rpcResult = new RpcResult();
-        Result<ContractResultDto> contractResult = contractTools.getContractResult(chainId, hash);
+        Result<Map> contractResult = contractTools.getContractResult(chainId, hash);
         if (contractResult.isFailed()) {
             return rpcResult.setError(new RpcResultError(contractResult.getStatus(), contractResult.getMessage(), null));
         }
-        ContractResultDto dto = contractResult.getData();
+        Map dto = contractResult.getData();
         rpcResult.setResult(dto);
         return rpcResult;
     }
 
-    /**
-     * 获取合约代码构造函数
-     */
     @RpcMethod("getContractConstructor")
-    public RpcResult getContractConstructor(List<Object> params) throws NulsException {
+    @ApiOperation(description = "获取合约代码构造函数")
+    @Parameters({
+        @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
+        @Parameter(parameterName = "contractCode", parameterDes = "智能合约代码(字节码的Hex编码字符串)")
+    })
+    @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = ContractConstructorInfoDto.class))
+    public RpcResult getContractConstructor(List<Object> params) {
         VerifyUtils.verifyParams(params, 2);
         int chainId;
         String contractCode;
@@ -151,13 +171,15 @@ public class ContractController {
         return rpcResult;
     }
 
-    /**
-     * 获取合约方法信息
-     *
-     * @param params
-     * @return
-     */
     @RpcMethod("getContractMethod")
+    @ApiOperation(description = "获取合约方法信息")
+    @Parameters({
+        @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
+        @Parameter(parameterName = "contractAddress", parameterDes = "合约地址"),
+        @Parameter(parameterName = "methodName", parameterDes = "方法名称"),
+        @Parameter(parameterName = "methodDesc", parameterDes = "方法描述", canNull = true)
+    })
+    @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = ProgramMethod.class))
     public RpcResult getContractMethod(List<Object> params) {
         VerifyUtils.verifyParams(params, 3);
         int chainId;
@@ -224,10 +246,15 @@ public class ContractController {
         }
     }
 
-    /**
-     * 获取合约方法参数类型
-     */
     @RpcMethod("getContractMethodArgsTypes")
+    @ApiOperation(description = "获取合约方法参数类型")
+    @Parameters({
+        @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
+        @Parameter(parameterName = "contractAddress", parameterDes = "合约地址"),
+        @Parameter(parameterName = "methodName", parameterDes = "方法名称"),
+        @Parameter(parameterName = "methodDesc", parameterDes = "方法描述", canNull = true)
+    })
+    @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = List.class, collectionElement = String.class))
     public RpcResult getContractMethodArgsTypes(List<Object> params) {
         RpcResult result = this.getContractMethod(params);
         if(result.getError() != null) {
@@ -253,14 +280,22 @@ public class ContractController {
         }
     }
 
-    /**
-     * 验证创建合约
-     *
-     * @param params
-     * @return
-     */
     @RpcMethod("validateContractCreate")
-    public RpcResult validateContractCreate(List<Object> params) throws NulsException {
+    @ApiOperation(description = "验证发布合约")
+    @Parameters(value = {
+        @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链id"),
+        @Parameter(parameterName = "sender", parameterDes = "交易创建者账户地址"),
+        @Parameter(parameterName = "gasLimit", requestType = @TypeDescriptor(value = long.class), parameterDes = "GAS限制"),
+        @Parameter(parameterName = "price", requestType = @TypeDescriptor(value = long.class), parameterDes = "GAS单价"),
+        @Parameter(parameterName = "contractCode", parameterDes = "智能合约代码(字节码的Hex编码字符串)"),
+        @Parameter(parameterName = "args", requestType = @TypeDescriptor(value = Object[].class), parameterDes = "参数列表", canNull = true)
+    })
+    @ResponseData(name = "返回值", description = "返回消耗的gas值", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+        @Key(name = "success", valueType = boolean.class, description = "验证成功与否"),
+        @Key(name = "code", description = "验证失败的错误码"),
+        @Key(name = "msg", description = "验证失败的错误信息")
+    }))
+    public RpcResult validateContractCreate(List<Object> params) {
         VerifyUtils.verifyParams(params, 6);
         int chainId;
         try {
@@ -283,14 +318,26 @@ public class ContractController {
         return rpcResult;
     }
 
-    /**
-     * 验证调用合约
-     *
-     * @param params
-     * @return
-     */
+
     @RpcMethod("validateContractCall")
-    public RpcResult validateContractCall(List<Object> params) throws NulsException {
+    @ApiOperation(description = "验证调用合约")
+    @Parameters(value = {
+        @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链id"),
+        @Parameter(parameterName = "sender", parameterDes = "交易创建者账户地址"),
+        @Parameter(parameterName = "value", requestType = @TypeDescriptor(value = BigInteger.class), parameterDes = "调用者向合约地址转入的主网资产金额，没有此业务时填BigInteger.ZERO"),
+        @Parameter(parameterName = "gasLimit", requestType = @TypeDescriptor(value = long.class), parameterDes = "GAS限制"),
+        @Parameter(parameterName = "price", requestType = @TypeDescriptor(value = long.class), parameterDes = "GAS单价"),
+        @Parameter(parameterName = "contractAddress", parameterDes = "合约地址"),
+        @Parameter(parameterName = "methodName", parameterDes = "合约方法"),
+        @Parameter(parameterName = "methodDesc", parameterDes = "合约方法描述，若合约内方法没有重载，则此参数可以为空", canNull = true),
+        @Parameter(parameterName = "args", requestType = @TypeDescriptor(value = Object[].class), parameterDes = "参数列表", canNull = true)
+    })
+    @ResponseData(name = "返回值", description = "返回消耗的gas值", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+        @Key(name = "success", valueType = boolean.class, description = "验证成功与否"),
+        @Key(name = "code", description = "验证失败的错误码"),
+        @Key(name = "msg", description = "验证失败的错误信息")
+    }))
+    public RpcResult validateContractCall(List<Object> params) {
         VerifyUtils.verifyParams(params, 9);
         int chainId;
         try {
@@ -316,14 +363,19 @@ public class ContractController {
         return rpcResult;
     }
 
-    /**
-     * 验证删除合约
-     *
-     * @param params
-     * @return
-     */
     @RpcMethod("validateContractDelete")
-    public RpcResult validateContractDelete(List<Object> params) throws NulsException {
+    @ApiOperation(description = "验证删除合约")
+    @Parameters(value = {
+        @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链id"),
+        @Parameter(parameterName = "sender", parameterDes = "交易创建者账户地址"),
+        @Parameter(parameterName = "contractAddress", parameterDes = "合约地址")
+    })
+    @ResponseData(name = "返回值", description = "返回消耗的gas值", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+        @Key(name = "success", valueType = boolean.class, description = "验证成功与否"),
+        @Key(name = "code", description = "验证失败的错误码"),
+        @Key(name = "msg", description = "验证失败的错误信息")
+    }))
+    public RpcResult validateContractDelete(List<Object> params) {
         VerifyUtils.verifyParams(params, 3);
         int chainId;
         try {
@@ -343,14 +395,18 @@ public class ContractController {
         return rpcResult;
     }
 
-    /**
-     * 预估创建合约交易的gas
-     *
-     * @param params
-     * @return
-     */
     @RpcMethod("imputedContractCreateGas")
-    public RpcResult imputedContractCreateGas(List<Object> params) throws NulsException {
+    @ApiOperation(description = "估算发布合约交易的GAS")
+    @Parameters(value = {
+        @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链id"),
+        @Parameter(parameterName = "sender", parameterDes = "交易创建者账户地址"),
+        @Parameter(parameterName = "contractCode", parameterDes = "智能合约代码(字节码的Hex编码字符串)"),
+        @Parameter(parameterName = "args", requestType = @TypeDescriptor(value = Object[].class), parameterDes = "参数列表", canNull = true)
+    })
+    @ResponseData(name = "返回值", description = "返回消耗的gas值", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+        @Key(name = "gasLimit", valueType = Long.class, description = "消耗的gas值，执行失败返回数值1")
+    }))
+    public RpcResult imputedContractCreateGas(List<Object> params) {
         VerifyUtils.verifyParams(params, 4);
         int chainId;
         try {
@@ -371,14 +427,21 @@ public class ContractController {
         return rpcResult;
     }
 
-    /**
-     * 预估调用合约交易的gas
-     *
-     * @param params
-     * @return
-     */
     @RpcMethod("imputedContractCallGas")
-    public RpcResult imputedContractCallGas(List<Object> params) throws NulsException {
+    @ApiOperation(description = "估算调用合约交易的GAS")
+    @Parameters(value = {
+        @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链id"),
+        @Parameter(parameterName = "sender", parameterDes = "交易创建者账户地址"),
+        @Parameter(parameterName = "value", requestType = @TypeDescriptor(value = BigInteger.class), parameterDes = "调用者向合约地址转入的主网资产金额，没有此业务时填BigInteger.ZERO"),
+        @Parameter(parameterName = "contractAddress", parameterDes = "合约地址"),
+        @Parameter(parameterName = "methodName", parameterDes = "合约方法"),
+        @Parameter(parameterName = "methodDesc", parameterDes = "合约方法描述，若合约内方法没有重载，则此参数可以为空", canNull = true),
+        @Parameter(parameterName = "args", requestType = @TypeDescriptor(value = Object[].class), parameterDes = "参数列表", canNull = true)
+    })
+    @ResponseData(name = "返回值", description = "返回消耗的gas值", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+        @Key(name = "gasLimit", valueType = Long.class, description = "消耗的gas值，执行失败返回数值1")
+    }))
+    public RpcResult imputedContractCallGas(List<Object> params) {
         VerifyUtils.verifyParams(params, 7);
         int chainId;
         try {
@@ -402,14 +465,19 @@ public class ContractController {
         return rpcResult;
     }
 
-    /**
-     * 调用合约不上链方法
-     *
-     * @param params
-     * @return
-     */
     @RpcMethod("invokeView")
-    public RpcResult invokeView(List<Object> params) throws NulsException {
+    @ApiOperation(description = "调用合约不上链方法")
+    @Parameters(value = {
+        @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链id"),
+        @Parameter(parameterName = "contractAddress", parameterDes = "合约地址"),
+        @Parameter(parameterName = "methodName", parameterDes = "合约方法"),
+        @Parameter(parameterName = "methodDesc", parameterDes = "合约方法描述，若合约内方法没有重载，则此参数可以为空", canNull = true),
+        @Parameter(parameterName = "args", requestType = @TypeDescriptor(value = Object[].class), parameterDes = "参数列表", canNull = true)
+    })
+    @ResponseData(name = "返回值", description = "返回Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+        @Key(name = "result", description = "视图方法的调用结果")
+    }))
+    public RpcResult invokeView(List<Object> params) {
         VerifyUtils.verifyParams(params, 5);
         int chainId;
         try {

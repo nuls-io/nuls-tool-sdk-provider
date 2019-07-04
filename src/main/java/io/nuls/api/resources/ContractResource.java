@@ -203,7 +203,7 @@ public class ContractResource {
         if (hash == null) {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
         }
-        Result<ContractResultDto> result = contractTools.getContractResult(config.getChainId(), hash);
+        Result<Map> result = contractTools.getContractResult(config.getChainId(), hash);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
         return clientResult;
     }
