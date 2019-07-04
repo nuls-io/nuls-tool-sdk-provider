@@ -80,8 +80,8 @@ Modules added in the future may be release under different license, will specifi
 
 /api/tx/hash/{hash}
 ===================
-### cmdType:RESTFUL
-### httpMethod:GET
+### cmdType: RESTFUL
+### HttpMethod: GET
 根据hash获取交易，只查已确认交易
 
 参数列表
@@ -109,10 +109,30 @@ Modules added in the future may be release under different license, will specifi
 | to                                                       | list&lt;object> | 输出                                        |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lockTime |      long       | 解锁时间，-1为永久锁定                              |
 
+/api/consensus/agent/stop
+=========================
+### cmdType: RESTFUL
+### HttpMethod: POST
+注销共识节点
+
+参数列表
+----
+| 参数名                                                      |     参数类型      | 参数描述   | 是否非空 |
+| -------------------------------------------------------- |:-------------:| ------ |:----:|
+|                                                          | stopagentform | 注销共识节点 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address  |    string     | 共识节点地址 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password |    string     | 密码     |  是   |
+
+返回值
+---
+| 字段名   |  字段类型  | 参数描述   |
+| ----- |:------:| ------ |
+| value | string | 交易hash |
+
 /api/consensus/agent
 ====================
-### cmdType:RESTFUL
-### httpMethod:POST
+### cmdType: RESTFUL
+### HttpMethod: POST
 Create an agent for consensus! 创建共识(代理)节点
 
 参数列表
@@ -133,30 +153,10 @@ Create an agent for consensus! 创建共识(代理)节点
 | ----- |:------:| ------ |
 | value | string | 交易hash |
 
-/api/consensus/agent/stop
-=========================
-### cmdType:RESTFUL
-### httpMethod:POST
-注销共识节点
-
-参数列表
-----
-| 参数名                                                      |     参数类型      | 参数描述   | 是否非空 |
-| -------------------------------------------------------- |:-------------:| ------ |:----:|
-|                                                          | stopagentform | 注销共识节点 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address  |    string     | 共识节点地址 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password |    string     | 密码     |  是   |
-
-返回值
----
-| 字段名   |  字段类型  | 参数描述   |
-| ----- |:------:| ------ |
-| value | string | 交易hash |
-
 /api/consensus/deposit
 ======================
-### cmdType:RESTFUL
-### httpMethod:POST
+### cmdType: RESTFUL
+### HttpMethod: POST
 deposit nuls to a bank! 申请参与共识
 
 参数列表
@@ -177,8 +177,8 @@ deposit nuls to a bank! 申请参与共识
 
 /api/consensus/withdraw
 =======================
-### cmdType:RESTFUL
-### httpMethod:POST
+### cmdType: RESTFUL
+### HttpMethod: POST
 退出共识
 
 参数列表
@@ -198,8 +198,8 @@ deposit nuls to a bank! 申请参与共识
 
 /api/contract/create
 ====================
-### cmdType:RESTFUL
-### httpMethod:POST
+### cmdType: RESTFUL
+### HttpMethod: POST
 单笔转账
 
 参数列表
@@ -220,8 +220,8 @@ deposit nuls to a bank! 申请参与共识
 
 /api/contract/call
 ==================
-### cmdType:RESTFUL
-### httpMethod:POST
+### cmdType: RESTFUL
+### HttpMethod: POST
 单笔转账
 
 参数列表
@@ -243,8 +243,8 @@ deposit nuls to a bank! 申请参与共识
 
 /api/contract/delete
 ====================
-### cmdType:RESTFUL
-### httpMethod:POST
+### cmdType: RESTFUL
+### HttpMethod: POST
 单笔转账
 
 参数列表
@@ -265,8 +265,8 @@ deposit nuls to a bank! 申请参与共识
 
 /api/contract/result/{hash}
 ===========================
-### cmdType:RESTFUL
-### httpMethod:GET
+### cmdType: RESTFUL
+### HttpMethod: GET
 获取智能合约执行结果
 
 参数列表
@@ -319,8 +319,8 @@ deposit nuls to a bank! 申请参与共识
 
 /api/contract/info/{address}
 ============================
-### cmdType:RESTFUL
-### httpMethod:GET
+### cmdType: RESTFUL
+### HttpMethod: GET
 获取智能合约详细信息
 
 参数列表
@@ -360,8 +360,8 @@ deposit nuls to a bank! 申请参与共识
 
 /api/contract/balance/token/{contractAddress}/{address}
 =======================================================
-### cmdType:RESTFUL
-### httpMethod:GET
+### cmdType: RESTFUL
+### HttpMethod: GET
 获取账户地址的指定token余额
 
 参数列表
@@ -385,8 +385,8 @@ deposit nuls to a bank! 申请参与共识
 
 /api/account/import/pri
 =======================
-### cmdType:RESTFUL
-### httpMethod:POST
+### cmdType: RESTFUL
+### HttpMethod: POST
 根据私钥导入账户
 
 参数列表
@@ -406,8 +406,8 @@ deposit nuls to a bank! 申请参与共识
 
 /api/account/import/pri
 =======================
-### cmdType:RESTFUL
-### httpMethod:POST
+### cmdType: RESTFUL
+### HttpMethod: POST
 批量创建账户
 
 参数列表
@@ -426,8 +426,8 @@ deposit nuls to a bank! 申请参与共识
 
 /api/account/prikey/{address}
 =============================
-### cmdType:RESTFUL
-### httpMethod:POST
+### cmdType: RESTFUL
+### HttpMethod: POST
 账户备份，导出账户私钥，只能导出本地创建或导入的账户
 
 参数列表
@@ -444,31 +444,10 @@ deposit nuls to a bank! 申请参与共识
 | ----- |:------:| ---- |
 | value | string | 私钥   |
 
-/api/account/password/{address}
-===============================
-### cmdType:RESTFUL
-### httpMethod:PUT
-[修改密码] 根据原密码修改账户密码
-
-参数列表
-----
-| 参数名                                                         |           参数类型            | 参数描述   | 是否非空 |
-| ----------------------------------------------------------- |:-------------------------:| ------ |:----:|
-|                                                             |          string           | 账户地址   |  是   |
-|                                                             | accountupdatepasswordform | 账户密码信息 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password    |          string           | 原始密码   |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;newPassword |          string           | 新密码    |  是   |
-
-返回值
----
-| 字段名   |  字段类型   | 参数描述   |
-| ----- |:-------:| ------ |
-| value | boolean | 是否修改成功 |
-
 /api/account/import/keystore
 ============================
-### cmdType:RESTFUL
-### httpMethod:POST
+### cmdType: RESTFUL
+### HttpMethod: POST
 根据AccountKeyStore导入账户
 
 参数列表
@@ -486,8 +465,8 @@ deposit nuls to a bank! 申请参与共识
 
 /api/account/import/keystore/path
 =================================
-### cmdType:RESTFUL
-### httpMethod:POST
+### cmdType: RESTFUL
+### HttpMethod: POST
 根据keystore文件路径导入账户
 
 参数列表
@@ -507,8 +486,8 @@ deposit nuls to a bank! 申请参与共识
 
 /api/account/import/keystore/string
 ===================================
-### cmdType:RESTFUL
-### httpMethod:POST
+### cmdType: RESTFUL
+### HttpMethod: POST
 根据keystore字符串导入账户
 
 参数列表
@@ -528,8 +507,8 @@ deposit nuls to a bank! 申请参与共识
 
 /api/account/export/{address}
 =============================
-### cmdType:RESTFUL
-### httpMethod:POST
+### cmdType: RESTFUL
+### HttpMethod: POST
 账户备份，导出AccountKeyStore文件到指定目录
 
 参数列表
@@ -547,10 +526,128 @@ deposit nuls to a bank! 申请参与共识
 | ---- |:------:| ------- |
 | path | string | 导出的文件路径 |
 
+/api/account/password/{address}
+===============================
+### cmdType: RESTFUL
+### HttpMethod: PUT
+[修改密码] 根据原密码修改账户密码
+
+参数列表
+----
+| 参数名                                                         |           参数类型            | 参数描述   | 是否非空 |
+| ----------------------------------------------------------- |:-------------------------:| ------ |:----:|
+|                                                             |          string           | 账户地址   |  是   |
+|                                                             | accountupdatepasswordform | 账户密码信息 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password    |          string           | 原始密码   |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;newPassword |          string           | 新密码    |  是   |
+
+返回值
+---
+| 字段名   |  字段类型   | 参数描述   |
+| ----- |:-------:| ------ |
+| value | boolean | 是否修改成功 |
+
+/api/block/header/newest
+========================
+### cmdType: RESTFUL
+### HttpMethod: GET
+查询最新区块头信息
+
+参数列表
+----
+无参数
+
+返回值
+---
+| 字段名                  |  字段类型  | 参数描述                 |
+| -------------------- |:------:| -------------------- |
+| hash                 | string | 区块的hash值             |
+| preHash              | string | 上一个区块的hash值          |
+| merkleHash           | string | 梅克尔hash              |
+| time                 | string | 区块生成时间               |
+| height               |  long  | 区块高度                 |
+| txCount              |  int   | 区块打包交易数量             |
+| blockSignature       | string | 签名Hex.encode(byte[]) |
+| size                 |  int   | 大小                   |
+| packingAddress       | string | 打包地址                 |
+| roundIndex           |  long  | 共识轮次                 |
+| consensusMemberCount |  int   | 参与共识成员数量             |
+| roundStartTime       | string | 当前共识轮开始时间            |
+| packingIndexOfRound  |  int   | 当前轮次打包出块的名次          |
+| mainVersion          | short  | 主网当前生效的版本            |
+| blockVersion         | short  | 区块的版本，可以理解为本地钱包的版本   |
+| stateRoot            | string | 智能合约世界状态根            |
+
+/api/block/hash/{hash}
+======================
+### cmdType: RESTFUL
+### HttpMethod: GET
+根据区块hash查询区块，包含区块打包的所有交易信息，此接口返回数据量较多，谨慎调用
+
+参数列表
+----
+| 参数名  |  参数类型  | 参数描述   | 是否非空 |
+| ---- |:------:| ------ |:----:|
+| hash | string | 区块hash |  是   |
+
+返回值
+---
+| 字段名                  |  字段类型  | 参数描述                 |
+| -------------------- |:------:| -------------------- |
+| hash                 | string | 区块的hash值             |
+| preHash              | string | 上一个区块的hash值          |
+| merkleHash           | string | 梅克尔hash              |
+| time                 | string | 区块生成时间               |
+| height               |  long  | 区块高度                 |
+| txCount              |  int   | 区块打包交易数量             |
+| blockSignature       | string | 签名Hex.encode(byte[]) |
+| size                 |  int   | 大小                   |
+| packingAddress       | string | 打包地址                 |
+| roundIndex           |  long  | 共识轮次                 |
+| consensusMemberCount |  int   | 参与共识成员数量             |
+| roundStartTime       | string | 当前共识轮开始时间            |
+| packingIndexOfRound  |  int   | 当前轮次打包出块的名次          |
+| mainVersion          | short  | 主网当前生效的版本            |
+| blockVersion         | short  | 区块的版本，可以理解为本地钱包的版本   |
+| stateRoot            | string | 智能合约世界状态根            |
+
+/api/block/height/{height}
+==========================
+### cmdType: RESTFUL
+### HttpMethod: GET
+根据区块高度查询区块，包含区块打包的所有交易信息，此接口返回数据量较多，谨慎调用
+
+参数列表
+----
+| 参数名    | 参数类型 | 参数描述 | 是否非空 |
+| ------ |:----:| ---- |:----:|
+| height | long | 区块高度 |  是   |
+
+返回值
+---
+| 字段名                  |  字段类型  | 参数描述                 |
+| -------------------- |:------:| -------------------- |
+| hash                 | string | 区块的hash值             |
+| preHash              | string | 上一个区块的hash值          |
+| merkleHash           | string | 梅克尔hash              |
+| time                 | string | 区块生成时间               |
+| height               |  long  | 区块高度                 |
+| txCount              |  int   | 区块打包交易数量             |
+| blockSignature       | string | 签名Hex.encode(byte[]) |
+| size                 |  int   | 大小                   |
+| packingAddress       | string | 打包地址                 |
+| roundIndex           |  long  | 共识轮次                 |
+| consensusMemberCount |  int   | 参与共识成员数量             |
+| roundStartTime       | string | 当前共识轮开始时间            |
+| packingIndexOfRound  |  int   | 当前轮次打包出块的名次          |
+| mainVersion          | short  | 主网当前生效的版本            |
+| blockVersion         | short  | 区块的版本，可以理解为本地钱包的版本   |
+| stateRoot            | string | 智能合约世界状态根            |
+
 /api/block/newest
 =================
-### cmdType:RESTFUL
-### httpMethod:GET
+### cmdType: RESTFUL
+### HttpMethod: GET
 查询最新区块
 
 参数列表
@@ -594,76 +691,10 @@ deposit nuls to a bank! 申请参与共识
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to                                                       | list&lt;object> | 输出                                        |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lockTime |      long       | 解锁时间，-1为永久锁定                              |
 
-/api/block/height/{height}
-==========================
-### cmdType:RESTFUL
-### httpMethod:GET
-根据区块高度查询区块，包含区块打包的所有交易信息，此接口返回数据量较多，谨慎调用
-
-参数列表
-----
-| 参数名    | 参数类型 | 参数描述 | 是否非空 |
-| ------ |:----:| ---- |:----:|
-| height | long | 区块高度 |  是   |
-
-返回值
----
-| 字段名                  |  字段类型  | 参数描述                 |
-| -------------------- |:------:| -------------------- |
-| hash                 | string | 区块的hash值             |
-| preHash              | string | 上一个区块的hash值          |
-| merkleHash           | string | 梅克尔hash              |
-| time                 | string | 区块生成时间               |
-| height               |  long  | 区块高度                 |
-| txCount              |  int   | 区块打包交易数量             |
-| blockSignature       | string | 签名Hex.encode(byte[]) |
-| size                 |  int   | 大小                   |
-| packingAddress       | string | 打包地址                 |
-| roundIndex           |  long  | 共识轮次                 |
-| consensusMemberCount |  int   | 参与共识成员数量             |
-| roundStartTime       | string | 当前共识轮开始时间            |
-| packingIndexOfRound  |  int   | 当前轮次打包出块的名次          |
-| mainVersion          | short  | 主网当前生效的版本            |
-| blockVersion         | short  | 区块的版本，可以理解为本地钱包的版本   |
-| stateRoot            | string | 智能合约世界状态根            |
-
-/api/block/hash/{hash}
-======================
-### cmdType:RESTFUL
-### httpMethod:GET
-根据区块hash查询区块，包含区块打包的所有交易信息，此接口返回数据量较多，谨慎调用
-
-参数列表
-----
-| 参数名  |  参数类型  | 参数描述   | 是否非空 |
-| ---- |:------:| ------ |:----:|
-| hash | string | 区块hash |  是   |
-
-返回值
----
-| 字段名                  |  字段类型  | 参数描述                 |
-| -------------------- |:------:| -------------------- |
-| hash                 | string | 区块的hash值             |
-| preHash              | string | 上一个区块的hash值          |
-| merkleHash           | string | 梅克尔hash              |
-| time                 | string | 区块生成时间               |
-| height               |  long  | 区块高度                 |
-| txCount              |  int   | 区块打包交易数量             |
-| blockSignature       | string | 签名Hex.encode(byte[]) |
-| size                 |  int   | 大小                   |
-| packingAddress       | string | 打包地址                 |
-| roundIndex           |  long  | 共识轮次                 |
-| consensusMemberCount |  int   | 参与共识成员数量             |
-| roundStartTime       | string | 当前共识轮开始时间            |
-| packingIndexOfRound  |  int   | 当前轮次打包出块的名次          |
-| mainVersion          | short  | 主网当前生效的版本            |
-| blockVersion         | short  | 区块的版本，可以理解为本地钱包的版本   |
-| stateRoot            | string | 智能合约世界状态根            |
-
 /api/block/header/hash/{hash}
 =============================
-### cmdType:RESTFUL
-### httpMethod:GET
+### cmdType: RESTFUL
+### HttpMethod: GET
 根据区块hash查询区块头
 
 参数列表
@@ -695,8 +726,8 @@ deposit nuls to a bank! 申请参与共识
 
 /api/block/header/height/{height}
 =================================
-### cmdType:RESTFUL
-### httpMethod:GET
+### cmdType: RESTFUL
+### HttpMethod: GET
 根据区块高度查询区块头
 
 参数列表
@@ -726,53 +757,22 @@ deposit nuls to a bank! 申请参与共识
 | blockVersion         | short  | 区块的版本，可以理解为本地钱包的版本   |
 | stateRoot            | string | 智能合约世界状态根            |
 
-/api/block/header/newest
-========================
-### cmdType:RESTFUL
-### httpMethod:GET
-查询最新区块头信息
-
-参数列表
-----
-无参数
-
-返回值
----
-| 字段名                  |  字段类型  | 参数描述                 |
-| -------------------- |:------:| -------------------- |
-| hash                 | string | 区块的hash值             |
-| preHash              | string | 上一个区块的hash值          |
-| merkleHash           | string | 梅克尔hash              |
-| time                 | string | 区块生成时间               |
-| height               |  long  | 区块高度                 |
-| txCount              |  int   | 区块打包交易数量             |
-| blockSignature       | string | 签名Hex.encode(byte[]) |
-| size                 |  int   | 大小                   |
-| packingAddress       | string | 打包地址                 |
-| roundIndex           |  long  | 共识轮次                 |
-| consensusMemberCount |  int   | 参与共识成员数量             |
-| roundStartTime       | string | 当前共识轮开始时间            |
-| packingIndexOfRound  |  int   | 当前轮次打包出块的名次          |
-| mainVersion          | short  | 主网当前生效的版本            |
-| blockVersion         | short  | 区块的版本，可以理解为本地钱包的版本   |
-| stateRoot            | string | 智能合约世界状态根            |
-
 /api/accountledger/transfer
 ===========================
-### cmdType:RESTFUL
-### httpMethod:POST
+### cmdType: RESTFUL
+### HttpMethod: POST
 单笔转账
 
 参数列表
 ----
-| 参数名                                                       |     参数类型     | 参数描述 | 是否非空 |
-| --------------------------------------------------------- |:------------:| ---- |:----:|
-|                                                           | transferform | 单笔转账 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address   |    string    | 账户地址 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;toAddress |    string    | 账户地址 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password  |    string    | 账户密码 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount    |  biginteger  | 金额   |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark    |    string    | 备注   |  是   |
+| 参数名                                                       |     参数类型     | 参数描述   | 是否非空 |
+| --------------------------------------------------------- |:------------:| ------ |:----:|
+| 单笔转账                                                      | transferform | 单笔转账表单 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address   |    string    | 账户地址   |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;toAddress |    string    | 账户地址   |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password  |    string    | 账户密码   |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount    |  biginteger  | 金额     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark    |    string    | 备注     |  是   |
 
 返回值
 ---
@@ -782,8 +782,8 @@ deposit nuls to a bank! 申请参与共识
 
 /api/accountledger/tx/{hash}
 ============================
-### cmdType:RESTFUL
-### httpMethod:GET
+### cmdType: RESTFUL
+### HttpMethod: GET
 根据hash获取交易，先查未确认，查不到再查已确认
 
 参数列表
@@ -813,8 +813,8 @@ deposit nuls to a bank! 申请参与共识
 
 /api/accountledger/balance/{address}
 ====================================
-### cmdType:RESTFUL
-### httpMethod:GET
+### cmdType: RESTFUL
+### HttpMethod: GET
 查询账户余额
 
 参数列表

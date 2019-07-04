@@ -67,7 +67,7 @@ public class AccountResource {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(description = "批量创建账户")
     @Parameters({
-            @Parameter(parameterDes = "批量创建账户", requestType = @TypeDescriptor(value = AccountCreateForm.class))
+            @Parameter(parameterName = "批量创建账户", parameterDes = "批量创建账户表单", requestType = @TypeDescriptor(value = AccountCreateForm.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "list", valueType = List.class, valueElement = String.class, description = "交易hash")
@@ -91,8 +91,8 @@ public class AccountResource {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(description = "[修改密码] 根据原密码修改账户密码")
     @Parameters({
-            @Parameter(parameterDes = "账户地址", requestType = @TypeDescriptor(value = String.class)),
-            @Parameter(parameterDes = "账户密码信息", requestType = @TypeDescriptor(value = AccountUpdatePasswordForm.class))
+            @Parameter(parameterName = "address", parameterDes = "账户地址"),
+            @Parameter(parameterName = "账户密码信息", parameterDes = "账户密码信息表单", requestType = @TypeDescriptor(value = AccountUpdatePasswordForm.class))
     })
     @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "value", valueType = Boolean.class, description = "是否修改成功")
@@ -116,7 +116,7 @@ public class AccountResource {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(description = "根据私钥导入账户")
     @Parameters({
-            @Parameter(parameterDes = "根据私钥导入账户", requestType = @TypeDescriptor(value = AccountPriKeyPasswordForm.class))
+            @Parameter(parameterName = "根据私钥导入账户", parameterDes = "根据私钥导入账户表单", requestType = @TypeDescriptor(value = AccountPriKeyPasswordForm.class))
     })
     @ResponseData(name = "返回值", description = "返回账户地址", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "value", description = "账户地址")
@@ -141,7 +141,7 @@ public class AccountResource {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @ApiOperation(description = "根据AccountKeyStore导入账户")
     @Parameters({
-            @Parameter(parameterDes = "根据私钥导入账户", requestType = @TypeDescriptor(value = InputStream.class))
+            @Parameter(parameterName = "根据私钥导入账户", parameterDes = "根据私钥导入账户表单", requestType = @TypeDescriptor(value = InputStream.class))
     })
     @ResponseData(name = "返回值", description = "返回账户地址", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "value", description = "账户地址")
@@ -176,7 +176,7 @@ public class AccountResource {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(description = "根据keystore文件路径导入账户")
     @Parameters({
-            @Parameter(parameterDes = "根据keystore文件路径导入账户", requestType = @TypeDescriptor(value = AccountKeyStoreImportForm.class))
+            @Parameter(parameterName = "根据keystore文件路径导入账户", parameterDes = "根据keystore文件路径导入账户表单", requestType = @TypeDescriptor(value = AccountKeyStoreImportForm.class))
     })
     @ResponseData(name = "返回值", description = "返回账户地址", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "value", description = "账户地址")
@@ -201,7 +201,7 @@ public class AccountResource {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(description = "根据keystore字符串导入账户")
     @Parameters({
-            @Parameter(parameterDes = "根据keystore字符串导入账户", requestType = @TypeDescriptor(value = AccountKeyStoreStringImportForm.class))
+            @Parameter(parameterName = "根据keystore字符串导入账户", parameterDes = "根据keystore字符串导入账户表单", requestType = @TypeDescriptor(value = AccountKeyStoreStringImportForm.class))
     })
     @ResponseData(name = "返回值", description = "返回账户地址", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "value", description = "账户地址")
@@ -226,8 +226,8 @@ public class AccountResource {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(description = "账户备份，导出AccountKeyStore文件到指定目录")
     @Parameters({
-            @Parameter(parameterDes = "账户地址", requestType = @TypeDescriptor(value = String.class)),
-            @Parameter(parameterDes = "keystone导出信息", requestType = @TypeDescriptor(value = AccountKeyStoreBackup.class))
+            @Parameter(parameterName = "address", parameterDes = "账户地址", requestType = @TypeDescriptor(value = String.class)),
+            @Parameter(parameterName = "keystone导出信息", parameterDes = "keystone导出信息表单", requestType = @TypeDescriptor(value = AccountKeyStoreBackup.class))
     })
     @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "path", description = "导出的文件路径")
@@ -251,8 +251,8 @@ public class AccountResource {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(description = "账户备份，导出账户私钥，只能导出本地创建或导入的账户")
     @Parameters({
-            @Parameter(parameterDes = "账户地址", requestType = @TypeDescriptor(value = String.class)),
-            @Parameter(parameterDes = "账户密码信息", requestType = @TypeDescriptor(value = AccountPasswordForm.class))
+            @Parameter(parameterName = "address", parameterDes = "账户地址"),
+            @Parameter(parameterName = "账户密码信息", parameterDes = "账户密码信息表单", requestType = @TypeDescriptor(value = AccountPasswordForm.class))
     })
     @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "value", description = "私钥")

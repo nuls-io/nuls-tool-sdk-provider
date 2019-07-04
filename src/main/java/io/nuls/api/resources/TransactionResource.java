@@ -65,7 +65,7 @@ public class TransactionResource {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(description = "根据hash获取交易，只查已确认交易")
     @Parameters({
-            @Parameter(parameterName = "hash", requestType = @TypeDescriptor(value = String.class), parameterDes = "交易hash")
+        @Parameter(parameterName = "hash", parameterDes = "交易hash")
     })
     @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = TransactionDto.class))
     public RpcClientResult getTx(@PathParam("hash") String hash) {

@@ -74,7 +74,7 @@ public class ConsensusResource {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(description = "Create an agent for consensus! 创建共识(代理)节点")
     @Parameters({
-            @Parameter(parameterDes = "Create an agent for consensus! 创建共识(代理)节点", requestType = @TypeDescriptor(value = CreateAgentForm.class))
+            @Parameter(parameterName = "创建共识(代理)节点", parameterDes = "创建共识(代理)节点表单", requestType = @TypeDescriptor(value = CreateAgentForm.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "value", description = "交易hash")
@@ -104,7 +104,7 @@ public class ConsensusResource {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(description = "注销共识节点")
     @Parameters({
-            @Parameter(parameterDes = "注销共识节点", requestType = @TypeDescriptor(value = StopAgentForm.class))
+            @Parameter(parameterName = "注销共识节点", parameterDes = "注销共识节点表单", requestType = @TypeDescriptor(value = StopAgentForm.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "value", description = "交易hash")
@@ -130,7 +130,7 @@ public class ConsensusResource {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(description = "deposit nuls to a bank! 申请参与共识")
     @Parameters({
-            @Parameter(parameterDes = "deposit nuls to a bank! 申请参与共识", requestType = @TypeDescriptor(value = DepositForm.class))
+            @Parameter(parameterName = "申请参与共识", parameterDes = "申请参与共识表单", requestType = @TypeDescriptor(value = DepositForm.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "value", description = "交易hash")
@@ -158,7 +158,7 @@ public class ConsensusResource {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(description = "退出共识")
     @Parameters({
-            @Parameter(parameterDes = "退出共识", requestType = @TypeDescriptor(value = WithdrawForm.class))
+            @Parameter(parameterName = "退出共识", parameterDes = "退出共识表单", requestType = @TypeDescriptor(value = WithdrawForm.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "value", description = "交易hash")

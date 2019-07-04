@@ -71,7 +71,7 @@ public class ContractResource {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(description = "单笔转账")
     @Parameters({
-            @Parameter(parameterDes = "创建合约", requestType = @TypeDescriptor(value = ContractCreate.class))
+            @Parameter(parameterName = "创建合约", parameterDes = "创建合约表单", requestType = @TypeDescriptor(value = ContractCreate.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map对象，包含两个属性", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "txHash", description = "发布合约的交易hash"),
@@ -100,7 +100,7 @@ public class ContractResource {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(description = "单笔转账")
     @Parameters({
-            @Parameter(parameterDes = "调用合约", requestType = @TypeDescriptor(value = ContractCall.class))
+            @Parameter(parameterName = "调用合约", parameterDes = "调用合约表单", requestType = @TypeDescriptor(value = ContractCall.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "txHash", description = "调用合约的交易hash")
@@ -135,7 +135,7 @@ public class ContractResource {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(description = "单笔转账")
     @Parameters({
-            @Parameter(parameterDes = "删除合约", requestType = @TypeDescriptor(value = ContractDelete.class))
+            @Parameter(parameterName = "删除合约", parameterDes = "删除合约表单", requestType = @TypeDescriptor(value = ContractDelete.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "txHash", description = "删除合约的交易hash")
@@ -161,8 +161,8 @@ public class ContractResource {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(description = "获取账户地址的指定token余额")
     @Parameters({
-            @Parameter(parameterName = "contractAddress", requestType = @TypeDescriptor(value = String.class), parameterDes = "合约地址"),
-            @Parameter(parameterName = "address", requestType = @TypeDescriptor(value = String.class), parameterDes = "账户地址")
+            @Parameter(parameterName = "contractAddress", parameterDes = "合约地址"),
+            @Parameter(parameterName = "address", parameterDes = "账户地址")
     })
     @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = ContractTokenInfoDto.class))
     public RpcClientResult getBalance(@PathParam("contractAddress") String contractAddress, @PathParam("address") String address) {
@@ -179,7 +179,7 @@ public class ContractResource {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(description = "获取智能合约详细信息")
     @Parameters({
-            @Parameter(parameterName = "address", requestType = @TypeDescriptor(value = String.class), parameterDes = "合约地址")
+            @Parameter(parameterName = "address", parameterDes = "合约地址")
     })
     @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = ContractInfoDto.class))
     public RpcClientResult getContractInfo(@PathParam("address") String address) {
@@ -196,7 +196,7 @@ public class ContractResource {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(description = "获取智能合约执行结果")
     @Parameters({
-            @Parameter(parameterName = "hash", requestType = @TypeDescriptor(value = String.class), parameterDes = "交易hash")
+            @Parameter(parameterName = "hash", parameterDes = "交易hash")
     })
     @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = ContractResultDto.class))
     public RpcClientResult getContractResult(@PathParam("hash") String hash) {

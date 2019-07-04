@@ -71,7 +71,7 @@ public class AccountLedgerResource {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(description = "单笔转账")
     @Parameters({
-            @Parameter(parameterDes = "单笔转账", requestType = @TypeDescriptor(value = TransferForm.class))
+            @Parameter(parameterName = "单笔转账", parameterDes = "单笔转账表单", requestType = @TypeDescriptor(value = TransferForm.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "value", description = "交易hash")

@@ -102,7 +102,7 @@ public class BlockResource {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(description = "根据区块hash查询区块头")
     @Parameters({
-            @Parameter(parameterName = "hash", requestType = @TypeDescriptor(value = String.class), parameterDes = "区块hash")
+            @Parameter(parameterName = "hash", parameterDes = "区块hash")
     })
     @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = BlockHeaderDto.class))
     public RpcClientResult getBlockHeaderByHash(@PathParam("hash") String hash) {
@@ -188,7 +188,7 @@ public class BlockResource {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(description = "根据区块hash查询区块，包含区块打包的所有交易信息，此接口返回数据量较多，谨慎调用")
     @Parameters({
-            @Parameter(parameterName = "hash", requestType = @TypeDescriptor(value = String.class), parameterDes = "区块hash")
+            @Parameter(parameterName = "hash", parameterDes = "区块hash")
     })
     @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = BlockHeaderDto.class))
     public RpcClientResult getBlockByHeight(@PathParam("hash") String hash) {

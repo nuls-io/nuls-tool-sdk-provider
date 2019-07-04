@@ -284,7 +284,7 @@ public class DocTool {
         public static void genJSON() throws IOException {
             List<CmdDes> cmdDesList = buildData();
             Log.info("{}",cmdDesList);
-            System.out.println("生成文档成功："+createJSONConfig(cmdDesList,"/Users/zhoulijun/workspace/test"));
+            System.out.println("生成文档成功："+createJSONConfig(cmdDesList,"/Users/pierreluo/IdeaProjects/nuls-engine/nuls-sdk-provider/documents"));
 //            System.exit(0);
         }
 
@@ -510,9 +510,9 @@ public class DocTool {
             try {
                 writer.write(new Heading(cmd.cmdName.replaceAll("_", "\\\\_"), 1).toString());
                 writer.newLine();
-                writer.write(new Heading("cmdType:" + cmd.cmdType, 3).toString());
+                writer.write(new Heading("cmdType: " + cmd.cmdType, 3).toString());
                 writer.newLine();
-                writer.write(new Heading("httpMethod:" + cmd.httpMethod, 3).toString());
+                writer.write(new Heading("HttpMethod: " + cmd.httpMethod, 3).toString());
                 writer.newLine();
                 writer.write(new Text(cmd.des).toString());
                 writer.newLine();
