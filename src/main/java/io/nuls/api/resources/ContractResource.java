@@ -137,8 +137,7 @@ public class ContractResource {
         Result<String> result = contractProvider.callContract(req);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
         if(clientResult.isSuccess()) {
-            String hash = (String) clientResult.getData();
-            return clientResult.resultMap().map("txHash", hash).mapToData();
+            return clientResult.resultMap().map("txHash", clientResult.getData()).mapToData();
         }
         return clientResult;
     }
@@ -171,8 +170,7 @@ public class ContractResource {
         Result<String> result = contractProvider.tokenTransfer(req);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
         if(clientResult.isSuccess()) {
-            String hash = (String) clientResult.getData();
-            return clientResult.resultMap().map("txHash", hash).mapToData();
+            return clientResult.resultMap().map("txHash", clientResult.getData()).mapToData();
         }
         return clientResult;
     }
@@ -205,8 +203,7 @@ public class ContractResource {
         Result<String> result = contractProvider.transferToContract(req);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
         if(clientResult.isSuccess()) {
-            String hash = (String) clientResult.getData();
-            return clientResult.resultMap().map("txHash", hash).mapToData();
+            return clientResult.resultMap().map("txHash", clientResult.getData()).mapToData();
         }
         return clientResult;
     }
@@ -231,8 +228,7 @@ public class ContractResource {
         Result<String> result = contractProvider.deleteContract(req);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
         if(clientResult.isSuccess()) {
-            String hash = (String) clientResult.getData();
-            return clientResult.resultMap().map("txHash", hash).mapToData();
+            return clientResult.resultMap().map("txHash", clientResult.getData()).mapToData();
         }
         return clientResult;
     }
