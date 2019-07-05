@@ -128,7 +128,7 @@ public class AccountResource {
     @ResponseData(name = "返回值", description = "返回账户地址", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "value", description = "账户地址")
     }))
-    public RpcClientResult create(AccountPriKeyPasswordForm form) {
+    public RpcClientResult importPriKey(AccountPriKeyPasswordForm form) {
         if (form == null) {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
         }
@@ -213,7 +213,7 @@ public class AccountResource {
     @ResponseData(name = "返回值", description = "返回账户地址", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "value", description = "账户地址")
     }))
-    public RpcClientResult imporAccountByKeystoreString(AccountKeyStoreStringImportForm form) {
+    public RpcClientResult importAccountByKeystoreString(AccountKeyStoreStringImportForm form) {
         if(form == null) {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
         }
