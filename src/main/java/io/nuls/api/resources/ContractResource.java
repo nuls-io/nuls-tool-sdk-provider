@@ -24,22 +24,27 @@
 package io.nuls.api.resources;
 
 import io.nuls.api.config.Config;
+import io.nuls.api.config.Context;
 import io.nuls.base.api.provider.Result;
 import io.nuls.base.api.provider.ServiceManager;
 import io.nuls.base.api.provider.contract.ContractProvider;
 import io.nuls.base.api.provider.contract.facade.*;
+import io.nuls.base.basic.AddressTool;
 import io.nuls.core.constant.CommonCodeConstanst;
 import io.nuls.core.core.annotation.Autowired;
 import io.nuls.core.core.annotation.Component;
+import io.nuls.core.core.annotation.RpcMethod;
+import io.nuls.core.model.StringUtils;
 import io.nuls.core.rpc.model.*;
 import io.nuls.model.ErrorData;
 import io.nuls.model.RpcClientResult;
-import io.nuls.model.dto.ContractInfoDto;
-import io.nuls.model.dto.ContractResultDto;
-import io.nuls.model.dto.ContractTokenInfoDto;
+import io.nuls.model.dto.*;
 import io.nuls.model.form.contract.*;
+import io.nuls.model.jsonrpc.RpcResult;
 import io.nuls.rpctools.ContractTools;
+import io.nuls.utils.Log;
 import io.nuls.utils.ResultUtil;
+import io.nuls.utils.VerifyUtils;
 import io.nuls.v2.model.annotation.Api;
 import io.nuls.v2.model.annotation.ApiOperation;
 import io.nuls.v2.util.NulsSDKTool;
@@ -47,6 +52,8 @@ import io.nuls.v2.util.NulsSDKTool;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -142,6 +149,32 @@ public class ContractResource {
         return clientResult;
     }
 
+
+    @POST
+    @Path("/delete")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "删除合约")
+    @Parameters({
+            @Parameter(parameterName = "删除合约", parameterDes = "删除合约表单", requestType = @TypeDescriptor(value = ContractDelete.class))
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "txHash", description = "删除合约的交易hash")
+    }))
+    public RpcClientResult deleteContract(ContractDelete delete) {
+        if (delete == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form data is empty"));
+        }
+        DeleteContractReq req = new DeleteContractReq(delete.getSender(), delete.getContractAddress(), delete.getPassword());
+        req.setChainId(config.getChainId());
+        req.setRemark(delete.getRemark());
+        Result<String> result = contractProvider.deleteContract(req);
+        RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
+        if(clientResult.isSuccess()) {
+            return clientResult.resultMap().map("txHash", clientResult.getData()).mapToData();
+        }
+        return clientResult;
+    }
+
     @POST
     @Path("/tokentransfer")
     @Produces(MediaType.APPLICATION_JSON)
@@ -181,10 +214,10 @@ public class ContractResource {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(description = "从账户地址向合约地址转账(主链资产)的合约交易")
     @Parameters({
-        @Parameter(parameterName = "向合约地址转账", parameterDes = "向合约地址转账表单", requestType = @TypeDescriptor(value = ContractTransfer.class))
+            @Parameter(parameterName = "向合约地址转账", parameterDes = "向合约地址转账表单", requestType = @TypeDescriptor(value = ContractTransfer.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
-        @Key(name = "txHash", description = "交易hash")
+            @Key(name = "txHash", description = "交易hash")
     }))
     public RpcClientResult transferTocontract(ContractTransfer form) {
         if (form == null) {
@@ -208,30 +241,6 @@ public class ContractResource {
         return clientResult;
     }
 
-    @POST
-    @Path("/delete")
-    @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "删除合约")
-    @Parameters({
-            @Parameter(parameterName = "删除合约", parameterDes = "删除合约表单", requestType = @TypeDescriptor(value = ContractDelete.class))
-    })
-    @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
-            @Key(name = "txHash", description = "删除合约的交易hash")
-    }))
-    public RpcClientResult deleteContract(ContractDelete delete) {
-        if (delete == null) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form data is empty"));
-        }
-        DeleteContractReq req = new DeleteContractReq(delete.getSender(), delete.getContractAddress(), delete.getPassword());
-        req.setChainId(config.getChainId());
-        req.setRemark(delete.getRemark());
-        Result<String> result = contractProvider.deleteContract(req);
-        RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
-        if(clientResult.isSuccess()) {
-            return clientResult.resultMap().map("txHash", clientResult.getData()).mapToData();
-        }
-        return clientResult;
-    }
 
     @GET
     @Path("/balance/token/{contractAddress}/{address}")
@@ -242,7 +251,7 @@ public class ContractResource {
             @Parameter(parameterName = "address", parameterDes = "账户地址")
     })
     @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = ContractTokenInfoDto.class))
-    public RpcClientResult getBalance(@PathParam("contractAddress") String contractAddress, @PathParam("address") String address) {
+    public RpcClientResult getTokenBalance(@PathParam("contractAddress") String contractAddress, @PathParam("address") String address) {
         if (address == null) {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "address is empty"));
         }
@@ -283,6 +292,263 @@ public class ContractResource {
         Result<Map> result = contractTools.getContractResult(config.getChainId(), hash);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
         return clientResult;
+    }
+
+
+    @POST
+    @Path("/constructor")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "获取合约代码构造函数")
+    @Parameters({
+        @Parameter(parameterName = "获取合约代码构造函数", parameterDes = "获取合约代码构造函数表单", requestType = @TypeDescriptor(value = ContractCode.class))
+    })
+    @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = ContractConstructorInfoDto.class))
+    public RpcClientResult getContractConstructor(ContractCode form) {
+        if (form == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
+        }
+        Result<Map> result = contractTools.getContractConstructor(config.getChainId(), form.getContractCode());
+        RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
+        return clientResult;
+    }
+
+
+    @POST
+    @Path("/method")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "获取已发布合约指定函数的信息")
+    @Parameters({
+        @Parameter(parameterName = "获取已发布合约指定函数的信息", parameterDes = "获取已发布合约指定函数的信息表单", requestType = @TypeDescriptor(value = ContractMethodForm.class))
+    })
+    @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = ProgramMethod.class))
+    public RpcClientResult getContractMethod(ContractMethodForm form) {
+        int chainId = config.getChainId();
+        if (form == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
+        }
+        if (!AddressTool.validAddress(chainId, form.getContractAddress())) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), String.format("contractAddress [%s] is invalid", form.getContractAddress())));
+        }
+        if (StringUtils.isBlank(form.getMethodName())) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "methodName is empty"));
+        }
+        Result<Map> contractInfoDtoResult = contractTools.getContractInfo(chainId, form.getContractAddress());
+        if(contractInfoDtoResult.isFailed()) {
+            return ResultUtil.getRpcClientResult(contractInfoDtoResult);
+        }
+        Map contractInfo = contractInfoDtoResult.getData();
+        String methodName = form.getMethodName();
+        String methodDesc = form.getMethodDesc();
+        List<Map<String, Object>> methods =(List<Map<String, Object>>) contractInfo.get("method");
+        Map resultMethod = null;
+        boolean isEmptyMethodDesc = StringUtils.isBlank(methodDesc);
+        for (Map<String, Object> method : methods) {
+            if (methodName.equals(method.get("name"))) {
+                if (isEmptyMethodDesc) {
+                    resultMethod = method;
+                    break;
+                } else if (methodDesc.equals(method.get("desc"))) {
+                    resultMethod = method;
+                    break;
+                }
+            }
+        }
+        if (resultMethod == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.DATA_NOT_FOUND));
+        }
+        return RpcClientResult.getSuccess(resultMethod);
+    }
+
+
+    @POST
+    @Path("/method/argstypes")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "获取已发布合约指定函数的参数类型列表")
+    @Parameters({
+        @Parameter(parameterName = "获取已发布合约指定函数的参数类型列表", parameterDes = "获取已发布合约指定函数的参数类型表单", requestType = @TypeDescriptor(value = ContractMethodForm.class))
+    })
+    @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = List.class, collectionElement = String.class))
+    public RpcClientResult getContractMethodArgsTypes(ContractMethodForm form) {
+        RpcClientResult clientResult = this.getContractMethod(form);
+        if(clientResult.isFailed()) {
+            return clientResult;
+        }
+        Map resultMethod = (Map) clientResult.getData();
+        if (resultMethod == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.DATA_NOT_FOUND));
+        }
+        List<String> argsTypes;
+        try {
+            List<Map<String, Object>> args = (List<Map<String, Object>>) resultMethod.get("args");
+            argsTypes = new ArrayList<>();
+            for (Map<String, Object> arg : args) {
+                argsTypes.add((String) arg.get("type"));
+            }
+            return RpcClientResult.getSuccess(argsTypes);
+        } catch (Exception e) {
+            Log.error(e);
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.DATA_ERROR.getCode(), e.getMessage()));
+        }
+    }
+
+
+    @POST
+    @Path("/validate/create")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "验证发布合约")
+    @Parameters(value = {
+        @Parameter(parameterName = "验证发布合约", parameterDes = "验证发布合约表单", requestType = @TypeDescriptor(value = ContractValidateCreate.class))
+    })
+    @ResponseData(name = "返回值", description = "返回消耗的gas值", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+        @Key(name = "success", valueType = boolean.class, description = "验证成功与否"),
+        @Key(name = "code", description = "验证失败的错误码"),
+        @Key(name = "msg", description = "验证失败的错误信息")
+    }))
+    public RpcClientResult validateContractCreate(ContractValidateCreate form) {
+        if (form == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form data is empty"));
+        }
+        if (form.getGasLimit() < 0) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), String.format("gasLimit [%s] is invalid", form.getGasLimit())));
+        }
+        if (form.getPrice() < 0) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), String.format("price [%s] is invalid", form.getPrice())));
+        }
+        Result<Map> mapResult = contractTools.validateContractCreate(config.getChainId(),
+                form.getSender(),
+                form.getGasLimit(),
+                form.getPrice(),
+                form.getContractCode(),
+                form.getArgs());
+        return ResultUtil.getRpcClientResult(mapResult);
+    }
+
+
+    @POST
+    @Path("/validate/call")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "验证调用合约")
+    @Parameters(value = {
+        @Parameter(parameterName = "验证调用合约", parameterDes = "验证调用合约表单", requestType = @TypeDescriptor(value = ContractValidateCall.class))
+    })
+    @ResponseData(name = "返回值", description = "返回消耗的gas值", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+        @Key(name = "success", valueType = boolean.class, description = "验证成功与否"),
+        @Key(name = "code", description = "验证失败的错误码"),
+        @Key(name = "msg", description = "验证失败的错误信息")
+    }))
+    public RpcClientResult validateContractCall(ContractValidateCall form) {
+        if (form == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form data is empty"));
+        }
+        if (form.getGasLimit() < 0) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), String.format("gasLimit [%s] is invalid", form.getGasLimit())));
+        }
+        if (form.getPrice() < 0) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), String.format("price [%s] is invalid", form.getPrice())));
+        }
+        Result<Map> mapResult = contractTools.validateContractCall(config.getChainId(),
+                form.getSender(),
+                form.getValue(),
+                form.getGasLimit(),
+                form.getPrice(),
+                form.getContractAddress(),
+                form.getMethodName(),
+                form.getMethodDesc(),
+                form.getArgs());
+        return ResultUtil.getRpcClientResult(mapResult);
+    }
+
+
+    @POST
+    @Path("/validate/delete")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "验证删除合约")
+    @Parameters(value = {
+        @Parameter(parameterName = "验证删除合约", parameterDes = "验证删除合约表单", requestType = @TypeDescriptor(value = ContractValidateDelete.class))
+    })
+    @ResponseData(name = "返回值", description = "返回消耗的gas值", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+        @Key(name = "success", valueType = boolean.class, description = "验证成功与否"),
+        @Key(name = "code", description = "验证失败的错误码"),
+        @Key(name = "msg", description = "验证失败的错误信息")
+    }))
+    public RpcClientResult validateContractDelete(ContractValidateDelete form) {
+        if (form == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form data is empty"));
+        }
+        Result<Map> mapResult = contractTools.validateContractDelete(config.getChainId(),
+                form.getSender(),
+                form.getContractAddress());
+        return ResultUtil.getRpcClientResult(mapResult);
+    }
+
+
+    @POST
+    @Path("/imputedgas/create")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "估算发布合约交易的GAS")
+    @Parameters(value = {
+        @Parameter(parameterName = "估算发布合约交易的GAS", parameterDes = "估算发布合约交易的GAS表单", requestType = @TypeDescriptor(value = ImputedGasContractCreate.class))
+    })
+    @ResponseData(name = "返回值", description = "返回消耗的gas值", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+        @Key(name = "gasLimit", valueType = Long.class, description = "消耗的gas值，执行失败返回数值1")
+    }))
+    public RpcClientResult imputedContractCreateGas(ImputedGasContractCreate form) {
+        if (form == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form data is empty"));
+        }
+        Result<Map> mapResult = contractTools.imputedContractCreateGas(config.getChainId(),
+                form.getSender(),
+                form.getContractCode(),
+                form.getArgs());
+        return ResultUtil.getRpcClientResult(mapResult);
+    }
+
+
+    @POST
+    @Path("/imputedgas/call")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "估算调用合约交易的GAS")
+    @Parameters(value = {
+        @Parameter(parameterName = "估算调用合约交易的GAS", parameterDes = "估算调用合约交易的GAS表单", requestType = @TypeDescriptor(value = ImputedGasContractCall.class))
+    })
+    @ResponseData(name = "返回值", description = "返回消耗的gas值", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+        @Key(name = "gasLimit", valueType = Long.class, description = "消耗的gas值，执行失败返回数值1")
+    }))
+    public RpcClientResult imputedContractCallGas(ImputedGasContractCall form) {
+        if (form == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form data is empty"));
+        }
+        Result<Map> mapResult = contractTools.imputedContractCallGas(config.getChainId(),
+                form.getSender(),
+                form.getValue(),
+                form.getContractAddress(),
+                form.getMethodName(),
+                form.getMethodDesc(),
+                form.getArgs());
+        return ResultUtil.getRpcClientResult(mapResult);
+    }
+
+
+    @POST
+    @Path("/view")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "调用合约不上链方法")
+    @Parameters(value = {
+        @Parameter(parameterName = "调用合约不上链方法", parameterDes = "调用合约不上链方法表单", requestType = @TypeDescriptor(value = ContractViewCall.class))
+    })
+    @ResponseData(name = "返回值", description = "返回Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+        @Key(name = "result", description = "视图方法的调用结果")
+    }))
+    public RpcClientResult invokeView(ContractViewCall form) {
+        if (form == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form data is empty"));
+        }
+        Result<Map> mapResult = contractTools.invokeView(config.getChainId(),
+                form.getContractAddress(),
+                form.getMethodName(),
+                form.getMethodDesc(),
+                form.getArgs());
+        return ResultUtil.getRpcClientResult(mapResult);
     }
 
 

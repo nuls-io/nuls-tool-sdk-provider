@@ -27,27 +27,26 @@ package io.nuls.model.form.contract;
 
 import io.nuls.core.rpc.model.ApiModel;
 import io.nuls.core.rpc.model.ApiModelProperty;
+import io.nuls.model.form.Base;
 import io.nuls.v2.util.ContractUtil;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * @desription:
  * @author: PierreLuo
  * @date: 2018/4/20
  */
 @Data
 @NoArgsConstructor
-@ApiModel
-public class ContractCreate extends ContractBase {
+@ApiModel(description = "估算创建智能合约的Gas消耗的表单数据")
+public class ImputedGasContractCreate extends Base {
 
+    @ApiModelProperty(description = "交易创建者", required = true)
+    private String sender;
     @ApiModelProperty(description = "智能合约代码(字节码的Hex编码字符串)", required = true)
     private String contractCode;
-    @ApiModelProperty(description = "合约别名", required = true)
-    private String alias;
     @ApiModelProperty(description = "参数列表", required = false)
     private Object[] args;
-
 
     public String[][] getArgs(String[] types) {
         return ContractUtil.twoDimensionalArray(args, types);

@@ -43,8 +43,6 @@ public class ContractDeleteOffline extends Base {
     private String sender;
     @ApiModelProperty(description = "智能合约地址", required = true)
     private String contractAddress;
-    @ApiModelProperty(description = "交易创建者账户密码", required = true)
-    private String password;
     @ApiModelProperty(description = "备注", required = false)
     private String remark;
 

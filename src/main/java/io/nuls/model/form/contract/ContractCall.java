@@ -27,7 +27,7 @@ package io.nuls.model.form.contract;
 
 import io.nuls.core.rpc.model.ApiModel;
 import io.nuls.core.rpc.model.ApiModelProperty;
-import io.nuls.utils.ContractUtil;
+import io.nuls.v2.util.ContractUtil;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

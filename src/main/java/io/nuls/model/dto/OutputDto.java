@@ -33,7 +33,7 @@ import io.nuls.core.rpc.model.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import static io.nuls.utils.ContractUtil.bigInteger2String;
+import static io.nuls.v2.util.ContractUtil.bigInteger2String;
 
 
 /**
