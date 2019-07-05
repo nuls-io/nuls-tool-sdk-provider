@@ -1,5 +1,7 @@
 package io.nuls.model.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  * @Author: zhoulijun
  * @Time: 2019-03-07 15:11
@@ -7,6 +9,7 @@ package io.nuls.model.form;
  */
 public class Base {
 
+    @JsonIgnore
     private Integer chainId;
 
     public Integer getChainId() {

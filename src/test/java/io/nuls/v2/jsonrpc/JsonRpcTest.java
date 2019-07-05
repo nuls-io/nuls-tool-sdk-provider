@@ -25,12 +25,18 @@ package io.nuls.v2.jsonrpc;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.nuls.core.parse.JSONUtils;
+import io.nuls.core.rpc.model.ApiModel;
+import io.nuls.model.form.contract.ContractCall;
+import io.nuls.v2.model.dto.CoinFromDto;
+import io.nuls.v2.model.dto.ConsensusDto;
 import io.nuls.v2.model.dto.RpcResult;
 import io.nuls.v2.util.JsonRpcUtil;
+import org.apache.commons.beanutils.BeanUtils;
 import org.junit.Test;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 
 /**
  * @author: PierreLuo
@@ -46,5 +52,31 @@ public class JsonRpcTest {
         params.add("transfer");
         RpcResult result = JsonRpcUtil.request("getContractMethod", params);
         System.out.println(JSONUtils.obj2PrettyJson(result));
+    }
+
+    @Test
+    public void test1() {
+        Class<ContractCall> aClass = ContractCall.class;
+        Field[] fields = aClass.getDeclaredFields();
+        Field[] fields1 = aClass.getSuperclass().getDeclaredFields();
+        System.out.println(Arrays.toString(fields));
+        System.out.println(Arrays.toString(fields1));
+        Class clzs = aClass;
+        List list = new LinkedList();
+        while(clzs.getAnnotation(ApiModel.class) != null) {
+            list.addAll(Arrays.asList(clzs.getDeclaredFields()));
+            clzs = clzs.getSuperclass();
+        }
+        System.out.println(Arrays.toString(list.toArray()));
+    }
+
+    @Test
+    public void test2() throws IllegalAccessException, InstantiationException, InvocationTargetException, JsonProcessingException {
+        Class cls = ConsensusDto.class;
+        Object obj = cls.newInstance();
+        Class cls1 = CoinFromDto.class;
+        Object obj1 = cls1.newInstance();
+        BeanUtils.setProperty(obj, "input", obj1);
+        System.out.println(JSONUtils.obj2PrettyJson(obj));
     }
 }

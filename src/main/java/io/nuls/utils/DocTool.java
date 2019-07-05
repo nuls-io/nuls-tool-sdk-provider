@@ -1,5 +1,6 @@
 package io.nuls.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.nuls.base.api.provider.Provider;
 import io.nuls.base.api.provider.ServiceManager;
 import io.nuls.core.core.annotation.RpcMethod;
@@ -13,14 +14,19 @@ import io.nuls.core.rpc.model.*;
 import io.nuls.v2.model.annotation.Api;
 import io.nuls.v2.model.annotation.ApiOperation;
 import io.nuls.v2.model.annotation.ApiType;
+import net.sf.cglib.beans.BeanMap;
 import net.steppschuh.markdowngenerator.table.Table;
 import net.steppschuh.markdowngenerator.text.Text;
 import net.steppschuh.markdowngenerator.text.heading.Heading;
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.collections.ListUtils;
 
 import javax.ws.rs.*;
 import java.io.*;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -66,6 +72,7 @@ public class DocTool {
         String type;
         List<ResultDes> list;
         boolean canNull;
+        String formJsonOfRestful;
 
         public String getName() {
             return name;
@@ -105,6 +112,14 @@ public class DocTool {
 
         public void setCanNull(boolean canNull) {
             this.canNull = canNull;
+        }
+
+        public String getFormJsonOfRestful() {
+            return formJsonOfRestful;
+        }
+
+        public void setFormJsonOfRestful(String formJsonOfRestful) {
+            this.formJsonOfRestful = formJsonOfRestful;
         }
     }
 
@@ -266,7 +281,7 @@ public class DocTool {
 
                     cmdDes.cmdName = cmdBaseName + methodPath;
                     cmdDes.des = cmdAnnotation.description();
-                    cmdDes.parameters = buildParam(method);
+                    cmdDes.parameters = buildParam(apiType, method);
                     annotation = method.getAnnotation(ResponseData.class);
                     if (annotation != null) {
                         ResponseData responseData = (ResponseData) annotation;
@@ -302,7 +317,7 @@ public class DocTool {
 //            System.exit(0);
         }
 
-        public static List<ResultDes> buildParam(Method method) {
+        public static List<ResultDes> buildParam(ApiType apiType, Method method) {
             Annotation annotation = method.getAnnotation(Parameters.class);
             List<Parameter> parameters;
             if (annotation != null) {
@@ -318,15 +333,50 @@ public class DocTool {
                 res.name = parameter.parameterName();
                 res.des = parameter.parameterDes();
                 res.canNull = parameter.canNull();
-                if (baseType.contains(parameter.requestType().value())) {
+                Class<?> requestType = parameter.requestType().value();
+                if (baseType.contains(requestType)) {
                     param.addAll(buildResultDes(parameter.requestType(), res.des, res.name));
                 } else {
+                    if(ApiType.RESTFUL.equals(apiType)) {
+                        try {
+                            res.formJsonOfRestful = JSONUtils.obj2PrettyJson(newInstance(requestType));
+                        } catch (Exception e) {
+                            System.out.println(String.format("Form named [%s] has no non-args-constructor.", requestType.getSimpleName()));
+                        }
+                    }
                     res.list = buildResultDes(parameter.requestType(), res.des, res.name);
                     res.type = parameter.requestType().value().getSimpleName().toLowerCase();
                     param.add(res);
                 }
             });
             return param;
+        }
+
+        private static Object newInstance(Class cls) throws IllegalAccessException, InstantiationException, InvocationTargetException {
+            Object o = cls.newInstance();
+            Field[] fields = cls.getDeclaredFields();
+            for(Field field : fields) {
+                if(!baseType.contains(field.getType())) {
+                    Object o1 = null;
+                    if(field.getType() == List.class) {
+                        o1 = new ArrayList<>();
+                        List o2 = (List) o1;
+                        ApiModelProperty apiModelProperty = field.getAnnotation(ApiModelProperty.class);
+                        if(apiModelProperty != null) {
+                            Class<?> element = apiModelProperty.type().collectionElement();
+                            o2.add(newInstance(element));
+                        }
+                    } else if(field.getType() == Map.class) {
+                        o1 = new HashMap<>();
+                    } else if(field.getType() == Set.class) {
+                        o1 = new HashSet<>();
+                    } else {
+                        o1 = field.getType().newInstance();
+                    }
+                    BeanUtils.setProperty(o, field.getName(), o1);
+                }
+            }
+            return o;
         }
 
         public static List<ResultDes> buildResultDes(TypeDescriptor typeDescriptor, String des, String name) {
@@ -419,8 +469,16 @@ public class DocTool {
             if (annotation == null) {
                 throw new IllegalArgumentException("返回值是复杂对象时必须声明ApiModule注解 + " + clzs.getSimpleName());
             }
+            List<Field> list = new LinkedList();
+            list.addAll(Arrays.asList(clzs.getDeclaredFields()));
+            Class clzsTemp = clzs.getSuperclass();
+            while(clzsTemp.getAnnotation(ApiModel.class) != null) {
+                list.addAll(0, Arrays.asList(clzsTemp.getDeclaredFields()));
+                clzsTemp = clzsTemp.getSuperclass();
+            }
+            Field[] fileds = new Field[list.size()];
+            list.toArray(fileds);
             List<ResultDes> filedList = new ArrayList<>();
-            Field[] fileds = clzs.getDeclaredFields();
             Arrays.stream(fileds).forEach(filed -> {
                 Annotation ann = filed.getAnnotation(ApiModelProperty.class);
                 ApiModelProperty apiModelProperty = (ApiModelProperty) ann;
@@ -569,6 +627,23 @@ public class DocTool {
         }
 
         private static void buildParam(BufferedWriter writer, List<ResultDes> parameters) throws IOException {
+            parameters.forEach(des -> {
+                if(des.formJsonOfRestful != null) {
+                    try {
+                        writer.newLine();
+                        writer.write(new Heading("Form json data: ", 3).toString());
+                        writer.newLine();
+                        writer.write(new Text("```json").toString());
+                        writer.newLine();
+                        writer.write(new Text(des.formJsonOfRestful).toString());
+                        writer.newLine();
+                        writer.write(new Text("```").toString());
+                        writer.newLine();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
             writer.newLine();
             writer.write(new Heading("参数列表", 2).toString());
             if (parameters == null || parameters.isEmpty()) {
