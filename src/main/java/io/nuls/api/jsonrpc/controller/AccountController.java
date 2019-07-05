@@ -22,15 +22,29 @@ package io.nuls.api.jsonrpc.controller;
 
 import io.nuls.api.config.Context;
 import io.nuls.base.api.provider.Result;
+import io.nuls.base.api.provider.ServiceManager;
+import io.nuls.base.api.provider.account.AccountService;
+import io.nuls.base.api.provider.account.facade.*;
 import io.nuls.base.basic.AddressTool;
 import io.nuls.core.core.annotation.Autowired;
 import io.nuls.core.core.annotation.Controller;
 import io.nuls.core.core.annotation.RpcMethod;
+import io.nuls.core.crypto.HexUtil;
+import io.nuls.core.model.FormatValidUtils;
+import io.nuls.core.model.StringUtils;
+import io.nuls.core.rpc.model.*;
+import io.nuls.model.dto.AccountBalanceDto;
 import io.nuls.model.jsonrpc.RpcResult;
 import io.nuls.model.jsonrpc.RpcResultError;
+import io.nuls.rpctools.AccountTools;
 import io.nuls.rpctools.LegderTools;
 import io.nuls.rpctools.vo.AccountBalance;
+import io.nuls.utils.ResultUtil;
 import io.nuls.utils.VerifyUtils;
+import io.nuls.v2.model.annotation.ApiOperation;
+import io.nuls.v2.model.dto.AccountDto;
+import io.nuls.v2.util.NulsSDKTool;
+import org.checkerframework.checker.units.qual.K;
 
 import java.util.HashMap;
 import java.util.List;
@@ -44,10 +58,264 @@ public class AccountController {
 
     @Autowired
     private LegderTools legderTools;
+    @Autowired
+    private AccountTools accountTools;
+
+    AccountService accountService = ServiceManager.get(AccountService.class);
+
+    @RpcMethod("createAccount")
+    @ApiOperation(description = "批量创建账户")
+    @Parameters(value = {
+            @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
+            @Parameter(parameterName = "count", requestType = @TypeDescriptor(value = int.class), parameterDes = "创建数量"),
+            @Parameter(parameterName = "password", requestType = @TypeDescriptor(value = String.class), parameterDes = "密码")
+    })
+    @ResponseData(name = "返回值", description = "返回账户地址集合", responseType = @TypeDescriptor(value = List.class))
+    public RpcResult createAccount(List<Object> params) {
+        VerifyUtils.verifyParams(params, 3);
+        int chainId, count;
+        String password;
+        try {
+            chainId = (int) params.get(0);
+        } catch (Exception e) {
+            return RpcResult.paramError("[chainId] is inValid");
+        }
+        try {
+            count = (int) params.get(1);
+        } catch (Exception e) {
+            return RpcResult.paramError("[count] is inValid");
+        }
+        try {
+            password = (String) params.get(2);
+        } catch (Exception e) {
+            return RpcResult.paramError("[password] is inValid");
+        }
+        if(!FormatValidUtils.validPassword(password)) {
+            return RpcResult.paramError("[password] is inValid");
+        }
+
+        CreateAccountReq req = new CreateAccountReq(count, password);
+        req.setChainId(chainId);
+        Result<String> result = accountService.createAccount(req);
+        RpcResult rpcResult = new RpcResult();
+        if (result.isFailed()) {
+            rpcResult.setError(new RpcResultError(result.getStatus(), result.getMessage(), null));
+        } else {
+            rpcResult.setResult(result.getList());
+        }
+        return rpcResult;
+    }
+
+    @RpcMethod("updatePassword")
+    @ApiOperation(description = "重置账密码")
+    @Parameters(value = {
+            @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
+            @Parameter(parameterName = "address", requestType = @TypeDescriptor(value = String.class), parameterDes = "账户地址"),
+            @Parameter(parameterName = "oldPassword", requestType = @TypeDescriptor(value = String.class), parameterDes = "账户密码"),
+            @Parameter(parameterName = "newPassword", requestType = @TypeDescriptor(value = String.class), parameterDes = "新密码")
+    })
+    @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "value", valueType = Boolean.class, description = "是否修改成功")
+    }))
+    public RpcResult updatePassword(List<Object> params) {
+        VerifyUtils.verifyParams(params, 4);
+        int chainId;
+        String address, oldPassword, newPassword;
+        try {
+            chainId = (int) params.get(0);
+        } catch (Exception e) {
+            return RpcResult.paramError("[chainId] is inValid");
+        }
+        try {
+            address = (String) params.get(1);
+        } catch (Exception e) {
+            return RpcResult.paramError("[address] is inValid");
+        }
+        try {
+            oldPassword = (String) params.get(2);
+        } catch (Exception e) {
+            return RpcResult.paramError("[oldPassword] is inValid");
+        }
+        try {
+            newPassword = (String) params.get(3);
+        } catch (Exception e) {
+            return RpcResult.paramError("[newPassword] is inValid");
+        }
+
+        if (!AddressTool.validAddress(chainId, address)) {
+            return RpcResult.paramError("[address] is inValid");
+        }
+        if (!FormatValidUtils.validPassword(oldPassword)) {
+            return RpcResult.paramError("[oldPassword] is inValid");
+        }
+        if (!FormatValidUtils.validPassword(newPassword)) {
+            return RpcResult.paramError("[newPassword] is inValid");
+        }
+        UpdatePasswordReq req = new UpdatePasswordReq(address, oldPassword, newPassword);
+        req.setChainId(chainId);
+        Result<Boolean> result = accountService.updatePassword(req);
+        RpcResult rpcResult = new RpcResult();
+        if (result.isSuccess()) {
+            rpcResult.setResult(result.getData());
+        } else {
+            rpcResult.setError(new RpcResultError(result.getStatus(), result.getMessage(), null));
+        }
+        return rpcResult;
+    }
+
+
+    @RpcMethod("importPriKey")
+    @ApiOperation(description = "根据私钥导入账户")
+    @Parameters(value = {
+            @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
+            @Parameter(parameterName = "priKey", requestType = @TypeDescriptor(value = String.class), parameterDes = "账户明文私钥"),
+            @Parameter(parameterName = "password", requestType = @TypeDescriptor(value = String.class), parameterDes = "新密码")
+    })
+    @ResponseData(name = "返回值", description = "返回账户地址", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "value", description = "账户地址")
+    }))
+    public RpcResult importPriKey(List<Object> params) {
+        VerifyUtils.verifyParams(params, 3);
+        int chainId;
+        String priKey, password;
+        try {
+            chainId = (int) params.get(0);
+        } catch (Exception e) {
+            return RpcResult.paramError("[chainId] is inValid");
+        }
+        try {
+            priKey = (String) params.get(1);
+        } catch (Exception e) {
+            return RpcResult.paramError("[priKey] is inValid");
+        }
+        try {
+            password = (String) params.get(2);
+        } catch (Exception e) {
+            return RpcResult.paramError("[password] is inValid");
+        }
+        if (StringUtils.isBlank(priKey)) {
+            return RpcResult.paramError("[priKey] is inValid");
+        }
+        if (!FormatValidUtils.validPassword(password)) {
+            return RpcResult.paramError("[password] is inValid");
+        }
+
+        ImportAccountByPrivateKeyReq req = new ImportAccountByPrivateKeyReq(password, priKey, true);
+        req.setChainId(chainId);
+        Result<String> result = accountService.importAccountByPrivateKey(req);
+        RpcResult rpcResult = new RpcResult();
+        if (result.isSuccess()) {
+            rpcResult.setResult(result.getData());
+        } else {
+            rpcResult.setError(new RpcResultError(result.getStatus(), result.getMessage(), null));
+        }
+        return rpcResult;
+    }
+
+    @RpcMethod("importKeystore")
+    @ApiOperation(description = "根据keystore导入账户")
+    @Parameters(value = {
+            @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
+            @Parameter(parameterName = "keyStoreJson", requestType = @TypeDescriptor(value = String.class), parameterDes = "keyStore字符串"),
+            @Parameter(parameterName = "password", requestType = @TypeDescriptor(value = String.class), parameterDes = "keystore密码")
+    })
+    @ResponseData(name = "返回值", description = "返回账户地址", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "value", description = "账户地址")
+    }))
+    public RpcResult importKeystore(List<Object> params) {
+        VerifyUtils.verifyParams(params, 3);
+        int chainId;
+        String keyStoreJson, password;
+        try {
+            chainId = (int) params.get(0);
+        } catch (Exception e) {
+            return RpcResult.paramError("[chainId] is inValid");
+        }
+        try {
+            keyStoreJson = (String) params.get(1);
+        } catch (Exception e) {
+            return RpcResult.paramError("[keyStoreJson] is inValid");
+        }
+        try {
+            password = (String) params.get(2);
+        } catch (Exception e) {
+            return RpcResult.paramError("[password] is inValid");
+        }
+        if (StringUtils.isBlank(keyStoreJson)) {
+            return RpcResult.paramError("[keyStoreJson] is inValid");
+        }
+        if (!FormatValidUtils.validPassword(password)) {
+            return RpcResult.paramError("[password] is inValid");
+        }
+
+        ImportAccountByKeyStoreReq req = new ImportAccountByKeyStoreReq(password, HexUtil.encode(keyStoreJson.getBytes()), true);
+        req.setChainId(chainId);
+        Result<String> result = accountService.importAccountByKeyStore(req);
+        RpcResult rpcResult = new RpcResult();
+        if (result.isSuccess()) {
+            rpcResult.setResult(result.getData());
+        } else {
+            rpcResult.setError(new RpcResultError(result.getStatus(), result.getMessage(), null));
+        }
+        return rpcResult;
+    }
+
+    @RpcMethod("exportKeystore")
+    @ApiOperation(description = "根据keystore导入账户")
+    @Parameters(value = {
+            @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
+            @Parameter(parameterName = "address", requestType = @TypeDescriptor(value = String.class), parameterDes = "账户地址"),
+            @Parameter(parameterName = "password", requestType = @TypeDescriptor(value = String.class), parameterDes = "账户密码")
+    })
+    @ResponseData(name = "返回值", description = "返回keystore字符串", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "result", description = "keystore")
+    }))
+    public RpcResult exportKeystore(List<Object> params) {
+        VerifyUtils.verifyParams(params, 3);
+        int chainId;
+        String address, password;
+        try {
+            chainId = (int) params.get(0);
+        } catch (Exception e) {
+            return RpcResult.paramError("[chainId] is inValid");
+        }
+        try {
+            address = (String) params.get(1);
+        } catch (Exception e) {
+            return RpcResult.paramError("[address] is inValid");
+        }
+        try {
+            password = (String) params.get(2);
+        } catch (Exception e) {
+            return RpcResult.paramError("[password] is inValid");
+        }
+        if (!AddressTool.validAddress(chainId, address)) {
+            return RpcResult.paramError("[address] is inValid");
+        }
+        if (!FormatValidUtils.validPassword(password)) {
+            return RpcResult.paramError("[password] is inValid");
+        }
+        KeyStoreReq req = new KeyStoreReq(password, address);
+        Result<String > result = accountService.getAccountKeyStore(req);
+        RpcResult rpcResult = new RpcResult();
+        if (result.isSuccess()) {
+            rpcResult.setResult(result.getData());
+        } else {
+            rpcResult.setError(new RpcResultError(result.getStatus(), result.getMessage(), null));
+        }
+        return rpcResult;
+    }
 
     @RpcMethod("getAccountBalance")
+    @ApiOperation(description = "获取账户余额")
+    @Parameters(value = {
+            @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
+            @Parameter(parameterName = "address", requestType = @TypeDescriptor(value = String.class), parameterDes = "账户地址"),
+            @Parameter(parameterName = "password", requestType = @TypeDescriptor(value = String.class), parameterDes = "账户密码")
+    })
+    @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = AccountBalanceDto.class))
     public RpcResult getAccountBalance(List<Object> params) {
-        VerifyUtils.verifyParams(params, 3);
+        VerifyUtils.verifyParams(params, 4);
         int chainId, assetChainId, assetId;
         String address;
         try {
@@ -85,5 +353,30 @@ public class AccountController {
         return rpcResult.setResult(balanceResult.getData());
     }
 
-
+    @RpcMethod("createAccountOffline")
+    public RpcResult createAccountOffline(List<Object> params) {
+        VerifyUtils.verifyParams(params, 3);
+        int chainId, count;
+        String password;
+        try {
+            chainId = (int) params.get(0);
+        } catch (Exception e) {
+            return RpcResult.paramError("[chainId] is inValid");
+        }
+        try {
+            count = (int) params.get(1);
+        } catch (Exception e) {
+            return RpcResult.paramError("[count] is inValid");
+        }
+        try {
+            password = (String) params.get(2);
+        } catch (Exception e) {
+            return RpcResult.paramError("[password] is inValid");
+        }
+        if(!FormatValidUtils.validPassword(password)) {
+            return RpcResult.paramError("[password] is inValid");
+        }
+        io.nuls.core.basic.Result<List<AccountDto>> result = NulsSDKTool.createOffLineAccount(count, password);
+        return ResultUtil.getJsonRpcResult(result);
+    }
 }

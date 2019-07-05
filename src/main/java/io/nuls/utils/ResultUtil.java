@@ -27,14 +27,10 @@ import io.nuls.base.api.provider.Result;
 import io.nuls.core.constant.CommonCodeConstanst;
 import io.nuls.core.constant.ErrorCode;
 import io.nuls.core.exception.NulsException;
-import io.nuls.core.model.StringUtils;
 import io.nuls.model.ErrorData;
 import io.nuls.model.RpcClientResult;
-import io.nuls.model.jsonrpc.RpcErrorCode;
 import io.nuls.model.jsonrpc.RpcResult;
 import io.nuls.model.jsonrpc.RpcResultError;
-
-import java.util.Map;
 
 /**
  * @author: PierreLuo
@@ -43,14 +39,14 @@ import java.util.Map;
 public class ResultUtil {
 
     public static RpcClientResult getRpcClientResult(Result result) {
-        if(result.isFailed()) {
+        if (result.isFailed()) {
             return RpcClientResult.getFailed(new ErrorData(result.getStatus(), result.getMessage()));
         }
         Object obj;
         do {
-            if((obj = result.getData()) != null) {
+            if ((obj = result.getData()) != null) {
                 break;
-            } else if((obj = result.getList()) != null){
+            } else if ((obj = result.getList()) != null) {
                 break;
             } else {
                 obj = null;
@@ -60,13 +56,13 @@ public class ResultUtil {
     }
 
     public static RpcClientResult getRpcClientResult(io.nuls.core.basic.Result result) {
-        if(result.isFailed()) {
+        if (result.isFailed()) {
             String msg = result.getMsg();
-            if(msg == null) {
+            if (msg == null) {
                 msg = "";
             }
             ErrorCode errorCode = result.getErrorCode();
-            if(errorCode == null) {
+            if (errorCode == null) {
                 errorCode = CommonCodeConstanst.DATA_ERROR;
             }
             return RpcClientResult.getFailed(new ErrorData(errorCode.getCode(), errorCode.getMsg() + ";" + msg));
@@ -76,14 +72,14 @@ public class ResultUtil {
 
     public static RpcResult getJsonRpcResult(Result result) {
         RpcResult rpcResult = new RpcResult();
-        if(result.isFailed()) {
+        if (result.isFailed()) {
             return rpcResult.setError(new RpcResultError(result.getStatus(), result.getMessage(), null));
         }
         Object obj;
         do {
-            if((obj = result.getData()) != null) {
+            if ((obj = result.getData()) != null) {
                 break;
-            } else if((obj = result.getList()) != null){
+            } else if ((obj = result.getList()) != null) {
                 break;
             } else {
                 obj = null;
@@ -94,9 +90,9 @@ public class ResultUtil {
 
     public static RpcResult getJsonRpcResult(io.nuls.core.basic.Result result) {
         RpcResult rpcResult = new RpcResult();
-        if(result.isFailed()) {
+        if (result.isFailed()) {
             ErrorCode errorCode = result.getErrorCode();
-            if(errorCode == null) {
+            if (errorCode == null) {
                 errorCode = CommonCodeConstanst.DATA_ERROR;
             }
             return rpcResult.setError(new RpcResultError(errorCode.getCode(), errorCode.getMsg(), result.getMsg()));
@@ -104,11 +100,9 @@ public class ResultUtil {
         return rpcResult.setResult(result.getData());
     }
 
-
-
     public static RpcClientResult getNulsExceptionRpcClientResult(NulsException e) {
         ErrorCode errorCode = e.getErrorCode();
-        if(errorCode != null) {
+        if (errorCode != null) {
             return RpcClientResult.getFailed(new ErrorData(errorCode.getCode(), e.format()));
         }
         return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.DATA_ERROR.getCode(), e.getMessage()));
@@ -116,7 +110,7 @@ public class ResultUtil {
 
     public static Result getNulsExceptionResult(NulsException e) {
         ErrorCode errorCode = e.getErrorCode();
-        if(errorCode != null) {
+        if (errorCode != null) {
             return Result.fail(errorCode.getCode(), e.format());
         }
         return Result.fail(CommonCodeConstanst.DATA_ERROR.getCode(), e.getMessage());
