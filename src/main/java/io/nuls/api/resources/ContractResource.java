@@ -186,7 +186,7 @@ public class ContractResource {
     @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
         @Key(name = "txHash", description = "交易hash")
     }))
-    public RpcClientResult tokentransfer(ContractTransfer form) {
+    public RpcClientResult transferTocontract(ContractTransfer form) {
         if (form == null) {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form data is empty"));
         }
@@ -299,7 +299,7 @@ public class ContractResource {
         @Key(name = "contractAddress", description = "生成的合约地址")
     }))
     public RpcClientResult createTxOffline(ContractCreateOffline form) {
-        io.nuls.core.basic.Result<Map> result = NulsSDKTool.createContractTx(
+        io.nuls.core.basic.Result<Map> result = NulsSDKTool.createContractTxOffline(
                 form.getSender(),
                 form.getAlias(),
                 form.getContractCode(),
@@ -363,7 +363,7 @@ public class ContractResource {
         @Key(name = "txHex", description = "交易序列化字符串")
     }))
     public RpcClientResult tokenTransferOffline(ContractTokenTransferOffline form) {
-        io.nuls.core.basic.Result<Map> result = NulsSDKTool.tokenTransfer(
+        io.nuls.core.basic.Result<Map> result = NulsSDKTool.tokenTransferTxOffline(
                 form.getFromAddress(),
                 form.getToAddress(),
                 form.getContractAddress(),
@@ -383,8 +383,8 @@ public class ContractResource {
         @Key(name = "hash", description = "交易hash"),
         @Key(name = "txHex", description = "交易序列化字符串")
     }))
-    public RpcClientResult tokenToContractOffline(ContractTransferOffline form) {
-        io.nuls.core.basic.Result<Map> result = NulsSDKTool.tokenToContract(
+    public RpcClientResult transferToContractOffline(ContractTransferOffline form) {
+        io.nuls.core.basic.Result<Map> result = NulsSDKTool.transferToContractTxOffline(
                 form.getFromAddress(),
                 form.getToAddress(),
                 form.getAmount(),
