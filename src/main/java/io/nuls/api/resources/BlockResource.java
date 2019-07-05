@@ -68,11 +68,9 @@ import javax.ws.rs.core.MediaType;
 @Api
 public class BlockResource {
 
+    BlockService blockService = ServiceManager.get(BlockService.class);
     @Autowired
     private Config config;
-
-    BlockService blockService = ServiceManager.get(BlockService.class);
-
     @Autowired
     BlockTools blockTools;
 
@@ -95,7 +93,7 @@ public class BlockResource {
         if (clientResult.isSuccess() && clientResult.getData() != null) {
             BlockHeaderDto dto = new BlockHeaderDto();
             Object data = clientResult.getData();
-            BeanCopierManager.beanCopier("BlockHeaderData2BlockHeaderDto", data, dto);
+            BeanCopierManager.beanCopier(data, dto);
             clientResult.setData(dto);
         }
         return clientResult;
@@ -120,7 +118,7 @@ public class BlockResource {
         if (clientResult.isSuccess() && clientResult.getData() != null) {
             BlockHeaderDto dto = new BlockHeaderDto();
             Object data = clientResult.getData();
-            BeanCopierManager.beanCopier("BlockHeaderData2BlockHeaderDto", data, dto);
+            BeanCopierManager.beanCopier(data, dto);
             clientResult.setData(dto);
         }
         return clientResult;
@@ -139,7 +137,7 @@ public class BlockResource {
         if (clientResult.isSuccess()) {
             BlockHeaderDto dto = new BlockHeaderDto();
             Object data = clientResult.getData();
-            BeanCopierManager.beanCopier("BlockHeaderData2BlockHeaderDto", data, dto);
+            BeanCopierManager.beanCopier(data, dto);
             clientResult.setData(dto);
         }
         return clientResult;

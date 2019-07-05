@@ -86,6 +86,7 @@ public class ContractController {
             @Key(name = "contractAddress", description = "生成的合约地址")
     }))
     public RpcResult contractCreate(List<Object> params) {
+        VerifyUtils.verifyParams(params, 9);
         try {
             int i = 0;
             Integer chainId = (Integer) params.get(i++);
@@ -157,6 +158,7 @@ public class ContractController {
             @Key(name = "txHash", description = "调用合约的交易hash")
     }))
     public RpcResult contractCall(List<Object> params) {
+        VerifyUtils.verifyParams(params, 11);
         try {
             int i = 0;
             Integer chainId = (Integer) params.get(i++);
@@ -238,6 +240,7 @@ public class ContractController {
             @Key(name = "txHash", description = "删除合约的交易hash")
     }))
     public RpcResult contractDelete(List<Object> params) {
+        VerifyUtils.verifyParams(params, 5);
         try {
             int i = 0;
             Integer chainId = (Integer) params.get(i++);
@@ -287,6 +290,7 @@ public class ContractController {
             @Key(name = "txHash", description = "交易hash")
     }))
     public RpcResult tokentransfer(List<Object> params) {
+        VerifyUtils.verifyParams(params, 7);
         try {
             int i = 0;
             Integer chainId = (Integer) params.get(i++);

@@ -70,6 +70,22 @@ public class ResultUtil {
         return RpcClientResult.getSuccess(result.getData());
     }
 
+    public static RpcClientResult getNulsExceptionRpcClientResult(NulsException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        if (errorCode != null) {
+            return RpcClientResult.getFailed(new ErrorData(errorCode.getCode(), e.format()));
+        }
+        return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.DATA_ERROR.getCode(), e.getMessage()));
+    }
+
+    public static Result getNulsExceptionResult(NulsException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        if (errorCode != null) {
+            return Result.fail(errorCode.getCode(), e.format());
+        }
+        return Result.fail(CommonCodeConstanst.DATA_ERROR.getCode(), e.getMessage());
+    }
+
     public static RpcResult getJsonRpcResult(Result result) {
         RpcResult rpcResult = new RpcResult();
         if (result.isFailed()) {
@@ -100,20 +116,12 @@ public class ResultUtil {
         return rpcResult.setResult(result.getData());
     }
 
-    public static RpcClientResult getNulsExceptionRpcClientResult(NulsException e) {
+    public static RpcResult getNulsExceptionJsonRpcResult(NulsException e) {
         ErrorCode errorCode = e.getErrorCode();
         if (errorCode != null) {
-            return RpcClientResult.getFailed(new ErrorData(errorCode.getCode(), e.format()));
+            return RpcResult.failed(errorCode, e.format());
         }
-        return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.DATA_ERROR.getCode(), e.getMessage()));
-    }
-
-    public static Result getNulsExceptionResult(NulsException e) {
-        ErrorCode errorCode = e.getErrorCode();
-        if (errorCode != null) {
-            return Result.fail(errorCode.getCode(), e.format());
-        }
-        return Result.fail(CommonCodeConstanst.DATA_ERROR.getCode(), e.getMessage());
+        return RpcResult.failed(CommonCodeConstanst.DATA_ERROR, e.getMessage());
     }
 
 }

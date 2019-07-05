@@ -39,7 +39,8 @@ public class BeanCopierManager {
 
     private static final ConcurrentHashMap<String, BeanCopier> BEAN_COPIER_MAP = new ConcurrentHashMap<>();
 
-    public static void beanCopier(String key, Object src, Object target) {
+    public static void beanCopier(Object src, Object target) {
+        String key = new StringBuilder(src.getClass().getSimpleName()).append('_').append(target.getClass().getSimpleName()).toString();
         BeanCopier beanCopier = BEAN_COPIER_MAP.computeIfAbsent(key, k -> initBean(src.getClass(), target.getClass()));
         beanCopier.copy(src, target, null);
     }
