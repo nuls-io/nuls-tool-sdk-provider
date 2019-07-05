@@ -24,10 +24,7 @@ import io.nuls.api.config.Context;
 import io.nuls.base.api.provider.Result;
 import io.nuls.base.api.provider.ServiceManager;
 import io.nuls.base.api.provider.account.AccountService;
-import io.nuls.base.api.provider.account.facade.CreateAccountReq;
-import io.nuls.base.api.provider.account.facade.ImportAccountByKeyStoreReq;
-import io.nuls.base.api.provider.account.facade.ImportAccountByPrivateKeyReq;
-import io.nuls.base.api.provider.account.facade.UpdatePasswordReq;
+import io.nuls.base.api.provider.account.facade.*;
 import io.nuls.base.basic.AddressTool;
 import io.nuls.core.core.annotation.Autowired;
 import io.nuls.core.core.annotation.Controller;
@@ -36,13 +33,18 @@ import io.nuls.core.crypto.HexUtil;
 import io.nuls.core.model.FormatValidUtils;
 import io.nuls.core.model.StringUtils;
 import io.nuls.core.rpc.model.*;
+import io.nuls.model.dto.AccountBalanceDto;
 import io.nuls.model.jsonrpc.RpcResult;
 import io.nuls.model.jsonrpc.RpcResultError;
 import io.nuls.rpctools.AccountTools;
 import io.nuls.rpctools.LegderTools;
 import io.nuls.rpctools.vo.AccountBalance;
+import io.nuls.utils.ResultUtil;
 import io.nuls.utils.VerifyUtils;
 import io.nuls.v2.model.annotation.ApiOperation;
+import io.nuls.v2.model.dto.AccountDto;
+import io.nuls.v2.util.NulsSDKTool;
+import org.checkerframework.checker.units.qual.K;
 
 import java.util.HashMap;
 import java.util.List;
@@ -86,6 +88,9 @@ public class AccountController {
         try {
             password = (String) params.get(2);
         } catch (Exception e) {
+            return RpcResult.paramError("[password] is inValid");
+        }
+        if(!FormatValidUtils.validPassword(password)) {
             return RpcResult.paramError("[password] is inValid");
         }
 
@@ -256,6 +261,15 @@ public class AccountController {
     }
 
     @RpcMethod("exportKeystore")
+    @ApiOperation(description = "根据keystore导入账户")
+    @Parameters(value = {
+            @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
+            @Parameter(parameterName = "address", requestType = @TypeDescriptor(value = String.class), parameterDes = "账户地址"),
+            @Parameter(parameterName = "password", requestType = @TypeDescriptor(value = String.class), parameterDes = "账户密码")
+    })
+    @ResponseData(name = "返回值", description = "返回keystore字符串", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "result", description = "keystore")
+    }))
     public RpcResult exportKeystore(List<Object> params) {
         VerifyUtils.verifyParams(params, 3);
         int chainId;
@@ -281,12 +295,25 @@ public class AccountController {
         if (!FormatValidUtils.validPassword(password)) {
             return RpcResult.paramError("[password] is inValid");
         }
-        return null;
-
-
+        KeyStoreReq req = new KeyStoreReq(password, address);
+        Result<String > result = accountService.getAccountKeyStore(req);
+        RpcResult rpcResult = new RpcResult();
+        if (result.isSuccess()) {
+            rpcResult.setResult(result.getData());
+        } else {
+            rpcResult.setError(new RpcResultError(result.getStatus(), result.getMessage(), null));
+        }
+        return rpcResult;
     }
 
     @RpcMethod("getAccountBalance")
+    @ApiOperation(description = "获取账户余额")
+    @Parameters(value = {
+            @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
+            @Parameter(parameterName = "address", requestType = @TypeDescriptor(value = String.class), parameterDes = "账户地址"),
+            @Parameter(parameterName = "password", requestType = @TypeDescriptor(value = String.class), parameterDes = "账户密码")
+    })
+    @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = AccountBalanceDto.class))
     public RpcResult getAccountBalance(List<Object> params) {
         VerifyUtils.verifyParams(params, 4);
         int chainId, assetChainId, assetId;
@@ -326,5 +353,30 @@ public class AccountController {
         return rpcResult.setResult(balanceResult.getData());
     }
 
-
+    @RpcMethod("createAccountOffline")
+    public RpcResult createAccountOffline(List<Object> params) {
+        VerifyUtils.verifyParams(params, 3);
+        int chainId, count;
+        String password;
+        try {
+            chainId = (int) params.get(0);
+        } catch (Exception e) {
+            return RpcResult.paramError("[chainId] is inValid");
+        }
+        try {
+            count = (int) params.get(1);
+        } catch (Exception e) {
+            return RpcResult.paramError("[count] is inValid");
+        }
+        try {
+            password = (String) params.get(2);
+        } catch (Exception e) {
+            return RpcResult.paramError("[password] is inValid");
+        }
+        if(!FormatValidUtils.validPassword(password)) {
+            return RpcResult.paramError("[password] is inValid");
+        }
+        io.nuls.core.basic.Result<List<AccountDto>> result = NulsSDKTool.createOffLineAccount(count, password);
+        return ResultUtil.getJsonRpcResult(result);
+    }
 }

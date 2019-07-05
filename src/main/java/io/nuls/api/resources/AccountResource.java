@@ -87,7 +87,7 @@ public class AccountResource {
         req.setChainId(config.getChainId());
         Result<String> result = accountService.createAccount(req);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
-        if(clientResult.isSuccess()) {
+        if (clientResult.isSuccess()) {
             return clientResult.resultMap().map("list", clientResult.getData()).mapToData();
         }
         return clientResult;
@@ -115,7 +115,7 @@ public class AccountResource {
         req.setChainId(config.getChainId());
         Result<Boolean> result = accountService.updatePassword(req);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
-        if(clientResult.isSuccess()) {
+        if (clientResult.isSuccess()) {
             return clientResult.resultMap().map("value", clientResult.getData()).mapToData();
         }
         return clientResult;
@@ -139,7 +139,7 @@ public class AccountResource {
         req.setChainId(config.getChainId());
         Result<String> result = accountService.importAccountByPrivateKey(req);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
-        if(clientResult.isSuccess()) {
+        if (clientResult.isSuccess()) {
             return clientResult.resultMap().map("value", clientResult.getData()).mapToData();
         }
         return clientResult;
@@ -159,11 +159,11 @@ public class AccountResource {
     public RpcClientResult importAccountByKeystoreFile(@FormDataParam("keystore") InputStream in,
                                                        @FormDataParam("password") String password,
                                                        @FormDataParam("overwrite") Boolean overwrite) {
-        if(in == null) {
+        if (in == null) {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "inputStream is empty"));
         }
         Result<AccountKeyStoreDto> dtoResult = this.getAccountKeyStoreDto(in);
-        if(dtoResult.isFailed()) {
+        if (dtoResult.isFailed()) {
             return RpcClientResult.getFailed(new ErrorData(dtoResult.getStatus(), dtoResult.getMessage()));
         }
         AccountKeyStoreDto dto = dtoResult.getData();
@@ -172,7 +172,7 @@ public class AccountResource {
             req.setChainId(config.getChainId());
             Result<String> result = accountService.importAccountByKeyStore(req);
             RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
-            if(clientResult.isSuccess()) {
+            if (clientResult.isSuccess()) {
                 return clientResult.resultMap().map("value", clientResult.getData()).mapToData();
             }
             return clientResult;
@@ -192,7 +192,7 @@ public class AccountResource {
             @Key(name = "value", description = "账户地址")
     }))
     public RpcClientResult imporAccountByKeystoreFilePath(AccountKeyStoreImportForm form) {
-        if(form == null) {
+        if (form == null) {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
         }
         String keystore = accountService.getAccountKeystoreDto(form.getPath());
@@ -200,7 +200,7 @@ public class AccountResource {
         req.setChainId(config.getChainId());
         Result<String> result = accountService.importAccountByKeyStore(req);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
-        if(clientResult.isSuccess()) {
+        if (clientResult.isSuccess()) {
             return clientResult.resultMap().map("value", clientResult.getData()).mapToData();
         }
         return clientResult;
@@ -217,7 +217,7 @@ public class AccountResource {
             @Key(name = "value", description = "账户地址")
     }))
     public RpcClientResult importAccountByKeystoreString(AccountKeyStoreStringImportForm form) {
-        if(form == null) {
+        if (form == null) {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
         }
         String keystore = form.getKeystoreString();
@@ -225,7 +225,7 @@ public class AccountResource {
         req.setChainId(config.getChainId());
         Result<String> result = accountService.importAccountByKeyStore(req);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
-        if(clientResult.isSuccess()) {
+        if (clientResult.isSuccess()) {
             return clientResult.resultMap().map("value", clientResult.getData()).mapToData();
         }
         return clientResult;
@@ -253,7 +253,7 @@ public class AccountResource {
         req.setChainId(config.getChainId());
         Result<String> result = accountService.backupAccount(req);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
-        if(clientResult.isSuccess()) {
+        if (clientResult.isSuccess()) {
             return clientResult.resultMap().map("path", clientResult.getData()).mapToData();
         }
         return clientResult;
@@ -281,7 +281,7 @@ public class AccountResource {
         req.setChainId(config.getChainId());
         Result<String> result = accountService.getAccountPrivateKey(req);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
-        if(clientResult.isSuccess()) {
+        if (clientResult.isSuccess()) {
             return clientResult.resultMap().map("value", clientResult.getData()).mapToData();
         }
         return clientResult;
