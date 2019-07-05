@@ -30,6 +30,9 @@ import io.nuls.core.exception.NulsException;
 import io.nuls.core.model.StringUtils;
 import io.nuls.model.ErrorData;
 import io.nuls.model.RpcClientResult;
+import io.nuls.model.jsonrpc.RpcErrorCode;
+import io.nuls.model.jsonrpc.RpcResult;
+import io.nuls.model.jsonrpc.RpcResultError;
 
 /**
  * @author: PierreLuo
@@ -52,6 +55,24 @@ public class ResultUtil {
             }
         } while (false);
         return RpcClientResult.getSuccess(obj);
+    }
+
+    public static RpcResult getJsonRpcResult(Result result) {
+        RpcResult rpcResult = new RpcResult();
+        if(result.isFailed()) {
+            return rpcResult.setError(new RpcResultError(result.getStatus(), result.getMessage(), null));
+        }
+        Object obj;
+        do {
+            if((obj = result.getData()) != null) {
+                break;
+            } else if((obj = result.getList()) != null){
+                break;
+            } else {
+                obj = null;
+            }
+        } while (false);
+        return rpcResult.setResult(obj);
     }
 
     public static RpcClientResult getRpcClientResult(io.nuls.core.basic.Result result) {

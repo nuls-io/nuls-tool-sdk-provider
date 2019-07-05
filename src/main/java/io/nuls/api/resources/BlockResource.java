@@ -51,6 +51,7 @@ import io.nuls.model.dto.block.BlockHeaderDto;
 import io.nuls.rpctools.BlockTools;
 import io.nuls.utils.Log;
 import io.nuls.utils.ResultUtil;
+import io.nuls.v2.util.ValidateUtil;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -85,7 +86,7 @@ public class BlockResource {
     @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = BlockHeaderDto.class))
     public RpcClientResult getBlockHeaderByHeight(@PathParam("height") Long height) {
         if (height == null || height < 0) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "height is invalid"));
         }
         GetBlockHeaderByHeightReq req = new GetBlockHeaderByHeightReq(height);
         req.setChainId(config.getChainId());
@@ -109,8 +110,8 @@ public class BlockResource {
     })
     @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = BlockHeaderDto.class))
     public RpcClientResult getBlockHeaderByHash(@PathParam("hash") String hash) {
-        if (hash == null) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+        if (hash == null || ValidateUtil.validHash(hash)) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "hash is invalid"));
         }
         GetBlockHeaderByHashReq req = new GetBlockHeaderByHashReq(hash);
         req.setChainId(config.getChainId());
@@ -173,7 +174,7 @@ public class BlockResource {
     @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = BlockHeaderDto.class))
     public RpcClientResult getBlockByHeight(@PathParam("height") Long height) {
         if (height == null || height < 0) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "height is invalid"));
         }
         Result<Block> result = blockTools.getBlockByHeight(config.getChainId(), height);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
@@ -199,8 +200,8 @@ public class BlockResource {
     })
     @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = BlockHeaderDto.class))
     public RpcClientResult getBlockByHeight(@PathParam("hash") String hash) {
-        if (hash == null) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+        if (hash == null || ValidateUtil.validHash(hash)) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "hash is invalid"));
         }
         Result<Block> result = blockTools.getBlockByHash(config.getChainId(), hash);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);

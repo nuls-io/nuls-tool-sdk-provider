@@ -110,11 +110,11 @@ public class ContractResource {
             @Key(name = "txHash", description = "调用合约的交易hash")
     }))
     public RpcClientResult callContract(ContractCall call) {
-        if (call.getValue() == null || call.getValue().compareTo(BigInteger.ZERO) < 0) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "value is invalid"));
-        }
         if (call == null) {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form data is empty"));
+        }
+        if (call.getValue() == null || call.getValue().compareTo(BigInteger.ZERO) < 0) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "value is invalid"));
         }
         if (call.getGasLimit() < 0) {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), String.format("gasLimit [%s] is invalid", call.getGasLimit())));
@@ -137,8 +137,7 @@ public class ContractResource {
         Result<String> result = contractProvider.callContract(req);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
         if(clientResult.isSuccess()) {
-            String hash = (String) clientResult.getData();
-            return clientResult.resultMap().map("txHash", hash).mapToData();
+            return clientResult.resultMap().map("txHash", clientResult.getData()).mapToData();
         }
         return clientResult;
     }
@@ -154,8 +153,11 @@ public class ContractResource {
             @Key(name = "txHash", description = "交易hash")
     }))
     public RpcClientResult tokentransfer(ContractTokenTransfer form) {
-        if (form == null || form.getAmount() == null || form.getAmount().compareTo(BigInteger.ZERO) < 0) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+        if (form == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form data is empty"));
+        }
+        if (form.getAmount() == null || form.getAmount().compareTo(BigInteger.ZERO) < 0) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "amount is invalid"));
         }
         TokenTransferReq req = new TokenTransferReq();
         req.setChainId(config.getChainId());
@@ -168,8 +170,7 @@ public class ContractResource {
         Result<String> result = contractProvider.tokenTransfer(req);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
         if(clientResult.isSuccess()) {
-            String hash = (String) clientResult.getData();
-            return clientResult.resultMap().map("txHash", hash).mapToData();
+            return clientResult.resultMap().map("txHash", clientResult.getData()).mapToData();
         }
         return clientResult;
     }
@@ -186,8 +187,11 @@ public class ContractResource {
         @Key(name = "txHash", description = "交易hash")
     }))
     public RpcClientResult tokentransfer(ContractTransfer form) {
-        if (form == null || form.getAmount() == null || form.getAmount().compareTo(BigInteger.ZERO) < 0) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+        if (form == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form data is empty"));
+        }
+        if (form.getAmount() == null || form.getAmount().compareTo(BigInteger.ZERO) < 0) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "amount is invalid"));
         }
         TransferToContractReq req = new TransferToContractReq(
                 form.getFromAddress(),
@@ -199,8 +203,7 @@ public class ContractResource {
         Result<String> result = contractProvider.transferToContract(req);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
         if(clientResult.isSuccess()) {
-            String hash = (String) clientResult.getData();
-            return clientResult.resultMap().map("txHash", hash).mapToData();
+            return clientResult.resultMap().map("txHash", clientResult.getData()).mapToData();
         }
         return clientResult;
     }
@@ -217,7 +220,7 @@ public class ContractResource {
     }))
     public RpcClientResult deleteContract(ContractDelete delete) {
         if (delete == null) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form data is empty"));
         }
         DeleteContractReq req = new DeleteContractReq(delete.getSender(), delete.getContractAddress(), delete.getPassword());
         req.setChainId(config.getChainId());
@@ -225,8 +228,7 @@ public class ContractResource {
         Result<String> result = contractProvider.deleteContract(req);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
         if(clientResult.isSuccess()) {
-            String hash = (String) clientResult.getData();
-            return clientResult.resultMap().map("txHash", hash).mapToData();
+            return clientResult.resultMap().map("txHash", clientResult.getData()).mapToData();
         }
         return clientResult;
     }
@@ -242,7 +244,7 @@ public class ContractResource {
     @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = ContractTokenInfoDto.class))
     public RpcClientResult getBalance(@PathParam("contractAddress") String contractAddress, @PathParam("address") String address) {
         if (address == null) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "address is empty"));
         }
         Result<ContractTokenInfoDto> result = contractTools.getTokenBalance(config.getChainId(), contractAddress, address);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
@@ -259,7 +261,7 @@ public class ContractResource {
     @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = ContractInfoDto.class))
     public RpcClientResult getContractDetailInfo(@PathParam("address") String address) {
         if (address == null) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "address is empty"));
         }
         Result<Map> result = contractTools.getContractInfo(config.getChainId(), address);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
@@ -276,7 +278,7 @@ public class ContractResource {
     @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = ContractResultDto.class))
     public RpcClientResult getContractResult(@PathParam("hash") String hash) {
         if (hash == null) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "hash is empty"));
         }
         Result<Map> result = contractTools.getContractResult(config.getChainId(), hash);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);

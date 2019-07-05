@@ -20,13 +20,20 @@
 
 package io.nuls.api.jsonrpc.controller;
 
+import io.nuls.api.config.Config;
 import io.nuls.api.config.Context;
 import io.nuls.base.api.provider.Result;
+import io.nuls.base.api.provider.ServiceManager;
+import io.nuls.base.api.provider.contract.ContractProvider;
+import io.nuls.base.api.provider.contract.facade.CallContractReq;
+import io.nuls.base.api.provider.contract.facade.CreateContractReq;
+import io.nuls.base.api.provider.contract.facade.DeleteContractReq;
 import io.nuls.base.basic.AddressTool;
 import io.nuls.core.constant.CommonCodeConstanst;
 import io.nuls.core.core.annotation.Autowired;
 import io.nuls.core.core.annotation.Controller;
 import io.nuls.core.core.annotation.RpcMethod;
+import io.nuls.core.model.FormatValidUtils;
 import io.nuls.core.model.StringUtils;
 import io.nuls.core.rpc.model.*;
 import io.nuls.model.dto.ContractConstructorInfoDto;
@@ -38,6 +45,7 @@ import io.nuls.model.jsonrpc.RpcResult;
 import io.nuls.model.jsonrpc.RpcResultError;
 import io.nuls.rpctools.ContractTools;
 import io.nuls.utils.Log;
+import io.nuls.utils.ResultUtil;
 import io.nuls.utils.VerifyUtils;
 import io.nuls.v2.model.annotation.Api;
 import io.nuls.v2.model.annotation.ApiOperation;
@@ -45,6 +53,7 @@ import io.nuls.v2.model.annotation.ApiType;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -56,8 +65,12 @@ import java.util.Map;
 @Api(type = ApiType.JSONRPC)
 public class ContractController {
 
+    ContractProvider contractProvider = ServiceManager.get(ContractProvider.class);
+    @Autowired
+    Config config;
     @Autowired
     private ContractTools contractTools;
+
 
     @RpcMethod("getContract")
     @ApiOperation(description = "获取智能合约详细信息")
@@ -272,6 +285,201 @@ public class ContractController {
             }
             RpcResult rpcResult = new RpcResult();
             rpcResult.setResult(argsTypes);
+            return rpcResult;
+        } catch (Exception e) {
+            Log.error(e);
+            return RpcResult.failed(CommonCodeConstanst.DATA_ERROR, e.getMessage());
+        }
+    }
+
+    @RpcMethod("contractCreate")
+    @ApiOperation(description = "发布合约")
+    @Parameters(value = {
+        @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链id"),
+        @Parameter(parameterName = "sender", parameterType = "String", parameterDes = "交易创建者账户地址"),
+        @Parameter(parameterName = "password", parameterType = "String", parameterDes = "账户密码"),
+        @Parameter(parameterName = "alias", parameterType = "String", parameterDes = "合约别名"),
+        @Parameter(parameterName = "gasLimit", requestType = @TypeDescriptor(value = long.class), parameterDes = "GAS限制"),
+        @Parameter(parameterName = "price", requestType = @TypeDescriptor(value = long.class), parameterDes = "GAS单价"),
+        @Parameter(parameterName = "contractCode", parameterType = "String", parameterDes = "智能合约代码(字节码的Hex编码字符串)"),
+        @Parameter(parameterName = "args", requestType = @TypeDescriptor(value = Object[].class), parameterDes = "参数列表", canNull = true),
+        @Parameter(parameterName = "remark", parameterType = "String", parameterDes = "交易备注", canNull = true)
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map对象，包含两个属性", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+        @Key(name = "txHash", description = "发布合约的交易hash"),
+        @Key(name = "contractAddress", description = "生成的合约地址")
+    }))
+    public RpcResult contractCreate(List<Object> params) {
+        try {
+            int i = 0;
+            Integer chainId = (Integer) params.get(i++);
+            String sender = (String) params.get(i++);
+            String password = (String) params.get(i++);
+            String alias = (String) params.get(i++);
+            Long gasLimit = Long.parseLong(params.get(i++).toString());
+            Long price = Long.parseLong(params.get(i++).toString());
+            String contractCode = (String) params.get(i++);
+            List argsList = (List) params.get(i++);
+            Object[] args = argsList != null ? argsList.toArray() : null;
+            String remark = (String) params.get(i++);
+
+            if (gasLimit < 0) {
+                return RpcResult.paramError(String.format("gasLimit [%s] is invalid", gasLimit));
+            }
+            if (price < 0) {
+                return RpcResult.paramError(String.format("price [%s] is invalid", price));
+            }
+
+            if (!AddressTool.validAddress(chainId, sender)) {
+                return RpcResult.paramError(String.format("sender [%s] is invalid", sender));
+            }
+
+            if(!FormatValidUtils.validAlias(alias)) {
+                return RpcResult.paramError(String.format("alias [%s] is invalid", alias));
+            }
+
+            if (StringUtils.isBlank(contractCode)) {
+                return RpcResult.paramError("contractCode is empty");
+            }
+            CreateContractReq req = new CreateContractReq();
+            req.setChainId(config.getChainId());
+            req.setSender(sender);
+            req.setPassword(password);
+            req.setPrice(price);
+            req.setGasLimit(gasLimit);
+            req.setContractCode(contractCode);
+            req.setAlias(alias);
+            req.setArgs(args);
+            req.setRemark(remark);
+            Result<Map> result = contractProvider.createContract(req);
+            return ResultUtil.getJsonRpcResult(result);
+        } catch (Exception e) {
+            Log.error(e);
+            return RpcResult.failed(CommonCodeConstanst.DATA_ERROR, e.getMessage());
+        }
+    }
+
+    @RpcMethod("contractCall")
+    @ApiOperation(description = "调用合约")
+    @Parameters(value = {
+        @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链id"),
+        @Parameter(parameterName = "sender", parameterType = "String", parameterDes = "交易创建者账户地址"),
+        @Parameter(parameterName = "password", parameterType = "String", parameterDes = "调用者账户密码"),
+        @Parameter(parameterName = "value", requestType = @TypeDescriptor(value = BigInteger.class), parameterDes = "调用者向合约地址转入的主网资产金额，没有此业务时填BigInteger.ZERO"),
+        @Parameter(parameterName = "gasLimit", requestType = @TypeDescriptor(value = long.class), parameterDes = "GAS限制"),
+        @Parameter(parameterName = "price", requestType = @TypeDescriptor(value = long.class), parameterDes = "GAS单价"),
+        @Parameter(parameterName = "contractAddress", parameterType = "String", parameterDes = "合约地址"),
+        @Parameter(parameterName = "methodName", parameterType = "String", parameterDes = "合约方法"),
+        @Parameter(parameterName = "methodDesc", parameterType = "String", parameterDes = "合约方法描述，若合约内方法没有重载，则此参数可以为空", canNull = true),
+        @Parameter(parameterName = "args", requestType = @TypeDescriptor(value = Object[].class), parameterDes = "参数列表", canNull = true),
+        @Parameter(parameterName = "remark", parameterType = "String", parameterDes = "交易备注", canNull = true)
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+        @Key(name = "txHash", description = "调用合约的交易hash")
+    }))
+    public RpcResult contractCall(List<Object> params) {
+        try {
+            int i = 0;
+            Integer chainId = (Integer) params.get(i++);
+            String sender = (String) params.get(i++);
+            String password = (String) params.get(i++);
+            Object valueObj = params.get(i++);
+            if(valueObj == null) {
+                return RpcResult.paramError("value is empty");
+            }
+            BigInteger value = new BigInteger(valueObj.toString());
+            if (value.compareTo(BigInteger.ZERO) < 0) {
+                return RpcResult.paramError(String.format("value [%s] is invalid", value.toString()));
+            }
+            Long gasLimit = Long.parseLong(params.get(i++).toString());
+            Long price = Long.parseLong(params.get(i++).toString());
+            String contractAddress = (String) params.get(i++);
+            String methodName = (String) params.get(i++);
+            String methodDesc = (String) params.get(i++);
+            List argsList = (List) params.get(i++);
+            Object[] args = argsList != null ? argsList.toArray() : null;
+            String remark = (String) params.get(i++);
+
+
+            if (gasLimit < 0) {
+                return RpcResult.paramError(String.format("gasLimit [%s] is invalid", gasLimit));
+            }
+            if (price < 0) {
+                return RpcResult.paramError(String.format("price [%s] is invalid", price));
+            }
+            if (!AddressTool.validAddress(chainId, sender)) {
+                return RpcResult.paramError(String.format("sender [%s] is invalid", sender));
+            }
+            if (!AddressTool.validAddress(chainId, contractAddress)) {
+                return RpcResult.paramError(String.format("contractAddress [%s] is invalid", contractAddress));
+            }
+            if (StringUtils.isBlank(methodName)) {
+                return RpcResult.paramError("methodName is empty");
+            }
+
+            CallContractReq req = new CallContractReq();
+            req.setChainId(config.getChainId());
+            req.setSender(sender);
+            req.setPassword(password);
+            req.setPrice(price);
+            req.setGasLimit(gasLimit);
+            req.setValue(value.longValue());
+            req.setMethodName(methodName);
+            req.setMethodDesc(methodDesc);
+            req.setContractAddress(contractAddress);
+            req.setArgs(args);
+            req.setRemark(remark);
+            Result<String> result = contractProvider.callContract(req);
+            RpcResult rpcResult = ResultUtil.getJsonRpcResult(result);
+            if(rpcResult.getError() == null) {
+                Map dataMap = new HashMap();
+                dataMap.put("txHash", rpcResult.getResult());
+                rpcResult.setResult(dataMap);
+            }
+            return rpcResult;
+        } catch (Exception e) {
+            Log.error(e);
+            return RpcResult.failed(CommonCodeConstanst.DATA_ERROR, e.getMessage());
+        }
+    }
+
+
+    @RpcMethod("contractDelete")
+    @ApiOperation(description = "删除合约")
+    @Parameters(value = {
+        @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链id"),
+        @Parameter(parameterName = "sender", parameterDes = "交易创建者账户地址"),
+        @Parameter(parameterName = "password", parameterDes = "交易账户密码"),
+        @Parameter(parameterName = "contractAddress", parameterDes = "合约地址"),
+        @Parameter(parameterName = "remark", parameterDes = "交易备注", canNull = true)
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+        @Key(name = "txHash", description = "删除合约的交易hash")
+    }))
+    public RpcResult contractDelete(List<Object> params) {
+        try {
+            int i = 0;
+            Integer chainId = (Integer) params.get(i++);
+            String sender = (String) params.get(i++);
+            String password = (String) params.get(i++);
+            String contractAddress = (String) params.get(i++);
+            String remark = (String) params.get(i++);
+            if (!AddressTool.validAddress(chainId, sender)) {
+                return RpcResult.paramError(String.format("sender [%s] is invalid", sender));
+            }
+            if (!AddressTool.validAddress(chainId, contractAddress)) {
+                return RpcResult.paramError(String.format("contractAddress [%s] is invalid", contractAddress));
+            }
+            DeleteContractReq req = new DeleteContractReq(sender, contractAddress, password);
+            req.setChainId(config.getChainId());
+            req.setRemark(remark);
+            Result<String> result = contractProvider.deleteContract(req);
+            RpcResult rpcResult = ResultUtil.getJsonRpcResult(result);
+            if(rpcResult.getError() == null) {
+                Map dataMap = new HashMap();
+                dataMap.put("txHash", rpcResult.getResult());
+                rpcResult.setResult(dataMap);
+            }
             return rpcResult;
         } catch (Exception e) {
             Log.error(e);

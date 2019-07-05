@@ -78,7 +78,7 @@ public class AccountLedgerResource {
     }))
     public RpcClientResult transfer(TransferForm form) {
         if (form == null) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
         }
         TransferReq.TransferReqBuilder builder =
                 new TransferReq.TransferReqBuilder(config.getChainId(),config.getAssetsId())
@@ -102,7 +102,7 @@ public class AccountLedgerResource {
     @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = AccountBalanceDto.class))
     public RpcClientResult getBalance(@PathParam("address") String address) {
         if (address == null) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "address is empty"));
         }
         Integer assetChainId = config.getChainId();
         Integer assetId = config.getAssetsId();
@@ -126,7 +126,7 @@ public class AccountLedgerResource {
     @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = TransactionDto.class))
     public RpcClientResult getTx(@PathParam("hash") String hash) {
         if (hash == null) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR));
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "hash is empty"));
         }
         Result<TransactionDto> result = transactionTools.getTx(config.getChainId(), hash);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
