@@ -202,7 +202,7 @@ public class ConsensusResource {
         if (form == null) {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
         }
-        io.nuls.core.basic.Result result = NulsSDKTool.createConsensusTx(form);
+        io.nuls.core.basic.Result result = NulsSDKTool.createConsensusTxOffline(form);
         return ResultUtil.getRpcClientResult(result);
     }
 
@@ -222,7 +222,7 @@ public class ConsensusResource {
         if (form == null) {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
         }
-        io.nuls.core.basic.Result result = NulsSDKTool.createStopConsensusTx(form);
+        io.nuls.core.basic.Result result = NulsSDKTool.createStopConsensusTxOffline(form);
         return ResultUtil.getRpcClientResult(result);
     }
 
@@ -242,7 +242,7 @@ public class ConsensusResource {
         if (form == null) {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
         }
-        io.nuls.core.basic.Result result = NulsSDKTool.createDepositTx(form);
+        io.nuls.core.basic.Result result = NulsSDKTool.createDepositTxOffline(form);
         return ResultUtil.getRpcClientResult(result);
     }
 
@@ -262,7 +262,7 @@ public class ConsensusResource {
         if (form == null) {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
         }
-        io.nuls.core.basic.Result result = NulsSDKTool.createWithdrawDepositTx(form);
+        io.nuls.core.basic.Result result = NulsSDKTool.createWithdrawDepositTxOffline(form);
         return ResultUtil.getRpcClientResult(result);
     }
 
