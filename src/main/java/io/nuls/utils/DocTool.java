@@ -12,6 +12,7 @@ import io.nuls.core.rpc.model.*;
 import io.nuls.v2.model.annotation.Api;
 import io.nuls.v2.model.annotation.ApiOperation;
 import io.nuls.v2.model.annotation.ApiType;
+import lombok.Data;
 import net.steppschuh.markdowngenerator.table.Table;
 import net.steppschuh.markdowngenerator.text.Text;
 import net.steppschuh.markdowngenerator.text.heading.Heading;
@@ -26,6 +27,7 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @Author: zhoulijun
@@ -543,6 +545,23 @@ public class DocTool {
                     }
                 });
                 writer.write(JSONUtils.obj2json(cmdDesList));
+            }
+            return mdFile.getAbsolutePath();
+        }
+
+        public static String createPostmanJSONConfig(List<CmdDes> cmdDesList, ApiType apiType, String path) throws IOException {
+            ConfigurationLoader configurationLoader = SpringLiteContext.getBean(ConfigurationLoader.class);
+            ConfigurationLoader.ConfigItem configItem = configurationLoader.getConfigItem("APP_NAME");
+            String appName = configItem.getValue();
+            File mdFile = new File(path + File.separator + appName + "_Postman_" + apiType.name() + ".json");
+            if (mdFile.exists()) {
+                mdFile.delete();
+            }
+            mdFile.createNewFile();
+
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(mdFile))) {
+                String postmanFormatJson = genPostmanFormatJson(cmdDesList, apiType);
+                writer.write(postmanFormatJson);
             }
             return mdFile.getAbsolutePath();
         }

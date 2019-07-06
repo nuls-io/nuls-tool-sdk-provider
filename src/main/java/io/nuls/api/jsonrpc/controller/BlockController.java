@@ -48,7 +48,9 @@ import io.nuls.rpctools.BlockTools;
 import io.nuls.utils.Log;
 import io.nuls.utils.ResultUtil;
 import io.nuls.utils.VerifyUtils;
+import io.nuls.v2.model.annotation.Api;
 import io.nuls.v2.model.annotation.ApiOperation;
+import io.nuls.v2.model.annotation.ApiType;
 
 import java.util.HashMap;
 import java.util.List;
@@ -58,6 +60,7 @@ import java.util.Map;
  * @author Niels
  */
 @Controller
+@Api(type = ApiType.JSONRPC)
 public class BlockController {
 
     BlockService blockService = ServiceManager.get(BlockService.class);

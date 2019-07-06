@@ -46,37 +46,6 @@ Cmd: /api/tx/hash/{hash}
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount        |     string      | 数量                                        |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lockTime      |      long       | 解锁时间，-1为永久锁定                              |
 
-注销共识节点
-======
-Cmd: /api/consensus/agent/stop
-------------------------------
-### CmdType: RESTFUL
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
-
-### Form json data: 
-```json
-{
-  "address" : null,
-  "password" : null
-}
-```
-
-参数列表
-----
-| 参数名                                                      |     参数类型      | 参数描述     | 是否非空 |
-| -------------------------------------------------------- |:-------------:| -------- |:----:|
-| 注销共识节点                                                   | stopagentform | 注销共识节点表单 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address  |    string     | 共识节点地址   |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password |    string     | 密码       |  是   |
-
-返回值
----
-| 字段名   |  字段类型  | 参数描述   |
-| ----- |:------:| ------ |
-| value | string | 交易hash |
-
 Create an agent for consensus! 创建共识(代理)节点
 =========================================
 Cmd: /api/consensus/agent
@@ -109,6 +78,37 @@ Cmd: /api/consensus/agent
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;commissionRate |       int       | 佣金比例         |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deposit        |     string      | 抵押金额         |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password       |     string      | 密码           |  是   |
+
+返回值
+---
+| 字段名   |  字段类型  | 参数描述   |
+| ----- |:------:| ------ |
+| value | string | 交易hash |
+
+注销共识节点
+======
+Cmd: /api/consensus/agent/stop
+------------------------------
+### CmdType: RESTFUL
+### HttpMethod: POST
+### ContentType: application/json;charset=UTF-8
+
+
+### Form json data: 
+```json
+{
+  "address" : null,
+  "password" : null
+}
+```
+
+参数列表
+----
+| 参数名                                                      |     参数类型      | 参数描述     | 是否非空 |
+| -------------------------------------------------------- |:-------------:| -------- |:----:|
+| 注销共识节点                                                   | stopagentform | 注销共识节点表单 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address  |    string     | 共识节点地址   |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password |    string     | 密码       |  是   |
 
 返回值
 ---
@@ -382,6 +382,189 @@ Cmd: /api/consensus/withdraw/offline
 | ----- |:------:| -------- |
 | hash  | string | 交易hash   |
 | txHex | string | 交易序列化字符串 |
+
+发布合约
+====
+Cmd: /api/contract/create
+-------------------------
+### CmdType: RESTFUL
+### HttpMethod: POST
+### ContentType: application/json;charset=UTF-8
+
+
+### Form json data: 
+```json
+{
+  "sender" : null,
+  "gasLimit" : 0,
+  "price" : 0,
+  "password" : null,
+  "remark" : null,
+  "contractCode" : null,
+  "alias" : null,
+  "args" : null
+}
+```
+
+参数列表
+----
+| 参数名                                                          |      参数类型      | 参数描述                 | 是否非空 |
+| ------------------------------------------------------------ |:--------------:| -------------------- |:----:|
+| 发布合约                                                         | contractcreate | 发布合约表单               |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sender       |     string     | 交易创建者                |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gasLimit     |      long      | 最大gas消耗              |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price        |      long      | 执行合约单价               |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password     |     string     | 交易创建者账户密码            |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark       |     string     | 备注                   |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractCode |     string     | 智能合约代码(字节码的Hex编码字符串) |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;alias        |     string     | 合约别名                 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args         |    object[]    | 参数列表                 |  是   |
+
+返回值
+---
+| 字段名             |  字段类型  | 参数描述        |
+| --------------- |:------:| ----------- |
+| txHash          | string | 发布合约的交易hash |
+| contractAddress | string | 生成的合约地址     |
+
+调用合约
+====
+Cmd: /api/contract/call
+-----------------------
+### CmdType: RESTFUL
+### HttpMethod: POST
+### ContentType: application/json;charset=UTF-8
+
+
+### Form json data: 
+```json
+{
+  "sender" : null,
+  "gasLimit" : 0,
+  "price" : 0,
+  "password" : null,
+  "remark" : null,
+  "contractAddress" : null,
+  "value" : null,
+  "methodName" : null,
+  "methodDesc" : null,
+  "args" : null
+}
+```
+
+参数列表
+----
+| 参数名                                                             |     参数类型     | 参数描述                       | 是否非空 |
+| --------------------------------------------------------------- |:------------:| -------------------------- |:----:|
+| 调用合约                                                            | contractcall | 调用合约表单                     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sender          |    string    | 交易创建者                      |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gasLimit        |     long     | 最大gas消耗                    |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price           |     long     | 执行合约单价                     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password        |    string    | 交易创建者账户密码                  |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark          |    string    | 备注                         |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractAddress |    string    | 智能合约地址                     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value           |  biginteger  | 调用者向合约地址转入的主网资产金额，没有此业务时填0 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodName      |    string    | 方法名                        |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodDesc      |    string    | 方法描述，若合约内方法没有重载，则此参数可以为空   |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args            |   object[]   | 参数列表                       |  是   |
+
+返回值
+---
+| 字段名    |  字段类型  | 参数描述        |
+| ------ |:------:| ----------- |
+| txHash | string | 调用合约的交易hash |
+
+删除合约
+====
+Cmd: /api/contract/delete
+-------------------------
+### CmdType: RESTFUL
+### HttpMethod: POST
+### ContentType: application/json;charset=UTF-8
+
+
+### Form json data: 
+```json
+{
+  "sender" : null,
+  "contractAddress" : null,
+  "password" : null,
+  "remark" : null
+}
+```
+
+参数列表
+----
+| 参数名                                                             |      参数类型      | 参数描述      | 是否非空 |
+| --------------------------------------------------------------- |:--------------:| --------- |:----:|
+| 删除合约                                                            | contractdelete | 删除合约表单    |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sender          |     string     | 交易创建者     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractAddress |     string     | 智能合约地址    |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password        |     string     | 交易创建者账户密码 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark          |     string     | 备注        |  是   |
+
+返回值
+---
+| 字段名    |  字段类型  | 参数描述        |
+| ------ |:------:| ----------- |
+| txHash | string | 删除合约的交易hash |
+
+获取智能合约执行结果
+==========
+Cmd: /api/contract/result/{hash}
+--------------------------------
+### CmdType: RESTFUL
+### HttpMethod: GET
+### ContentType: application/json;charset=UTF-8
+
+
+参数列表
+----
+| 参数名  |  参数类型  | 参数描述   | 是否非空 |
+| ---- |:------:| ------ |:----:|
+| hash | string | 交易hash |  是   |
+
+返回值
+---
+| 字段名                                                                                                   |      字段类型       | 参数描述                                        |
+| ----------------------------------------------------------------------------------------------------- |:---------------:| ------------------------------------------- |
+| success                                                                                               |     boolean     | 合约执行是否成功                                    |
+| errorMessage                                                                                          |     string      | 执行失败信息                                      |
+| contractAddress                                                                                       |     string      | 合约地址                                        |
+| result                                                                                                |     string      | 合约执行结果                                      |
+| gasLimit                                                                                              |      long       | GAS限制                                       |
+| gasUsed                                                                                               |      long       | 已使用GAS                                      |
+| price                                                                                                 |      long       | GAS单价                                       |
+| totalFee                                                                                              |     string      | 交易总手续费                                      |
+| txSizeFee                                                                                             |     string      | 交易大小手续费                                     |
+| actualContractFee                                                                                     |     string      | 实际执行合约手续费                                   |
+| refundFee                                                                                             |     string      | 合约返回的手续费                                    |
+| value                                                                                                 |     string      | 调用者向合约地址转入的主网资产金额，没有此业务时则为0                 |
+| stackTrace                                                                                            |     string      | 异常堆栈踪迹                                      |
+| transfers                                                                                             | list&lt;object> | 合约转账列表（从合约转出）                               |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;txHash                                                |     string      | 合约生成交易：合约转账交易hash                           |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;from                                                  |     string      | 转出的合约地址                                     |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value                                                 |     string      | 转账金额                                        |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;outputs                                               | list&lt;object> | 转入的地址列表                                     |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to    |     string      | 转入地址                                        |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value |     string      | 转入金额                                        |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;orginTxHash                                           |     string      | 调用合约交易hash（源交易hash，合约交易由调用合约交易派生而来）         |
+| events                                                                                                | list&lt;string> | 合约事件列表                                      |
+| tokenTransfers                                                                                        | list&lt;object> | 合约token转账列表                                 |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractAddress                                       |     string      | 合约地址                                        |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;from                                                  |     string      | 付款方                                         |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to                                                    |     string      | 收款方                                         |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value                                                 |     string      | 转账金额                                        |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name                                                  |     string      | token名称                                     |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;symbol                                                |     string      | token符号                                     |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;decimals                                              |      long       | token支持的小数位数                                |
+| invokeRegisterCmds                                                                                    | list&lt;object> | 合约调用外部命令的调用记录列表                             |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cmdName                                               |     string      | 命令名称                                        |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args                                                  |       map       | 命令参数，参数不固定，依据不同的命令而来，故此处不作描述，结构为 {参数名称=参数值} |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cmdRegisterMode                                       |     string      | 注册的命令模式（QUERY\_DATA or NEW\_TX）             |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;newTxHash                                             |     string      | 生成的交易hash（当调用的命令模式是 NEW\_TX 时，会生成交易）        |
+| contractTxList                                                                                        | list&lt;string> | 合约生成交易的序列化字符串列表                             |
+| remark                                                                                                |     string      | 备注                                          |
 
 获取账户地址的指定token余额
 ================
@@ -674,189 +857,6 @@ Cmd: /api/contract/view
 | 字段名    |  字段类型  | 参数描述      |
 | ------ |:------:| --------- |
 | result | string | 视图方法的调用结果 |
-
-发布合约
-====
-Cmd: /api/contract/create
--------------------------
-### CmdType: RESTFUL
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
-
-### Form json data: 
-```json
-{
-  "sender" : null,
-  "gasLimit" : 0,
-  "price" : 0,
-  "password" : null,
-  "remark" : null,
-  "contractCode" : null,
-  "alias" : null,
-  "args" : null
-}
-```
-
-参数列表
-----
-| 参数名                                                          |      参数类型      | 参数描述                 | 是否非空 |
-| ------------------------------------------------------------ |:--------------:| -------------------- |:----:|
-| 发布合约                                                         | contractcreate | 发布合约表单               |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sender       |     string     | 交易创建者                |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gasLimit     |      long      | 最大gas消耗              |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price        |      long      | 执行合约单价               |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password     |     string     | 交易创建者账户密码            |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark       |     string     | 备注                   |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractCode |     string     | 智能合约代码(字节码的Hex编码字符串) |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;alias        |     string     | 合约别名                 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args         |    object[]    | 参数列表                 |  是   |
-
-返回值
----
-| 字段名             |  字段类型  | 参数描述        |
-| --------------- |:------:| ----------- |
-| txHash          | string | 发布合约的交易hash |
-| contractAddress | string | 生成的合约地址     |
-
-调用合约
-====
-Cmd: /api/contract/call
------------------------
-### CmdType: RESTFUL
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
-
-### Form json data: 
-```json
-{
-  "sender" : null,
-  "gasLimit" : 0,
-  "price" : 0,
-  "password" : null,
-  "remark" : null,
-  "contractAddress" : null,
-  "value" : null,
-  "methodName" : null,
-  "methodDesc" : null,
-  "args" : null
-}
-```
-
-参数列表
-----
-| 参数名                                                             |     参数类型     | 参数描述                       | 是否非空 |
-| --------------------------------------------------------------- |:------------:| -------------------------- |:----:|
-| 调用合约                                                            | contractcall | 调用合约表单                     |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sender          |    string    | 交易创建者                      |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gasLimit        |     long     | 最大gas消耗                    |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price           |     long     | 执行合约单价                     |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password        |    string    | 交易创建者账户密码                  |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark          |    string    | 备注                         |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractAddress |    string    | 智能合约地址                     |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value           |  biginteger  | 调用者向合约地址转入的主网资产金额，没有此业务时填0 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodName      |    string    | 方法名                        |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodDesc      |    string    | 方法描述，若合约内方法没有重载，则此参数可以为空   |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args            |   object[]   | 参数列表                       |  是   |
-
-返回值
----
-| 字段名    |  字段类型  | 参数描述        |
-| ------ |:------:| ----------- |
-| txHash | string | 调用合约的交易hash |
-
-删除合约
-====
-Cmd: /api/contract/delete
--------------------------
-### CmdType: RESTFUL
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
-
-### Form json data: 
-```json
-{
-  "sender" : null,
-  "contractAddress" : null,
-  "password" : null,
-  "remark" : null
-}
-```
-
-参数列表
-----
-| 参数名                                                             |      参数类型      | 参数描述      | 是否非空 |
-| --------------------------------------------------------------- |:--------------:| --------- |:----:|
-| 删除合约                                                            | contractdelete | 删除合约表单    |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sender          |     string     | 交易创建者     |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractAddress |     string     | 智能合约地址    |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password        |     string     | 交易创建者账户密码 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark          |     string     | 备注        |  是   |
-
-返回值
----
-| 字段名    |  字段类型  | 参数描述        |
-| ------ |:------:| ----------- |
-| txHash | string | 删除合约的交易hash |
-
-获取智能合约执行结果
-==========
-Cmd: /api/contract/result/{hash}
---------------------------------
-### CmdType: RESTFUL
-### HttpMethod: GET
-### ContentType: application/json;charset=UTF-8
-
-
-参数列表
-----
-| 参数名  |  参数类型  | 参数描述   | 是否非空 |
-| ---- |:------:| ------ |:----:|
-| hash | string | 交易hash |  是   |
-
-返回值
----
-| 字段名                                                                                                   |      字段类型       | 参数描述                                        |
-| ----------------------------------------------------------------------------------------------------- |:---------------:| ------------------------------------------- |
-| success                                                                                               |     boolean     | 合约执行是否成功                                    |
-| errorMessage                                                                                          |     string      | 执行失败信息                                      |
-| contractAddress                                                                                       |     string      | 合约地址                                        |
-| result                                                                                                |     string      | 合约执行结果                                      |
-| gasLimit                                                                                              |      long       | GAS限制                                       |
-| gasUsed                                                                                               |      long       | 已使用GAS                                      |
-| price                                                                                                 |      long       | GAS单价                                       |
-| totalFee                                                                                              |     string      | 交易总手续费                                      |
-| txSizeFee                                                                                             |     string      | 交易大小手续费                                     |
-| actualContractFee                                                                                     |     string      | 实际执行合约手续费                                   |
-| refundFee                                                                                             |     string      | 合约返回的手续费                                    |
-| value                                                                                                 |     string      | 调用者向合约地址转入的主网资产金额，没有此业务时则为0                 |
-| stackTrace                                                                                            |     string      | 异常堆栈踪迹                                      |
-| transfers                                                                                             | list&lt;object> | 合约转账列表（从合约转出）                               |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;txHash                                                |     string      | 合约生成交易：合约转账交易hash                           |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;from                                                  |     string      | 转出的合约地址                                     |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value                                                 |     string      | 转账金额                                        |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;outputs                                               | list&lt;object> | 转入的地址列表                                     |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to    |     string      | 转入地址                                        |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value |     string      | 转入金额                                        |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;orginTxHash                                           |     string      | 调用合约交易hash（源交易hash，合约交易由调用合约交易派生而来）         |
-| events                                                                                                | list&lt;string> | 合约事件列表                                      |
-| tokenTransfers                                                                                        | list&lt;object> | 合约token转账列表                                 |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractAddress                                       |     string      | 合约地址                                        |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;from                                                  |     string      | 付款方                                         |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to                                                    |     string      | 收款方                                         |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value                                                 |     string      | 转账金额                                        |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name                                                  |     string      | token名称                                     |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;symbol                                                |     string      | token符号                                     |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;decimals                                              |      long       | token支持的小数位数                                |
-| invokeRegisterCmds                                                                                    | list&lt;object> | 合约调用外部命令的调用记录列表                             |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cmdName                                               |     string      | 命令名称                                        |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args                                                  |       map       | 命令参数，参数不固定，依据不同的命令而来，故此处不作描述，结构为 {参数名称=参数值} |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cmdRegisterMode                                       |     string      | 注册的命令模式（QUERY\_DATA or NEW\_TX）             |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;newTxHash                                             |     string      | 生成的交易hash（当调用的命令模式是 NEW\_TX 时，会生成交易）        |
-| contractTxList                                                                                        | list&lt;string> | 合约生成交易的序列化字符串列表                             |
-| remark                                                                                                |     string      | 备注                                          |
 
 token转账
 =======
@@ -1273,6 +1273,36 @@ Cmd: /api/account
 | ---- |:---------------:| ---- |
 | list | list&lt;string> | 账户地址 |
 
+账户备份，导出账户私钥，只能导出本地创建或导入的账户
+==========================
+Cmd: /api/account/prikey/{address}
+----------------------------------
+### CmdType: RESTFUL
+### HttpMethod: POST
+### ContentType: application/json;charset=UTF-8
+
+
+### Form json data: 
+```json
+{
+  "password" : null
+}
+```
+
+参数列表
+----
+| 参数名                                                      |        参数类型         | 参数描述     | 是否非空 |
+| -------------------------------------------------------- |:-------------------:| -------- |:----:|
+| address                                                  |       string        | 账户地址     |  是   |
+| 账户密码信息                                                   | accountpasswordform | 账户密码信息表单 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password |       string        | 密码       |  是   |
+
+返回值
+---
+| 字段名   |  字段类型  | 参数描述 |
+| ----- |:------:| ---- |
+| value | string | 私钥   |
+
 [修改密码] 根据原密码修改账户密码
 ==================
 Cmd: /api/account/password/{address}
@@ -1493,94 +1523,6 @@ Cmd: /api/account/offline
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prikey              |     string      | 明文私钥         |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;encryptedPrivateKey |     string      | 加密后的私钥       |
 
-账户备份，导出账户私钥，只能导出本地创建或导入的账户
-==========================
-Cmd: /api/account/prikey/{address}
-----------------------------------
-### CmdType: RESTFUL
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
-
-### Form json data: 
-```json
-{
-  "password" : null
-}
-```
-
-参数列表
-----
-| 参数名                                                      |        参数类型         | 参数描述     | 是否非空 |
-| -------------------------------------------------------- |:-------------------:| -------- |:----:|
-| address                                                  |       string        | 账户地址     |  是   |
-| 账户密码信息                                                   | accountpasswordform | 账户密码信息表单 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password |       string        | 密码       |  是   |
-
-返回值
----
-| 字段名   |  字段类型  | 参数描述 |
-| ----- |:------:| ---- |
-| value | string | 私钥   |
-
-查询最新区块
-======
-Cmd: /api/block/newest
-----------------------
-### CmdType: RESTFUL
-### HttpMethod: GET
-### ContentType: application/json;charset=UTF-8
-
-
-参数列表
-----
-无参数
-
-返回值
----
-| 字段名                                                                                                           |      字段类型       | 参数描述                                      |
-| ------------------------------------------------------------------------------------------------------------- |:---------------:| ----------------------------------------- |
-| header                                                                                                        |     object      | 区块头信息, 只返回对应的部分数据                         |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hash                                                          |     string      | 区块的hash值                                  |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;preHash                                                       |     string      | 上一个区块的hash值                               |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;merkleHash                                                    |     string      | 梅克尔hash                                   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;time                                                          |     string      | 区块生成时间                                    |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;height                                                        |      long       | 区块高度                                      |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;txCount                                                       |       int       | 区块打包交易数量                                  |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;blockSignature                                                |     string      | 签名Hex.encode(byte[])                      |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;size                                                          |       int       | 大小                                        |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;packingAddress                                                |     string      | 打包地址                                      |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;roundIndex                                                    |      long       | 共识轮次                                      |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;consensusMemberCount                                          |       int       | 参与共识成员数量                                  |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;roundStartTime                                                |     string      | 当前共识轮开始时间                                 |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;packingIndexOfRound                                           |       int       | 当前轮次打包出块的名次                               |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mainVersion                                                   |      short      | 主网当前生效的版本                                 |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;blockVersion                                                  |      short      | 区块的版本，可以理解为本地钱包的版本                        |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stateRoot                                                     |     string      | 智能合约世界状态根                                 |
-| txs                                                                                                           | list&lt;object> | 交易列表                                      |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hash                                                          |     string      | 交易的hash值                                  |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;type                                                          |       int       | 交易类型                                      |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;time                                                          |     string      | 交易时间                                      |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;blockHeight                                                   |      long       | 区块高度                                      |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark                                                        |     string      | 交易备注                                      |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;transactionSignature                                          |     string      | 交易签名                                      |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;status                                                        |       int       | 交易状态 0:unConfirm(待确认), 1:confirm(已确认)     |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;size                                                          |       int       | 交易大小                                      |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inBlockIndex                                                  |       int       | 在区块中的顺序，存储在rocksDB中是无序的，保存区块时赋值，取出后根据此值排序 |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;form                                                          | list&lt;object> | 输入                                        |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address       |     string      | 账户地址                                      |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetsChainId |       int       | 资产发行链的id                                  |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetsId      |       int       | 资产id                                      |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount        |     string      | 数量                                        |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nonce         |     string      | 账户nonce值的Hex字符串，防止双花交易，取上一笔交易hash的最后8个字节  |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;locked        |      byte       | 0普通交易，-1解锁金额交易（退出共识，退出委托）                 |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to                                                            | list&lt;object> | 输出                                        |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address       |     string      | 账户地址                                      |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetsChainId |       int       | 资产发行链的id                                  |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetsId      |       int       | 资产id                                      |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount        |     string      | 数量                                        |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lockTime      |      long       | 解锁时间，-1为永久锁定                              |
-
 根据区块高度查询区块，包含区块打包的所有交易信息，此接口返回数据量较多，谨慎调用
 ========================================
 Cmd: /api/block/height/{height}
@@ -1652,6 +1594,64 @@ Cmd: /api/block/hash/{hash}
 | mainVersion          | short  | 主网当前生效的版本            |
 | blockVersion         | short  | 区块的版本，可以理解为本地钱包的版本   |
 | stateRoot            | string | 智能合约世界状态根            |
+
+查询最新区块
+======
+Cmd: /api/block/newest
+----------------------
+### CmdType: RESTFUL
+### HttpMethod: GET
+### ContentType: application/json;charset=UTF-8
+
+
+参数列表
+----
+无参数
+
+返回值
+---
+| 字段名                                                                                                           |      字段类型       | 参数描述                                      |
+| ------------------------------------------------------------------------------------------------------------- |:---------------:| ----------------------------------------- |
+| header                                                                                                        |     object      | 区块头信息, 只返回对应的部分数据                         |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hash                                                          |     string      | 区块的hash值                                  |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;preHash                                                       |     string      | 上一个区块的hash值                               |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;merkleHash                                                    |     string      | 梅克尔hash                                   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;time                                                          |     string      | 区块生成时间                                    |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;height                                                        |      long       | 区块高度                                      |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;txCount                                                       |       int       | 区块打包交易数量                                  |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;blockSignature                                                |     string      | 签名Hex.encode(byte[])                      |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;size                                                          |       int       | 大小                                        |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;packingAddress                                                |     string      | 打包地址                                      |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;roundIndex                                                    |      long       | 共识轮次                                      |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;consensusMemberCount                                          |       int       | 参与共识成员数量                                  |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;roundStartTime                                                |     string      | 当前共识轮开始时间                                 |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;packingIndexOfRound                                           |       int       | 当前轮次打包出块的名次                               |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mainVersion                                                   |      short      | 主网当前生效的版本                                 |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;blockVersion                                                  |      short      | 区块的版本，可以理解为本地钱包的版本                        |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stateRoot                                                     |     string      | 智能合约世界状态根                                 |
+| txs                                                                                                           | list&lt;object> | 交易列表                                      |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hash                                                          |     string      | 交易的hash值                                  |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;type                                                          |       int       | 交易类型                                      |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;time                                                          |     string      | 交易时间                                      |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;blockHeight                                                   |      long       | 区块高度                                      |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark                                                        |     string      | 交易备注                                      |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;transactionSignature                                          |     string      | 交易签名                                      |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;status                                                        |       int       | 交易状态 0:unConfirm(待确认), 1:confirm(已确认)     |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;size                                                          |       int       | 交易大小                                      |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inBlockIndex                                                  |       int       | 在区块中的顺序，存储在rocksDB中是无序的，保存区块时赋值，取出后根据此值排序 |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;form                                                          | list&lt;object> | 输入                                        |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address       |     string      | 账户地址                                      |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetsChainId |       int       | 资产发行链的id                                  |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetsId      |       int       | 资产id                                      |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount        |     string      | 数量                                        |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nonce         |     string      | 账户nonce值的Hex字符串，防止双花交易，取上一笔交易hash的最后8个字节  |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;locked        |      byte       | 0普通交易，-1解锁金额交易（退出共识，退出委托）                 |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;to                                                            | list&lt;object> | 输出                                        |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address       |     string      | 账户地址                                      |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetsChainId |       int       | 资产发行链的id                                  |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetsId      |       int       | 资产id                                      |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount        |     string      | 数量                                        |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lockTime      |      long       | 解锁时间，-1为永久锁定                              |
 
 根据区块hash查询区块头
 =============

@@ -41,7 +41,9 @@ import io.nuls.rpctools.LegderTools;
 import io.nuls.rpctools.vo.AccountBalance;
 import io.nuls.utils.ResultUtil;
 import io.nuls.utils.VerifyUtils;
+import io.nuls.v2.model.annotation.Api;
 import io.nuls.v2.model.annotation.ApiOperation;
+import io.nuls.v2.model.annotation.ApiType;
 import io.nuls.v2.model.dto.AccountDto;
 import io.nuls.v2.util.NulsSDKTool;
 import org.checkerframework.checker.units.qual.K;
@@ -54,6 +56,7 @@ import java.util.Map;
  * @author Niels
  */
 @Controller
+@Api(type = ApiType.JSONRPC)
 public class AccountController {
 
     @Autowired
@@ -70,7 +73,7 @@ public class AccountController {
             @Parameter(parameterName = "count", requestType = @TypeDescriptor(value = int.class), parameterDes = "创建数量"),
             @Parameter(parameterName = "password", requestType = @TypeDescriptor(value = String.class), parameterDes = "密码")
     })
-    @ResponseData(name = "返回值", description = "返回账户地址集合", responseType = @TypeDescriptor(value = List.class))
+    @ResponseData(name = "返回值", description = "返回账户地址集合", responseType = @TypeDescriptor(value = List.class, collectionElement = String.class))
     public RpcResult createAccount(List<Object> params) {
         VerifyUtils.verifyParams(params, 3);
         int chainId, count;
@@ -354,6 +357,13 @@ public class AccountController {
     }
 
     @RpcMethod("createAccountOffline")
+    @ApiOperation(description = "离线 - 批量创建账户")
+    @Parameters(value = {
+            @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
+            @Parameter(parameterName = "count", requestType = @TypeDescriptor(value = int.class), parameterDes = "创建数量"),
+            @Parameter(parameterName = "password", requestType = @TypeDescriptor(value = String.class), parameterDes = "密码")
+    })
+    @ResponseData(name = "返回值", description = "返回账户信息集合", responseType = @TypeDescriptor(value = List.class, collectionElement = AccountDto.class))
     public RpcResult createAccountOffline(List<Object> params) {
         VerifyUtils.verifyParams(params, 3);
         int chainId, count;
