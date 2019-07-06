@@ -1,5 +1,6 @@
 package io.nuls.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.nuls.base.api.provider.Provider;
 import io.nuls.base.api.provider.ServiceManager;
 import io.nuls.core.core.annotation.RpcMethod;
@@ -195,6 +196,7 @@ public class DocTool {
         SpringLiteContext.init("io.nuls");
         //Gen.genJSON();
         Gen.genDoc();
+        Gen.genPostmanJSON();
         System.exit(0);
     }
 
@@ -311,6 +313,15 @@ public class DocTool {
             List<CmdDes> jsonrpcCmdDesList = cmdDesList[1];
             System.out.println("生成RESTFUL文档成功：" + createJSONConfig(restfulCmdDesList, ApiType.RESTFUL, "/Users/pierreluo/IdeaProjects/nuls-engine/nuls-sdk-provider/documents"));
             System.out.println("生成JSONRPC文档成功：" + createJSONConfig(jsonrpcCmdDesList, ApiType.JSONRPC, "/Users/pierreluo/IdeaProjects/nuls-engine/nuls-sdk-provider/documents"));
+//            System.exit(0);
+        }
+
+        public static void genPostmanJSON() throws IOException {
+            List<CmdDes>[] cmdDesList = buildData();
+            List<CmdDes> restfulCmdDesList = cmdDesList[0];
+            List<CmdDes> jsonrpcCmdDesList = cmdDesList[1];
+            System.out.println("生成Postman-RESTFUL导入文件成功：" + createPostmanJSONConfig(restfulCmdDesList, ApiType.RESTFUL, "/Users/pierreluo/IdeaProjects/nuls-engine/nuls-sdk-provider/documents"));
+            System.out.println("生成Postman-JSONRPC导入文件成功：" + createPostmanJSONConfig(jsonrpcCmdDesList, ApiType.JSONRPC, "/Users/pierreluo/IdeaProjects/nuls-engine/nuls-sdk-provider/documents"));
 //            System.exit(0);
         }
 
@@ -684,6 +695,138 @@ public class DocTool {
                 }
             });
         }
+
+        public static String genPostmanFormatJson(List<CmdDes> cmdDesList, ApiType apiType) throws JsonProcessingException {
+            boolean restful = apiType.equals(ApiType.RESTFUL);
+            boolean jsonrpc = apiType.equals(ApiType.JSONRPC);
+            PostmanFormat format = new PostmanFormat();
+            Info info = new Info();
+            format.setInfo(info);
+            info.setName("SDK-Provider-" + apiType.name());
+            info.setSchema("https://schema.getpostman.com/json/collection/v2.1.0/collection.json");
+            List<Item> item = new ArrayList<>();
+            for(CmdDes des : cmdDesList) {
+                Item aItem = new Item();
+                aItem.setName(des.des + " - " + des.cmdName);
+                Request request = new Request();
+                Body body = new Body();
+                Url url = new Url();
+                request.setMethod(des.httpMethod);
+                request.setBody(body);
+                if(jsonrpc) {
+                    List<String> nameList = des.getParameters().stream().map(p -> p.name).collect(Collectors.toList());
+                    body.setRaw(String.format(
+                            "{\n\"jsonrpc\":\"2.0\",\n\"method\":\"%s\",\n\"params\":%s,\n\"id\":1234\n}\n",
+                            des.cmdName,
+                            nameList.toString()
+                    ));
+                    url = Url.jsonrpcInstance();
+                } else if(restful) {
+                    Optional<ResultDes> first = des.getParameters().stream().filter(p -> p.formJsonOfRestful != null).findFirst();
+                    if(!first.isEmpty()) {
+                        body.setRaw(first.get().formJsonOfRestful);
+                    }
+                    url.path.add(des.cmdName.substring(1));
+                    url.raw = String.format("%s://%s:%s/%s", url.protocol, url.host.get(0), url.port, url.path.get(0));
+                }
+                request.setUrl(url);
+                aItem.setRequest(request);
+                item.add(aItem);
+            }
+            format.setItem(item);
+            String formatStr = JSONUtils.obj2json(format);
+            return formatStr;
+        }
+
+        @Data
+        private static class PostmanFormat {
+            private Info info;
+            private List<Item> item;
+        }
+
+        @Data
+        private static class Info {
+            private String _postman_id;
+            private String name;
+            private String schema;
+
+            public Info() {
+                this._postman_id = UUID.randomUUID().toString();
+            }
+        }
+
+        @Data
+        private static class Item {
+            private String name;
+            private Request request;
+            private List<String> response;
+
+            public Item() {
+                this.response = new ArrayList<>();
+            }
+        }
+
+        @Data
+        private static class Request {
+            private String method;
+            private List<Header> header;
+            private Body body;
+            private Url url;
+
+            public Request() {
+                this.header = new ArrayList<>();
+                Header header = new Header();
+                header.setKey("Content-Type");
+                header.setName("Content-Type");
+                header.setValue("application/json;charset=UTF-8");
+                header.setType("text");
+                this.header.add(header);
+            }
+        }
+
+        @Data
+        private static class Header {
+            private String key;
+            private String name;
+            private String value;
+            private String type;
+        }
+
+        @Data
+        private static class Body {
+            private String mode;
+            private String raw;
+
+            public Body() {
+                this.mode = "raw";
+            }
+        }
+
+        @Data
+        private static class Url {
+            private String raw;
+            private String protocol;
+            private List<String> host;
+            private String port;
+            private List<String> path;
+
+            public Url() {
+                this.protocol = "http";
+                this.host = new ArrayList<>();
+                this.host.add("localhost");
+                this.port = "9898";
+                this.path = new ArrayList<>();
+            }
+
+            public static Url jsonrpcInstance() {
+                Url url = new Url();
+                url.path.add("jsonrpc");
+                url.raw = "http://localhost:9898/jsonrpc";
+                return url;
+            }
+        }
     }
+
+
 
 }
