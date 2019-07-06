@@ -26,6 +26,9 @@ package io.nuls.api.jsonrpc.controller;
 import io.nuls.api.config.Context;
 import io.nuls.base.RPCUtil;
 import io.nuls.base.api.provider.Result;
+import io.nuls.base.api.provider.ServiceManager;
+import io.nuls.base.api.provider.transaction.TransferService;
+import io.nuls.base.api.provider.transaction.facade.TransferReq;
 import io.nuls.base.basic.AddressTool;
 import io.nuls.base.basic.NulsByteBuffer;
 import io.nuls.base.data.Transaction;
@@ -34,7 +37,12 @@ import io.nuls.core.constant.ErrorCode;
 import io.nuls.core.core.annotation.Autowired;
 import io.nuls.core.core.annotation.Controller;
 import io.nuls.core.core.annotation.RpcMethod;
+import io.nuls.core.exception.NulsException;
 import io.nuls.core.model.StringUtils;
+import io.nuls.core.parse.JSONUtils;
+import io.nuls.core.rpc.model.*;
+import io.nuls.model.ErrorData;
+import io.nuls.model.RpcClientResult;
 import io.nuls.model.jsonrpc.RpcErrorCode;
 import io.nuls.model.jsonrpc.RpcResult;
 import io.nuls.model.txdata.CallContractData;
@@ -43,8 +51,22 @@ import io.nuls.model.txdata.DeleteContractData;
 import io.nuls.rpctools.ContractTools;
 import io.nuls.rpctools.TransactionTools;
 import io.nuls.utils.Log;
+import io.nuls.utils.ResultUtil;
 import io.nuls.utils.VerifyUtils;
+import io.nuls.v2.model.annotation.ApiOperation;
+import io.nuls.v2.model.dto.CoinFromDto;
+import io.nuls.v2.model.dto.CoinToDto;
+import io.nuls.v2.model.dto.TransferDto;
+import io.nuls.v2.util.CommonValidator;
+import io.nuls.v2.util.NulsSDKTool;
+import io.nuls.v2.util.ValidateUtil;
 
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -62,6 +84,8 @@ public class TransactionController {
     private TransactionTools transactionTools;
     @Autowired
     private ContractTools contractTools;
+
+    TransferService transferService = ServiceManager.get(TransferService.class);
 
     @RpcMethod("validateTx")
     public RpcResult validateTx(List<Object> params) {
@@ -169,6 +193,127 @@ public class TransactionController {
         } catch (Exception e) {
             Log.error(e);
             return RpcResult.failed(RpcErrorCode.TX_PARSE_ERROR);
+        }
+    }
+
+    @RpcMethod("transfer")
+    public RpcResult transfer(List<Object> params) {
+        VerifyUtils.verifyParams(params, 6);
+        int chainId, assetId;
+        String address, toAddress, password, amount, remark;
+        try {
+            chainId = (int) params.get(0);
+        } catch (Exception e) {
+            return RpcResult.paramError("[chainId] is inValid");
+        }
+        try {
+            assetId = (int) params.get(1);
+        } catch (Exception e) {
+            return RpcResult.paramError("[assetId] is inValid");
+        }
+        try {
+            address = (String) params.get(2);
+        } catch (Exception e) {
+            return RpcResult.paramError("[address] is inValid");
+        }
+        try {
+            toAddress = (String) params.get(3);
+        } catch (Exception e) {
+            return RpcResult.paramError("[toAddress] is inValid");
+        }
+        try {
+            password = (String) params.get(4);
+        } catch (Exception e) {
+            return RpcResult.paramError("[password] is inValid");
+        }
+        try {
+            amount = (String) params.get(5);
+        } catch (Exception e) {
+            return RpcResult.paramError("[amount] is inValid");
+        }
+        try {
+            remark = (String) params.get(6);
+        } catch (Exception e) {
+            return RpcResult.paramError("[remark] is inValid");
+        }
+        if (!AddressTool.validAddress(chainId, address)) {
+            return RpcResult.paramError("[address] is inValid");
+        }
+        if (!AddressTool.validAddress(chainId, toAddress)) {
+            return RpcResult.paramError("[toAddress] is inValid");
+        }
+        if (!ValidateUtil.validateBigInteger(amount)) {
+            return RpcResult.paramError("[amount] is inValid");
+        }
+        TransferReq.TransferReqBuilder builder =
+                new TransferReq.TransferReqBuilder(chainId, assetId)
+                        .addForm(address, password, new BigInteger(amount))
+                        .addTo(toAddress, new BigInteger(amount)).setRemark(remark);
+        Result<String> result = transferService.transfer(builder.build());
+        if (result.isSuccess()) {
+            return RpcResult.success(result.getData());
+        } else {
+            return RpcResult.failed(ErrorCode.init(result.getStatus()), result.getMessage());
+        }
+    }
+
+    @RpcMethod("createTransferTxOffline")
+    @ApiOperation(description = "离线组装转账交易")
+    @Parameters({
+            @Parameter(parameterName = "transferDto", parameterDes = "转账交易表单", requestType = @TypeDescriptor(value = TransferDto.class))
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "hash", description = "交易hash"),
+            @Key(name = "txHex", description = "交易序列化16进制字符串")
+    }))
+    public RpcResult createTransferTxOffline(List<Object> params) {
+        List<Map> inputList, outpuList;
+        String remark;
+
+        List<CoinFromDto> froms = new ArrayList<>();
+        List<CoinToDto> tos = new ArrayList<>();
+        try {
+            inputList = (List<Map>) params.get(0);
+            for (Map map : inputList) {
+                String amount = (String) map.get("amount");
+                map.put("amount", new BigInteger(amount));
+                CoinFromDto fromDto = JSONUtils.map2pojo(map, CoinFromDto.class);
+                froms.add(fromDto);
+            }
+        } catch (Exception e) {
+            return RpcResult.paramError("[inputList] is inValid");
+        }
+        try {
+            outpuList = (List<Map>) params.get(1);
+            for (Map map : outpuList) {
+                String amount = (String) map.get("amount");
+                map.put("amount", new BigInteger(amount));
+                CoinToDto toDto = JSONUtils.map2pojo(map, CoinToDto.class);
+                tos.add(toDto);
+            }
+        } catch (Exception e) {
+            return RpcResult.paramError("[outpuList] is inValid");
+        }
+        try {
+            remark = (String) params.get(2);
+        } catch (Exception e) {
+            return RpcResult.paramError("[remark] is inValid");
+        }
+
+        try {
+            TransferDto transferDto = new TransferDto();
+            transferDto.setInputs(froms);
+            transferDto.setOutputs(tos);
+            transferDto.setRemark(remark);
+            CommonValidator.checkTransferDto(transferDto);
+            io.nuls.core.basic.Result result = NulsSDKTool.createTransferTxOffline(transferDto);
+            if (result.isSuccess()) {
+                return RpcResult.success(result.getData());
+            } else {
+                return RpcResult.failed(result.getErrorCode(), result.getMsg());
+            }
+        } catch (NulsException e) {
+            return RpcResult.failed(e.getErrorCode(), e.format());
         }
     }
 }

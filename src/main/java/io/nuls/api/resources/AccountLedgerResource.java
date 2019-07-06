@@ -34,6 +34,7 @@ import io.nuls.base.api.provider.transaction.facade.TransferReq;
 import io.nuls.core.constant.CommonCodeConstanst;
 import io.nuls.core.core.annotation.Autowired;
 import io.nuls.core.core.annotation.Component;
+import io.nuls.core.exception.NulsException;
 import io.nuls.core.rpc.model.*;
 import io.nuls.model.ErrorData;
 import io.nuls.model.RpcClientResult;
@@ -44,6 +45,9 @@ import io.nuls.rpctools.TransactionTools;
 import io.nuls.utils.ResultUtil;
 import io.nuls.v2.model.annotation.Api;
 import io.nuls.v2.model.annotation.ApiOperation;
+import io.nuls.v2.model.dto.TransferDto;
+import io.nuls.v2.util.CommonValidator;
+import io.nuls.v2.util.NulsSDKTool;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -81,15 +85,36 @@ public class AccountLedgerResource {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
         }
         TransferReq.TransferReqBuilder builder =
-                new TransferReq.TransferReqBuilder(config.getChainId(),config.getAssetsId())
+                new TransferReq.TransferReqBuilder(config.getChainId(), config.getAssetsId())
                         .addForm(form.getAddress(), form.getPassword(), form.getAmount())
                         .addTo(form.getToAddress(), form.getAmount());
         Result<String> result = transferService.transfer(builder.build());
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
-        if(clientResult.isSuccess()) {
+        if (clientResult.isSuccess()) {
             return clientResult.resultMap().map("value", clientResult.getData()).mapToData();
         }
         return clientResult;
+    }
+
+    @POST
+    @Path("/createTransferTxOffline")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "离线组装转账交易")
+    @Parameters({
+            @Parameter(parameterName = "transferDto", parameterDes = "转账交易表单", requestType = @TypeDescriptor(value = TransferDto.class))
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "hash", description = "交易hash"),
+            @Key(name = "txHex", description = "交易序列化16进制字符串")
+    }))
+    public RpcClientResult createTransferTxOffline(TransferDto transferDto) {
+        try {
+            CommonValidator.checkTransferDto(transferDto);
+            io.nuls.core.basic.Result result = NulsSDKTool.createTransferTxOffline(transferDto);
+            return ResultUtil.getRpcClientResult(result);
+        } catch (NulsException e) {
+            return RpcClientResult.getFailed(new ErrorData(e.getErrorCode().getCode(), e.getMessage()));
+        }
     }
 
     @GET
@@ -106,11 +131,11 @@ public class AccountLedgerResource {
         }
         Integer assetChainId = config.getChainId();
         Integer assetId = config.getAssetsId();
-        GetBalanceReq req = new GetBalanceReq(assetId,assetChainId,address);
+        GetBalanceReq req = new GetBalanceReq(assetId, assetChainId, address);
         req.setChainId(config.getChainId());
         Result<AccountBalanceInfo> result = ledgerProvider.getBalance(req);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
-        if(clientResult.isSuccess()) {
+        if (clientResult.isSuccess()) {
             clientResult.setData(new AccountBalanceDto((AccountBalanceInfo) clientResult.getData()));
         }
         return clientResult;
