@@ -712,8 +712,6 @@ public class DocTool {
                 Url url = new Url();
                 request.setMethod(des.httpMethod);
                 request.setBody(body);
-
-
                 if(jsonrpc) {
                     body.setRaw(String.format(
                             "{\n\"jsonrpc\":\"2.0\",\n\"method\":\"%s\",\n\"params\":[],\n\"id\":1234\n}\n",
@@ -734,7 +732,6 @@ public class DocTool {
             }
             format.setItem(item);
             String formatStr = JSONUtils.obj2json(format);
-            System.out.println(formatStr);
             return formatStr;
         }
 
