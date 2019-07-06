@@ -775,7 +775,7 @@ public class DocTool {
                 Header header = new Header();
                 header.setKey("Content-Type");
                 header.setName("Content-Type");
-                header.setValue("application/json");
+                header.setValue("application/json;charset=UTF-8");
                 header.setType("text");
                 this.header.add(header);
             }
