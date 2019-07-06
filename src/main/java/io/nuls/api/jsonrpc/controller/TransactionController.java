@@ -53,7 +53,9 @@ import io.nuls.rpctools.TransactionTools;
 import io.nuls.utils.Log;
 import io.nuls.utils.ResultUtil;
 import io.nuls.utils.VerifyUtils;
+import io.nuls.v2.model.annotation.Api;
 import io.nuls.v2.model.annotation.ApiOperation;
+import io.nuls.v2.model.annotation.ApiType;
 import io.nuls.v2.model.dto.CoinFromDto;
 import io.nuls.v2.model.dto.CoinToDto;
 import io.nuls.v2.model.dto.TransferDto;
@@ -78,6 +80,7 @@ import static io.nuls.utils.Utils.extractTxTypeFromTx;
  * @date: 2019-07-02
  */
 @Controller
+@Api(type = ApiType.JSONRPC)
 public class TransactionController {
 
     @Autowired

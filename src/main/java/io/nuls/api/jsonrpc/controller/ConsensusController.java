@@ -40,7 +40,9 @@ import io.nuls.model.form.consensus.StopAgentForm;
 import io.nuls.model.form.consensus.WithdrawForm;
 import io.nuls.model.jsonrpc.RpcResult;
 import io.nuls.utils.ResultUtil;
+import io.nuls.v2.model.annotation.Api;
 import io.nuls.v2.model.annotation.ApiOperation;
+import io.nuls.v2.model.annotation.ApiType;
 import io.nuls.v2.model.dto.CoinFromDto;
 import io.nuls.v2.model.dto.ConsensusDto;
 import io.nuls.v2.model.dto.StopConsensusDto;
@@ -55,6 +57,7 @@ import java.util.Map;
  * @author Niels
  */
 @Controller
+@Api(type = ApiType.JSONRPC)
 public class ConsensusController {
 
     ConsensusProvider consensusProvider = ServiceManager.get(ConsensusProvider.class);

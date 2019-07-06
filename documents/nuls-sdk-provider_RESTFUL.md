@@ -46,144 +46,6 @@ Cmd: /api/tx/hash/{hash}
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount        |     string      | 数量                                        |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lockTime      |      long       | 解锁时间，-1为永久锁定                              |
 
-Create an agent for consensus! 创建共识(代理)节点
-=========================================
-Cmd: /api/consensus/agent
--------------------------
-### CmdType: RESTFUL
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
-
-### Form json data: 
-```json
-{
-  "agentAddress" : null,
-  "packingAddress" : null,
-  "rewardAddress" : null,
-  "commissionRate" : 0,
-  "deposit" : null,
-  "password" : null
-}
-```
-
-参数列表
-----
-| 参数名                                                            |      参数类型       | 参数描述         | 是否非空 |
-| -------------------------------------------------------------- |:---------------:| ------------ |:----:|
-| 创建共识(代理)节点                                                     | createagentform | 创建共识(代理)节点表单 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;agentAddress   |     string      | 节点地址         |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;packingAddress |     string      | 节点出块地址       |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rewardAddress  |     string      | 奖励地址，默认节点地址  |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;commissionRate |       int       | 佣金比例         |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deposit        |     string      | 抵押金额         |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password       |     string      | 密码           |  是   |
-
-返回值
----
-| 字段名   |  字段类型  | 参数描述   |
-| ----- |:------:| ------ |
-| value | string | 交易hash |
-
-注销共识节点
-======
-Cmd: /api/consensus/agent/stop
-------------------------------
-### CmdType: RESTFUL
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
-
-### Form json data: 
-```json
-{
-  "address" : null,
-  "password" : null
-}
-```
-
-参数列表
-----
-| 参数名                                                      |     参数类型      | 参数描述     | 是否非空 |
-| -------------------------------------------------------- |:-------------:| -------- |:----:|
-| 注销共识节点                                                   | stopagentform | 注销共识节点表单 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address  |    string     | 共识节点地址   |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password |    string     | 密码       |  是   |
-
-返回值
----
-| 字段名   |  字段类型  | 参数描述   |
-| ----- |:------:| ------ |
-| value | string | 交易hash |
-
-deposit nuls to a bank! 申请参与共识
-==============================
-Cmd: /api/consensus/deposit
----------------------------
-### CmdType: RESTFUL
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
-
-### Form json data: 
-```json
-{
-  "address" : null,
-  "agentHash" : null,
-  "deposit" : null,
-  "password" : null
-}
-```
-
-参数列表
-----
-| 参数名                                                       |    参数类型     | 参数描述     | 是否非空 |
-| --------------------------------------------------------- |:-----------:| -------- |:----:|
-| 申请参与共识                                                    | depositform | 申请参与共识表单 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address   |   string    | 参与共识账户地址 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;agentHash |   string    | 共识节点hash |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deposit   |   string    | 参与共识的金额  |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password  |   string    | 密码       |  是   |
-
-返回值
----
-| 字段名   |  字段类型  | 参数描述   |
-| ----- |:------:| ------ |
-| value | string | 交易hash |
-
-退出共识
-====
-Cmd: /api/consensus/withdraw
-----------------------------
-### CmdType: RESTFUL
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
-
-### Form json data: 
-```json
-{
-  "address" : null,
-  "txHash" : null,
-  "password" : null
-}
-```
-
-参数列表
-----
-| 参数名                                                      |     参数类型     | 参数描述         | 是否非空 |
-| -------------------------------------------------------- |:------------:| ------------ |:----:|
-| 退出共识                                                     | withdrawform | 退出共识表单       |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address  |    string    | 节点地址         |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;txHash   |    string    | 加入共识时的交易hash |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password |    string    | 密码           |  是   |
-
-返回值
----
-| 字段名   |  字段类型  | 参数描述   |
-| ----- |:------:| ------ |
-| value | string | 交易hash |
-
 离线组装 - 创建共识(代理)节点
 =================
 Cmd: /api/consensus/agent/offline
@@ -375,6 +237,528 @@ Cmd: /api/consensus/withdraw/offline
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetId |     int     | 资产id        |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount  | biginteger  | 资产金额        |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nonce   |   string    | 资产nonce值    |  是   |
+
+返回值
+---
+| 字段名   |  字段类型  | 参数描述     |
+| ----- |:------:| -------- |
+| hash  | string | 交易hash   |
+| txHex | string | 交易序列化字符串 |
+
+Create an agent for consensus! 创建共识(代理)节点
+=========================================
+Cmd: /api/consensus/agent
+-------------------------
+### CmdType: RESTFUL
+### HttpMethod: POST
+### ContentType: application/json;charset=UTF-8
+
+
+### Form json data: 
+```json
+{
+  "agentAddress" : null,
+  "packingAddress" : null,
+  "rewardAddress" : null,
+  "commissionRate" : 0,
+  "deposit" : null,
+  "password" : null
+}
+```
+
+参数列表
+----
+| 参数名                                                            |      参数类型       | 参数描述         | 是否非空 |
+| -------------------------------------------------------------- |:---------------:| ------------ |:----:|
+| 创建共识(代理)节点                                                     | createagentform | 创建共识(代理)节点表单 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;agentAddress   |     string      | 节点地址         |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;packingAddress |     string      | 节点出块地址       |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rewardAddress  |     string      | 奖励地址，默认节点地址  |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;commissionRate |       int       | 佣金比例         |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deposit        |     string      | 抵押金额         |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password       |     string      | 密码           |  是   |
+
+返回值
+---
+| 字段名   |  字段类型  | 参数描述   |
+| ----- |:------:| ------ |
+| value | string | 交易hash |
+
+注销共识节点
+======
+Cmd: /api/consensus/agent/stop
+------------------------------
+### CmdType: RESTFUL
+### HttpMethod: POST
+### ContentType: application/json;charset=UTF-8
+
+
+### Form json data: 
+```json
+{
+  "address" : null,
+  "password" : null
+}
+```
+
+参数列表
+----
+| 参数名                                                      |     参数类型      | 参数描述     | 是否非空 |
+| -------------------------------------------------------- |:-------------:| -------- |:----:|
+| 注销共识节点                                                   | stopagentform | 注销共识节点表单 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address  |    string     | 共识节点地址   |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password |    string     | 密码       |  是   |
+
+返回值
+---
+| 字段名   |  字段类型  | 参数描述   |
+| ----- |:------:| ------ |
+| value | string | 交易hash |
+
+deposit nuls to a bank! 申请参与共识
+==============================
+Cmd: /api/consensus/deposit
+---------------------------
+### CmdType: RESTFUL
+### HttpMethod: POST
+### ContentType: application/json;charset=UTF-8
+
+
+### Form json data: 
+```json
+{
+  "address" : null,
+  "agentHash" : null,
+  "deposit" : null,
+  "password" : null
+}
+```
+
+参数列表
+----
+| 参数名                                                       |    参数类型     | 参数描述     | 是否非空 |
+| --------------------------------------------------------- |:-----------:| -------- |:----:|
+| 申请参与共识                                                    | depositform | 申请参与共识表单 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address   |   string    | 参与共识账户地址 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;agentHash |   string    | 共识节点hash |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deposit   |   string    | 参与共识的金额  |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password  |   string    | 密码       |  是   |
+
+返回值
+---
+| 字段名   |  字段类型  | 参数描述   |
+| ----- |:------:| ------ |
+| value | string | 交易hash |
+
+退出共识
+====
+Cmd: /api/consensus/withdraw
+----------------------------
+### CmdType: RESTFUL
+### HttpMethod: POST
+### ContentType: application/json;charset=UTF-8
+
+
+### Form json data: 
+```json
+{
+  "address" : null,
+  "txHash" : null,
+  "password" : null
+}
+```
+
+参数列表
+----
+| 参数名                                                      |     参数类型     | 参数描述         | 是否非空 |
+| -------------------------------------------------------- |:------------:| ------------ |:----:|
+| 退出共识                                                     | withdrawform | 退出共识表单       |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address  |    string    | 节点地址         |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;txHash   |    string    | 加入共识时的交易hash |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password |    string    | 密码           |  是   |
+
+返回值
+---
+| 字段名   |  字段类型  | 参数描述   |
+| ----- |:------:| ------ |
+| value | string | 交易hash |
+
+token转账
+=======
+Cmd: /api/contract/tokentransfer
+--------------------------------
+### CmdType: RESTFUL
+### HttpMethod: POST
+### ContentType: application/json;charset=UTF-8
+
+
+### Form json data: 
+```json
+{
+  "fromAddress" : null,
+  "password" : null,
+  "toAddress" : null,
+  "contractAddress" : null,
+  "amount" : null,
+  "remark" : null
+}
+```
+
+参数列表
+----
+| 参数名                                                             |         参数类型          | 参数描述         | 是否非空 |
+| --------------------------------------------------------------- |:---------------------:| ------------ |:----:|
+| token转账                                                         | contracttokentransfer | token转账表单    |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fromAddress     |        string         | 转出者账户地址      |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password        |        string         | 转出者账户地址密码    |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;toAddress       |        string         | 转入者账户地址      |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractAddress |        string         | 合约地址         |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount          |      biginteger       | 转出的token资产金额 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark          |        string         | 备注           |  是   |
+
+返回值
+---
+| 字段名    |  字段类型  | 参数描述   |
+| ------ |:------:| ------ |
+| txHash | string | 交易hash |
+
+从账户地址向合约地址转账(主链资产)的合约交易
+=======================
+Cmd: /api/contract/transfer2contract
+------------------------------------
+### CmdType: RESTFUL
+### HttpMethod: POST
+### ContentType: application/json;charset=UTF-8
+
+
+### Form json data: 
+```json
+{
+  "fromAddress" : null,
+  "password" : null,
+  "toAddress" : null,
+  "amount" : null,
+  "remark" : null
+}
+```
+
+参数列表
+----
+| 参数名                                                         |       参数类型       | 参数描述      | 是否非空 |
+| ----------------------------------------------------------- |:----------------:| --------- |:----:|
+| 向合约地址转账                                                     | contracttransfer | 向合约地址转账表单 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fromAddress |      string      | 转出者账户地址   |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password    |      string      | 转出者账户地址密码 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;toAddress   |      string      | 转入的合约地址   |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount      |    biginteger    | 转出的主链资产金额 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark      |      string      | 备注        |  是   |
+
+返回值
+---
+| 字段名    |  字段类型  | 参数描述   |
+| ------ |:------:| ------ |
+| txHash | string | 交易hash |
+
+获取智能合约详细信息
+==========
+Cmd: /api/contract/info/{address}
+---------------------------------
+### CmdType: RESTFUL
+### HttpMethod: GET
+### ContentType: application/json;charset=UTF-8
+
+
+参数列表
+----
+| 参数名     |  参数类型  | 参数描述 | 是否非空 |
+| ------- |:------:| ---- |:----:|
+| address | string | 合约地址 |  是   |
+
+返回值
+---
+| 字段名                                                                                                      |      字段类型       | 参数描述                          |
+| -------------------------------------------------------------------------------------------------------- |:---------------:| ----------------------------- |
+| createTxHash                                                                                             |     string      | 发布合约的交易hash                   |
+| address                                                                                                  |     string      | 合约地址                          |
+| creater                                                                                                  |     string      | 合约创建者地址                       |
+| alias                                                                                                    |     string      | 合约别名                          |
+| createTime                                                                                               |      long       | 合约创建时间（单位：秒）                  |
+| blockHeight                                                                                              |      long       | 合约创建时的区块高度                    |
+| isDirectPayable                                                                                          |     boolean     | 是否接受直接转账                      |
+| isNrc20                                                                                                  |     boolean     | 是否是NRC20合约                    |
+| nrc20TokenName                                                                                           |     string      | NRC20-token名称                 |
+| nrc20TokenSymbol                                                                                         |     string      | NRC20-token符号                 |
+| decimals                                                                                                 |      long       | NRC20-token支持的小数位数            |
+| totalSupply                                                                                              |     string      | NRC20-token发行总量               |
+| status                                                                                                   |     string      | 合约状态（not_found, normal, stop） |
+| method                                                                                                   | list&lt;object> | 合约方法列表                        |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name                                                     |     string      | 方法名称                          |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;desc                                                     |     string      | 方法描述                          |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args                                                     | list&lt;object> | 方法参数列表                        |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;type     |     string      | 参数类型                          |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name     |     string      | 参数名称                          |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;required |     boolean     | 是否必填                          |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;returnArg                                                |     string      | 返回值类型                         |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;view                                                     |     boolean     | 是否视图方法（调用此方法数据不上链）            |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;event                                                    |     boolean     | 是否是事件                         |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;payable                                                  |     boolean     | 是否是可接受主链资产转账的方法               |
+
+获取已发布合约指定函数的信息
+==============
+Cmd: /api/contract/method
+-------------------------
+### CmdType: RESTFUL
+### HttpMethod: POST
+### ContentType: application/json;charset=UTF-8
+
+
+### Form json data: 
+```json
+{
+  "contractAddress" : null,
+  "methodName" : null,
+  "methodDesc" : null
+}
+```
+
+参数列表
+----
+| 参数名                                                             |        参数类型        | 参数描述                     | 是否非空 |
+| --------------------------------------------------------------- |:------------------:| ------------------------ |:----:|
+| 获取已发布合约指定函数的信息                                                  | contractmethodform | 获取已发布合约指定函数的信息表单         |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractAddress |       string       | 智能合约地址                   |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodName      |       string       | 方法名                      |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodDesc      |       string       | 方法描述，若合约内方法没有重载，则此参数可以为空 |  是   |
+
+返回值
+---
+| 字段名                                                      |      字段类型       | 参数描述               |
+| -------------------------------------------------------- |:---------------:| ------------------ |
+| name                                                     |     string      | 方法名称               |
+| desc                                                     |     string      | 方法描述               |
+| args                                                     | list&lt;object> | 方法参数列表             |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;type     |     string      | 参数类型               |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name     |     string      | 参数名称               |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;required |     boolean     | 是否必填               |
+| returnArg                                                |     string      | 返回值类型              |
+| view                                                     |     boolean     | 是否视图方法（调用此方法数据不上链） |
+| event                                                    |     boolean     | 是否是事件              |
+| payable                                                  |     boolean     | 是否是可接受主链资产转账的方法    |
+
+获取已发布合约指定函数的参数类型列表
+==================
+Cmd: /api/contract/method/argstypes
+-----------------------------------
+### CmdType: RESTFUL
+### HttpMethod: POST
+### ContentType: application/json;charset=UTF-8
+
+
+### Form json data: 
+```json
+{
+  "contractAddress" : null,
+  "methodName" : null,
+  "methodDesc" : null
+}
+```
+
+参数列表
+----
+| 参数名                                                             |        参数类型        | 参数描述                     | 是否非空 |
+| --------------------------------------------------------------- |:------------------:| ------------------------ |:----:|
+| 获取已发布合约指定函数的参数类型列表                                              | contractmethodform | 获取已发布合约指定函数的参数类型表单       |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractAddress |       string       | 智能合约地址                   |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodName      |       string       | 方法名                      |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodDesc      |       string       | 方法描述，若合约内方法没有重载，则此参数可以为空 |  是   |
+
+返回值
+---
+| 字段名 |      字段类型       | 参数描述 |
+| --- |:---------------:| ---- |
+| 返回值 | list&lt;string> |      |
+
+离线组装 - 发布合约的交易
+==============
+Cmd: /api/contract/create/offline
+---------------------------------
+### CmdType: RESTFUL
+### HttpMethod: POST
+### ContentType: application/json;charset=UTF-8
+
+
+### Form json data: 
+```json
+{
+  "sender" : null,
+  "alias" : null,
+  "contractCode" : null,
+  "args" : null,
+  "remark" : null
+}
+```
+
+参数列表
+----
+| 参数名                                                          |         参数类型          | 参数描述                 | 是否非空 |
+| ------------------------------------------------------------ |:---------------------:| -------------------- |:----:|
+| 发布合约离线交易                                                     | contractcreateoffline | 发布合约离线交易表单           |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sender       |        string         | 交易创建者                |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;alias        |        string         | 合约别名                 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractCode |        string         | 智能合约代码(字节码的Hex编码字符串) |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args         |       object[]        | 参数列表                 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark       |        string         | 备注                   |  是   |
+
+返回值
+---
+| 字段名             |  字段类型  | 参数描述     |
+| --------------- |:------:| -------- |
+| hash            | string | 交易hash   |
+| txHex           | string | 交易序列化字符串 |
+| contractAddress | string | 生成的合约地址  |
+
+离线组装 - 调用合约的交易
+==============
+Cmd: /api/contract/call/offline
+-------------------------------
+### CmdType: RESTFUL
+### HttpMethod: POST
+### ContentType: application/json;charset=UTF-8
+
+
+### Form json data: 
+```json
+{
+  "sender" : null,
+  "contractAddress" : null,
+  "value" : null,
+  "methodName" : null,
+  "methodDesc" : null,
+  "args" : null,
+  "remark" : null
+}
+```
+
+参数列表
+----
+| 参数名                                                             |        参数类型         | 参数描述                       | 是否非空 |
+| --------------------------------------------------------------- |:-------------------:| -------------------------- |:----:|
+| 调用合约离线交易                                                        | contractcalloffline | 调用合约离线交易表单                 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sender          |       string        | 交易创建者                      |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractAddress |       string        | 智能合约地址                     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value           |     biginteger      | 调用者向合约地址转入的主网资产金额，没有此业务时填0 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodName      |       string        | 方法名                        |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodDesc      |       string        | 方法描述，若合约内方法没有重载，则此参数可以为空   |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args            |      object[]       | 参数列表                       |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark          |       string        | 备注                         |  是   |
+
+返回值
+---
+| 字段名   |  字段类型  | 参数描述     |
+| ----- |:------:| -------- |
+| hash  | string | 交易hash   |
+| txHex | string | 交易序列化字符串 |
+
+离线组装 - 删除合约交易
+=============
+Cmd: /api/contract/delete/offline
+---------------------------------
+### CmdType: RESTFUL
+### HttpMethod: POST
+### ContentType: application/json;charset=UTF-8
+
+
+### Form json data: 
+```json
+{
+  "sender" : null,
+  "contractAddress" : null,
+  "remark" : null
+}
+```
+
+参数列表
+----
+| 参数名                                                             |         参数类型          | 参数描述       | 是否非空 |
+| --------------------------------------------------------------- |:---------------------:| ---------- |:----:|
+| 删除合约离线交易                                                        | contractdeleteoffline | 删除合约离线交易表单 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sender          |        string         | 交易创建者      |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractAddress |        string         | 智能合约地址     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark          |        string         | 备注         |  是   |
+
+返回值
+---
+| 字段名   |  字段类型  | 参数描述     |
+| ----- |:------:| -------- |
+| hash  | string | 交易hash   |
+| txHex | string | 交易序列化字符串 |
+
+离线组装 - token转账交易
+================
+Cmd: /api/contract/tokentransfer/offline
+----------------------------------------
+### CmdType: RESTFUL
+### HttpMethod: POST
+### ContentType: application/json;charset=UTF-8
+
+
+### Form json data: 
+```json
+{
+  "fromAddress" : null,
+  "toAddress" : null,
+  "contractAddress" : null,
+  "amount" : null,
+  "remark" : null
+}
+```
+
+参数列表
+----
+| 参数名                                                             |             参数类型             | 参数描述          | 是否非空 |
+| --------------------------------------------------------------- |:----------------------------:| ------------- |:----:|
+| token转账离线交易                                                     | contracttokentransferoffline | token转账离线交易表单 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fromAddress     |            string            | 转出者账户地址       |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;toAddress       |            string            | 转入者账户地址       |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractAddress |            string            | 合约地址          |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount          |          biginteger          | 转出的token资产金额  |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark          |            string            | 备注            |  是   |
+
+返回值
+---
+| 字段名   |  字段类型  | 参数描述     |
+| ----- |:------:| -------- |
+| hash  | string | 交易hash   |
+| txHex | string | 交易序列化字符串 |
+
+离线组装 - 从账户地址向合约地址转账(主链资产)的合约交易
+==============================
+Cmd: /api/contract/transfer2contract/offline
+--------------------------------------------
+### CmdType: RESTFUL
+### HttpMethod: POST
+### ContentType: application/json;charset=UTF-8
+
+
+### Form json data: 
+```json
+{
+  "fromAddress" : null,
+  "toAddress" : null,
+  "amount" : null,
+  "remark" : null
+}
+```
+
+参数列表
+----
+| 参数名                                                         |          参数类型           | 参数描述          | 是否非空 |
+| ----------------------------------------------------------- |:-----------------------:| ------------- |:----:|
+| 向合约地址转账离线交易                                                 | contracttransferoffline | 向合约地址转账离线交易表单 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fromAddress |         string          | 账户地址          |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;toAddress   |         string          | 转入的合约地址       |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount      |       biginteger        | 转出的主链资产金额     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark      |         string          | 备注            |  是   |
 
 返回值
 ---
@@ -858,390 +1242,6 @@ Cmd: /api/contract/view
 | ------ |:------:| --------- |
 | result | string | 视图方法的调用结果 |
 
-token转账
-=======
-Cmd: /api/contract/tokentransfer
---------------------------------
-### CmdType: RESTFUL
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
-
-### Form json data: 
-```json
-{
-  "fromAddress" : null,
-  "password" : null,
-  "toAddress" : null,
-  "contractAddress" : null,
-  "amount" : null,
-  "remark" : null
-}
-```
-
-参数列表
-----
-| 参数名                                                             |         参数类型          | 参数描述         | 是否非空 |
-| --------------------------------------------------------------- |:---------------------:| ------------ |:----:|
-| token转账                                                         | contracttokentransfer | token转账表单    |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fromAddress     |        string         | 转出者账户地址      |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password        |        string         | 转出者账户地址密码    |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;toAddress       |        string         | 转入者账户地址      |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractAddress |        string         | 合约地址         |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount          |      biginteger       | 转出的token资产金额 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark          |        string         | 备注           |  是   |
-
-返回值
----
-| 字段名    |  字段类型  | 参数描述   |
-| ------ |:------:| ------ |
-| txHash | string | 交易hash |
-
-从账户地址向合约地址转账(主链资产)的合约交易
-=======================
-Cmd: /api/contract/transfer2contract
-------------------------------------
-### CmdType: RESTFUL
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
-
-### Form json data: 
-```json
-{
-  "fromAddress" : null,
-  "password" : null,
-  "toAddress" : null,
-  "amount" : null,
-  "remark" : null
-}
-```
-
-参数列表
-----
-| 参数名                                                         |       参数类型       | 参数描述      | 是否非空 |
-| ----------------------------------------------------------- |:----------------:| --------- |:----:|
-| 向合约地址转账                                                     | contracttransfer | 向合约地址转账表单 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fromAddress |      string      | 转出者账户地址   |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password    |      string      | 转出者账户地址密码 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;toAddress   |      string      | 转入的合约地址   |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount      |    biginteger    | 转出的主链资产金额 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark      |      string      | 备注        |  是   |
-
-返回值
----
-| 字段名    |  字段类型  | 参数描述   |
-| ------ |:------:| ------ |
-| txHash | string | 交易hash |
-
-获取智能合约详细信息
-==========
-Cmd: /api/contract/info/{address}
----------------------------------
-### CmdType: RESTFUL
-### HttpMethod: GET
-### ContentType: application/json;charset=UTF-8
-
-
-参数列表
-----
-| 参数名     |  参数类型  | 参数描述 | 是否非空 |
-| ------- |:------:| ---- |:----:|
-| address | string | 合约地址 |  是   |
-
-返回值
----
-| 字段名                                                                                                      |      字段类型       | 参数描述                          |
-| -------------------------------------------------------------------------------------------------------- |:---------------:| ----------------------------- |
-| createTxHash                                                                                             |     string      | 发布合约的交易hash                   |
-| address                                                                                                  |     string      | 合约地址                          |
-| creater                                                                                                  |     string      | 合约创建者地址                       |
-| alias                                                                                                    |     string      | 合约别名                          |
-| createTime                                                                                               |      long       | 合约创建时间（单位：秒）                  |
-| blockHeight                                                                                              |      long       | 合约创建时的区块高度                    |
-| isDirectPayable                                                                                          |     boolean     | 是否接受直接转账                      |
-| isNrc20                                                                                                  |     boolean     | 是否是NRC20合约                    |
-| nrc20TokenName                                                                                           |     string      | NRC20-token名称                 |
-| nrc20TokenSymbol                                                                                         |     string      | NRC20-token符号                 |
-| decimals                                                                                                 |      long       | NRC20-token支持的小数位数            |
-| totalSupply                                                                                              |     string      | NRC20-token发行总量               |
-| status                                                                                                   |     string      | 合约状态（not_found, normal, stop） |
-| method                                                                                                   | list&lt;object> | 合约方法列表                        |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name                                                     |     string      | 方法名称                          |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;desc                                                     |     string      | 方法描述                          |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args                                                     | list&lt;object> | 方法参数列表                        |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;type     |     string      | 参数类型                          |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name     |     string      | 参数名称                          |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;required |     boolean     | 是否必填                          |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;returnArg                                                |     string      | 返回值类型                         |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;view                                                     |     boolean     | 是否视图方法（调用此方法数据不上链）            |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;event                                                    |     boolean     | 是否是事件                         |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;payable                                                  |     boolean     | 是否是可接受主链资产转账的方法               |
-
-获取已发布合约指定函数的信息
-==============
-Cmd: /api/contract/method
--------------------------
-### CmdType: RESTFUL
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
-
-### Form json data: 
-```json
-{
-  "contractAddress" : null,
-  "methodName" : null,
-  "methodDesc" : null
-}
-```
-
-参数列表
-----
-| 参数名                                                             |        参数类型        | 参数描述                     | 是否非空 |
-| --------------------------------------------------------------- |:------------------:| ------------------------ |:----:|
-| 获取已发布合约指定函数的信息                                                  | contractmethodform | 获取已发布合约指定函数的信息表单         |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractAddress |       string       | 智能合约地址                   |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodName      |       string       | 方法名                      |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodDesc      |       string       | 方法描述，若合约内方法没有重载，则此参数可以为空 |  是   |
-
-返回值
----
-| 字段名                                                      |      字段类型       | 参数描述               |
-| -------------------------------------------------------- |:---------------:| ------------------ |
-| name                                                     |     string      | 方法名称               |
-| desc                                                     |     string      | 方法描述               |
-| args                                                     | list&lt;object> | 方法参数列表             |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;type     |     string      | 参数类型               |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name     |     string      | 参数名称               |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;required |     boolean     | 是否必填               |
-| returnArg                                                |     string      | 返回值类型              |
-| view                                                     |     boolean     | 是否视图方法（调用此方法数据不上链） |
-| event                                                    |     boolean     | 是否是事件              |
-| payable                                                  |     boolean     | 是否是可接受主链资产转账的方法    |
-
-获取已发布合约指定函数的参数类型列表
-==================
-Cmd: /api/contract/method/argstypes
------------------------------------
-### CmdType: RESTFUL
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
-
-### Form json data: 
-```json
-{
-  "contractAddress" : null,
-  "methodName" : null,
-  "methodDesc" : null
-}
-```
-
-参数列表
-----
-| 参数名                                                             |        参数类型        | 参数描述                     | 是否非空 |
-| --------------------------------------------------------------- |:------------------:| ------------------------ |:----:|
-| 获取已发布合约指定函数的参数类型列表                                              | contractmethodform | 获取已发布合约指定函数的参数类型表单       |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractAddress |       string       | 智能合约地址                   |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodName      |       string       | 方法名                      |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodDesc      |       string       | 方法描述，若合约内方法没有重载，则此参数可以为空 |  是   |
-
-返回值
----
-| 字段名 |      字段类型       | 参数描述 |
-| --- |:---------------:| ---- |
-| 返回值 | list&lt;string> |      |
-
-离线组装 - 发布合约的交易
-==============
-Cmd: /api/contract/create/offline
----------------------------------
-### CmdType: RESTFUL
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
-
-### Form json data: 
-```json
-{
-  "sender" : null,
-  "alias" : null,
-  "contractCode" : null,
-  "args" : null,
-  "remark" : null
-}
-```
-
-参数列表
-----
-| 参数名                                                          |         参数类型          | 参数描述                 | 是否非空 |
-| ------------------------------------------------------------ |:---------------------:| -------------------- |:----:|
-| 发布合约离线交易                                                     | contractcreateoffline | 发布合约离线交易表单           |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sender       |        string         | 交易创建者                |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;alias        |        string         | 合约别名                 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractCode |        string         | 智能合约代码(字节码的Hex编码字符串) |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args         |       object[]        | 参数列表                 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark       |        string         | 备注                   |  是   |
-
-返回值
----
-| 字段名             |  字段类型  | 参数描述     |
-| --------------- |:------:| -------- |
-| hash            | string | 交易hash   |
-| txHex           | string | 交易序列化字符串 |
-| contractAddress | string | 生成的合约地址  |
-
-离线组装 - 调用合约的交易
-==============
-Cmd: /api/contract/call/offline
--------------------------------
-### CmdType: RESTFUL
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
-
-### Form json data: 
-```json
-{
-  "sender" : null,
-  "contractAddress" : null,
-  "value" : null,
-  "methodName" : null,
-  "methodDesc" : null,
-  "args" : null,
-  "remark" : null
-}
-```
-
-参数列表
-----
-| 参数名                                                             |        参数类型         | 参数描述                       | 是否非空 |
-| --------------------------------------------------------------- |:-------------------:| -------------------------- |:----:|
-| 调用合约离线交易                                                        | contractcalloffline | 调用合约离线交易表单                 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sender          |       string        | 交易创建者                      |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractAddress |       string        | 智能合约地址                     |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value           |     biginteger      | 调用者向合约地址转入的主网资产金额，没有此业务时填0 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodName      |       string        | 方法名                        |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodDesc      |       string        | 方法描述，若合约内方法没有重载，则此参数可以为空   |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args            |      object[]       | 参数列表                       |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark          |       string        | 备注                         |  是   |
-
-返回值
----
-| 字段名   |  字段类型  | 参数描述     |
-| ----- |:------:| -------- |
-| hash  | string | 交易hash   |
-| txHex | string | 交易序列化字符串 |
-
-离线组装 - 删除合约交易
-=============
-Cmd: /api/contract/delete/offline
----------------------------------
-### CmdType: RESTFUL
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
-
-### Form json data: 
-```json
-{
-  "sender" : null,
-  "contractAddress" : null,
-  "remark" : null
-}
-```
-
-参数列表
-----
-| 参数名                                                             |         参数类型          | 参数描述       | 是否非空 |
-| --------------------------------------------------------------- |:---------------------:| ---------- |:----:|
-| 删除合约离线交易                                                        | contractdeleteoffline | 删除合约离线交易表单 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sender          |        string         | 交易创建者      |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractAddress |        string         | 智能合约地址     |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark          |        string         | 备注         |  是   |
-
-返回值
----
-| 字段名   |  字段类型  | 参数描述     |
-| ----- |:------:| -------- |
-| hash  | string | 交易hash   |
-| txHex | string | 交易序列化字符串 |
-
-离线组装 - token转账交易
-================
-Cmd: /api/contract/tokentransfer/offline
-----------------------------------------
-### CmdType: RESTFUL
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
-
-### Form json data: 
-```json
-{
-  "fromAddress" : null,
-  "toAddress" : null,
-  "contractAddress" : null,
-  "amount" : null,
-  "remark" : null
-}
-```
-
-参数列表
-----
-| 参数名                                                             |             参数类型             | 参数描述          | 是否非空 |
-| --------------------------------------------------------------- |:----------------------------:| ------------- |:----:|
-| token转账离线交易                                                     | contracttokentransferoffline | token转账离线交易表单 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fromAddress     |            string            | 转出者账户地址       |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;toAddress       |            string            | 转入者账户地址       |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractAddress |            string            | 合约地址          |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount          |          biginteger          | 转出的token资产金额  |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark          |            string            | 备注            |  是   |
-
-返回值
----
-| 字段名   |  字段类型  | 参数描述     |
-| ----- |:------:| -------- |
-| hash  | string | 交易hash   |
-| txHex | string | 交易序列化字符串 |
-
-离线组装 - 从账户地址向合约地址转账(主链资产)的合约交易
-==============================
-Cmd: /api/contract/transfer2contract/offline
---------------------------------------------
-### CmdType: RESTFUL
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
-
-### Form json data: 
-```json
-{
-  "fromAddress" : null,
-  "toAddress" : null,
-  "amount" : null,
-  "remark" : null
-}
-```
-
-参数列表
-----
-| 参数名                                                         |          参数类型           | 参数描述          | 是否非空 |
-| ----------------------------------------------------------- |:-----------------------:| ------------- |:----:|
-| 向合约地址转账离线交易                                                 | contracttransferoffline | 向合约地址转账离线交易表单 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fromAddress |         string          | 账户地址          |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;toAddress   |         string          | 转入的合约地址       |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount      |       biginteger        | 转出的主链资产金额     |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark      |         string          | 备注            |  是   |
-
-返回值
----
-| 字段名   |  字段类型  | 参数描述     |
-| ----- |:------:| -------- |
-| hash  | string | 交易hash   |
-| txHex | string | 交易序列化字符串 |
-
 批量创建账户
 ======
 Cmd: /api/account
@@ -1272,68 +1272,6 @@ Cmd: /api/account
 | 字段名  |      字段类型       | 参数描述 |
 | ---- |:---------------:| ---- |
 | list | list&lt;string> | 账户地址 |
-
-账户备份，导出账户私钥，只能导出本地创建或导入的账户
-==========================
-Cmd: /api/account/prikey/{address}
-----------------------------------
-### CmdType: RESTFUL
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
-
-### Form json data: 
-```json
-{
-  "password" : null
-}
-```
-
-参数列表
-----
-| 参数名                                                      |        参数类型         | 参数描述     | 是否非空 |
-| -------------------------------------------------------- |:-------------------:| -------- |:----:|
-| address                                                  |       string        | 账户地址     |  是   |
-| 账户密码信息                                                   | accountpasswordform | 账户密码信息表单 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password |       string        | 密码       |  是   |
-
-返回值
----
-| 字段名   |  字段类型  | 参数描述 |
-| ----- |:------:| ---- |
-| value | string | 私钥   |
-
-[修改密码] 根据原密码修改账户密码
-==================
-Cmd: /api/account/password/{address}
-------------------------------------
-### CmdType: RESTFUL
-### HttpMethod: PUT
-### ContentType: application/json;charset=UTF-8
-
-
-### Form json data: 
-```json
-{
-  "password" : null,
-  "newPassword" : null
-}
-```
-
-参数列表
-----
-| 参数名                                                         |           参数类型            | 参数描述     | 是否非空 |
-| ----------------------------------------------------------- |:-------------------------:| -------- |:----:|
-| address                                                     |          string           | 账户地址     |  是   |
-| 账户密码信息                                                      | accountupdatepasswordform | 账户密码信息表单 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password    |          string           | 原始密码     |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;newPassword |          string           | 新密码      |  是   |
-
-返回值
----
-| 字段名   |  字段类型   | 参数描述   |
-| ----- |:-------:| ------ |
-| value | boolean | 是否修改成功 |
 
 根据私钥导入账户
 ========
@@ -1523,6 +1461,174 @@ Cmd: /api/account/offline
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prikey              |     string      | 明文私钥         |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;encryptedPrivateKey |     string      | 加密后的私钥       |
 
+账户备份，导出账户私钥，只能导出本地创建或导入的账户
+==========================
+Cmd: /api/account/prikey/{address}
+----------------------------------
+### CmdType: RESTFUL
+### HttpMethod: POST
+### ContentType: application/json;charset=UTF-8
+
+
+### Form json data: 
+```json
+{
+  "password" : null
+}
+```
+
+参数列表
+----
+| 参数名                                                      |        参数类型         | 参数描述     | 是否非空 |
+| -------------------------------------------------------- |:-------------------:| -------- |:----:|
+| address                                                  |       string        | 账户地址     |  是   |
+| 账户密码信息                                                   | accountpasswordform | 账户密码信息表单 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password |       string        | 密码       |  是   |
+
+返回值
+---
+| 字段名   |  字段类型  | 参数描述 |
+| ----- |:------:| ---- |
+| value | string | 私钥   |
+
+[修改密码] 根据原密码修改账户密码
+==================
+Cmd: /api/account/password/{address}
+------------------------------------
+### CmdType: RESTFUL
+### HttpMethod: PUT
+### ContentType: application/json;charset=UTF-8
+
+
+### Form json data: 
+```json
+{
+  "password" : null,
+  "newPassword" : null
+}
+```
+
+参数列表
+----
+| 参数名                                                         |           参数类型            | 参数描述     | 是否非空 |
+| ----------------------------------------------------------- |:-------------------------:| -------- |:----:|
+| address                                                     |          string           | 账户地址     |  是   |
+| 账户密码信息                                                      | accountupdatepasswordform | 账户密码信息表单 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password    |          string           | 原始密码     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;newPassword |          string           | 新密码      |  是   |
+
+返回值
+---
+| 字段名   |  字段类型   | 参数描述   |
+| ----- |:-------:| ------ |
+| value | boolean | 是否修改成功 |
+
+查询最新区块头信息
+=========
+Cmd: /api/block/header/newest
+-----------------------------
+### CmdType: RESTFUL
+### HttpMethod: GET
+### ContentType: application/json;charset=UTF-8
+
+
+参数列表
+----
+无参数
+
+返回值
+---
+| 字段名                  |  字段类型  | 参数描述                 |
+| -------------------- |:------:| -------------------- |
+| hash                 | string | 区块的hash值             |
+| preHash              | string | 上一个区块的hash值          |
+| merkleHash           | string | 梅克尔hash              |
+| time                 | string | 区块生成时间               |
+| height               |  long  | 区块高度                 |
+| txCount              |  int   | 区块打包交易数量             |
+| blockSignature       | string | 签名Hex.encode(byte[]) |
+| size                 |  int   | 大小                   |
+| packingAddress       | string | 打包地址                 |
+| roundIndex           |  long  | 共识轮次                 |
+| consensusMemberCount |  int   | 参与共识成员数量             |
+| roundStartTime       | string | 当前共识轮开始时间            |
+| packingIndexOfRound  |  int   | 当前轮次打包出块的名次          |
+| mainVersion          | short  | 主网当前生效的版本            |
+| blockVersion         | short  | 区块的版本，可以理解为本地钱包的版本   |
+| stateRoot            | string | 智能合约世界状态根            |
+
+根据区块hash查询区块头
+=============
+Cmd: /api/block/header/hash/{hash}
+----------------------------------
+### CmdType: RESTFUL
+### HttpMethod: GET
+### ContentType: application/json;charset=UTF-8
+
+
+参数列表
+----
+| 参数名  |  参数类型  | 参数描述   | 是否非空 |
+| ---- |:------:| ------ |:----:|
+| hash | string | 区块hash |  是   |
+
+返回值
+---
+| 字段名                  |  字段类型  | 参数描述                 |
+| -------------------- |:------:| -------------------- |
+| hash                 | string | 区块的hash值             |
+| preHash              | string | 上一个区块的hash值          |
+| merkleHash           | string | 梅克尔hash              |
+| time                 | string | 区块生成时间               |
+| height               |  long  | 区块高度                 |
+| txCount              |  int   | 区块打包交易数量             |
+| blockSignature       | string | 签名Hex.encode(byte[]) |
+| size                 |  int   | 大小                   |
+| packingAddress       | string | 打包地址                 |
+| roundIndex           |  long  | 共识轮次                 |
+| consensusMemberCount |  int   | 参与共识成员数量             |
+| roundStartTime       | string | 当前共识轮开始时间            |
+| packingIndexOfRound  |  int   | 当前轮次打包出块的名次          |
+| mainVersion          | short  | 主网当前生效的版本            |
+| blockVersion         | short  | 区块的版本，可以理解为本地钱包的版本   |
+| stateRoot            | string | 智能合约世界状态根            |
+
+根据区块高度查询区块头
+===========
+Cmd: /api/block/header/height/{height}
+--------------------------------------
+### CmdType: RESTFUL
+### HttpMethod: GET
+### ContentType: application/json;charset=UTF-8
+
+
+参数列表
+----
+| 参数名    | 参数类型 | 参数描述 | 是否非空 |
+| ------ |:----:| ---- |:----:|
+| height | long | 区块高度 |  是   |
+
+返回值
+---
+| 字段名                  |  字段类型  | 参数描述                 |
+| -------------------- |:------:| -------------------- |
+| hash                 | string | 区块的hash值             |
+| preHash              | string | 上一个区块的hash值          |
+| merkleHash           | string | 梅克尔hash              |
+| time                 | string | 区块生成时间               |
+| height               |  long  | 区块高度                 |
+| txCount              |  int   | 区块打包交易数量             |
+| blockSignature       | string | 签名Hex.encode(byte[]) |
+| size                 |  int   | 大小                   |
+| packingAddress       | string | 打包地址                 |
+| roundIndex           |  long  | 共识轮次                 |
+| consensusMemberCount |  int   | 参与共识成员数量             |
+| roundStartTime       | string | 当前共识轮开始时间            |
+| packingIndexOfRound  |  int   | 当前轮次打包出块的名次          |
+| mainVersion          | short  | 主网当前生效的版本            |
+| blockVersion         | short  | 区块的版本，可以理解为本地钱包的版本   |
+| stateRoot            | string | 智能合约世界状态根            |
+
 根据区块高度查询区块，包含区块打包的所有交易信息，此接口返回数据量较多，谨慎调用
 ========================================
 Cmd: /api/block/height/{height}
@@ -1653,112 +1759,6 @@ Cmd: /api/block/newest
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount        |     string      | 数量                                        |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lockTime      |      long       | 解锁时间，-1为永久锁定                              |
 
-根据区块hash查询区块头
-=============
-Cmd: /api/block/header/hash/{hash}
-----------------------------------
-### CmdType: RESTFUL
-### HttpMethod: GET
-### ContentType: application/json;charset=UTF-8
-
-
-参数列表
-----
-| 参数名  |  参数类型  | 参数描述   | 是否非空 |
-| ---- |:------:| ------ |:----:|
-| hash | string | 区块hash |  是   |
-
-返回值
----
-| 字段名                  |  字段类型  | 参数描述                 |
-| -------------------- |:------:| -------------------- |
-| hash                 | string | 区块的hash值             |
-| preHash              | string | 上一个区块的hash值          |
-| merkleHash           | string | 梅克尔hash              |
-| time                 | string | 区块生成时间               |
-| height               |  long  | 区块高度                 |
-| txCount              |  int   | 区块打包交易数量             |
-| blockSignature       | string | 签名Hex.encode(byte[]) |
-| size                 |  int   | 大小                   |
-| packingAddress       | string | 打包地址                 |
-| roundIndex           |  long  | 共识轮次                 |
-| consensusMemberCount |  int   | 参与共识成员数量             |
-| roundStartTime       | string | 当前共识轮开始时间            |
-| packingIndexOfRound  |  int   | 当前轮次打包出块的名次          |
-| mainVersion          | short  | 主网当前生效的版本            |
-| blockVersion         | short  | 区块的版本，可以理解为本地钱包的版本   |
-| stateRoot            | string | 智能合约世界状态根            |
-
-根据区块高度查询区块头
-===========
-Cmd: /api/block/header/height/{height}
---------------------------------------
-### CmdType: RESTFUL
-### HttpMethod: GET
-### ContentType: application/json;charset=UTF-8
-
-
-参数列表
-----
-| 参数名    | 参数类型 | 参数描述 | 是否非空 |
-| ------ |:----:| ---- |:----:|
-| height | long | 区块高度 |  是   |
-
-返回值
----
-| 字段名                  |  字段类型  | 参数描述                 |
-| -------------------- |:------:| -------------------- |
-| hash                 | string | 区块的hash值             |
-| preHash              | string | 上一个区块的hash值          |
-| merkleHash           | string | 梅克尔hash              |
-| time                 | string | 区块生成时间               |
-| height               |  long  | 区块高度                 |
-| txCount              |  int   | 区块打包交易数量             |
-| blockSignature       | string | 签名Hex.encode(byte[]) |
-| size                 |  int   | 大小                   |
-| packingAddress       | string | 打包地址                 |
-| roundIndex           |  long  | 共识轮次                 |
-| consensusMemberCount |  int   | 参与共识成员数量             |
-| roundStartTime       | string | 当前共识轮开始时间            |
-| packingIndexOfRound  |  int   | 当前轮次打包出块的名次          |
-| mainVersion          | short  | 主网当前生效的版本            |
-| blockVersion         | short  | 区块的版本，可以理解为本地钱包的版本   |
-| stateRoot            | string | 智能合约世界状态根            |
-
-查询最新区块头信息
-=========
-Cmd: /api/block/header/newest
------------------------------
-### CmdType: RESTFUL
-### HttpMethod: GET
-### ContentType: application/json;charset=UTF-8
-
-
-参数列表
-----
-无参数
-
-返回值
----
-| 字段名                  |  字段类型  | 参数描述                 |
-| -------------------- |:------:| -------------------- |
-| hash                 | string | 区块的hash值             |
-| preHash              | string | 上一个区块的hash值          |
-| merkleHash           | string | 梅克尔hash              |
-| time                 | string | 区块生成时间               |
-| height               |  long  | 区块高度                 |
-| txCount              |  int   | 区块打包交易数量             |
-| blockSignature       | string | 签名Hex.encode(byte[]) |
-| size                 |  int   | 大小                   |
-| packingAddress       | string | 打包地址                 |
-| roundIndex           |  long  | 共识轮次                 |
-| consensusMemberCount |  int   | 参与共识成员数量             |
-| roundStartTime       | string | 当前共识轮开始时间            |
-| packingIndexOfRound  |  int   | 当前轮次打包出块的名次          |
-| mainVersion          | short  | 主网当前生效的版本            |
-| blockVersion         | short  | 区块的版本，可以理解为本地钱包的版本   |
-| stateRoot            | string | 智能合约世界状态根            |
-
 单笔转账
 ====
 Cmd: /api/accountledger/transfer
@@ -1795,6 +1795,62 @@ Cmd: /api/accountledger/transfer
 | 字段名   |  字段类型  | 参数描述   |
 | ----- |:------:| ------ |
 | value | string | 交易hash |
+
+离线组装转账交易
+========
+Cmd: /api/accountledger/createTransferTxOffline
+-----------------------------------------------
+### CmdType: RESTFUL
+### HttpMethod: POST
+### ContentType: application/json;charset=UTF-8
+
+
+### Form json data: 
+```json
+{
+  "inputs" : [ {
+    "address" : null,
+    "chainId" : 0,
+    "assetId" : 0,
+    "amount" : null,
+    "nonce" : null
+  } ],
+  "outputs" : [ {
+    "address" : null,
+    "chainId" : 0,
+    "assetId" : 0,
+    "amount" : null,
+    "lockTime" : 0
+  } ],
+  "remark" : null
+}
+```
+
+参数列表
+----
+| 参数名                                                                                                      |      参数类型       | 参数描述     | 是否非空 |
+| -------------------------------------------------------------------------------------------------------- |:---------------:| -------- |:----:|
+| transferDto                                                                                              |   transferdto   | 转账交易表单   |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inputs                                                   | list&lt;object> | 转账交易输入列表 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address  |     string      | 账户地址     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;chainId  |       int       | 资产的链id   |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetId  |       int       | 资产id     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount   |   biginteger    | 资产金额     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nonce    |     string      | 资产nonce值 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;outputs                                                  | list&lt;object> | 转账交易输出列表 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address  |     string      | 账户地址     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;chainId  |       int       | 资产的链id   |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetId  |       int       | 资产id     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount   |   biginteger    | 资产金额     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lockTime |      long       | 锁定时间     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark                                                   |     string      | 交易备注     |  是   |
+
+返回值
+---
+| 字段名   |  字段类型  | 参数描述         |
+| ----- |:------:| ------------ |
+| hash  | string | 交易hash       |
+| txHex | string | 交易序列化16进制字符串 |
 
 查询账户余额
 ======
