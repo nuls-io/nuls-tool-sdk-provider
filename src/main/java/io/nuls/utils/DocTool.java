@@ -28,6 +28,7 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @Author: zhoulijun
@@ -713,9 +714,11 @@ public class DocTool {
                 request.setMethod(des.httpMethod);
                 request.setBody(body);
                 if(jsonrpc) {
+                    List<String> nameList = des.getParameters().stream().map(p -> p.name).collect(Collectors.toList());
                     body.setRaw(String.format(
-                            "{\n\"jsonrpc\":\"2.0\",\n\"method\":\"%s\",\n\"params\":[],\n\"id\":1234\n}\n",
-                            des.cmdName
+                            "{\n\"jsonrpc\":\"2.0\",\n\"method\":\"%s\",\n\"params\":%s,\n\"id\":1234\n}\n",
+                            des.cmdName,
+                            nameList.toString()
                     ));
                     url = Url.jsonrpcInstance();
                 } else if(restful) {
