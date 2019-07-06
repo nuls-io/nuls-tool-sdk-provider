@@ -43,6 +43,7 @@ import io.nuls.core.parse.JSONUtils;
 import io.nuls.core.rpc.model.*;
 import io.nuls.model.ErrorData;
 import io.nuls.model.RpcClientResult;
+import io.nuls.model.form.TransferForm;
 import io.nuls.model.jsonrpc.RpcErrorCode;
 import io.nuls.model.jsonrpc.RpcResult;
 import io.nuls.model.txdata.CallContractData;
@@ -69,6 +70,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -91,6 +93,14 @@ public class TransactionController {
     TransferService transferService = ServiceManager.get(TransferService.class);
 
     @RpcMethod("validateTx")
+    @ApiOperation(description = "验证交易")
+    @Parameters({
+            @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链id"),
+            @Parameter(parameterName = "tx", parameterDes = "交易序列化字符串"),
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "value", description = "交易hash")
+    }))
     public RpcResult validateTx(List<Object> params) {
         VerifyUtils.verifyParams(params, 2);
         int chainId;
@@ -120,6 +130,15 @@ public class TransactionController {
     }
 
     @RpcMethod("broadcastTx")
+    @ApiOperation(description = "广播交易")
+    @Parameters({
+            @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链id"),
+            @Parameter(parameterName = "tx", parameterDes = "交易序列化字符串"),
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "value", valueType = boolean.class, description = "是否成功"),
+            @Key(name = "hash", description = "交易hash")
+    }))
     public RpcResult broadcastTx(List<Object> params) {
         VerifyUtils.verifyParams(params, 2);
         int chainId;
@@ -200,6 +219,19 @@ public class TransactionController {
     }
 
     @RpcMethod("transfer")
+    @ApiOperation(description = "单笔转账")
+    @Parameters({
+        @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链id"),
+        @Parameter(parameterName = "assetId", requestType = @TypeDescriptor(value = int.class), parameterDes = "资产id"),
+        @Parameter(parameterName = "address", parameterDes = "转出账户地址"),
+        @Parameter(parameterName = "toAddress", parameterDes = "转入账户地址"),
+        @Parameter(parameterName = "password", parameterDes = "转出账户密码"),
+        @Parameter(parameterName = "amount", parameterDes = "转出金额"),
+        @Parameter(parameterName = "remark", parameterDes = "备注"),
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+        @Key(name = "hash", description = "交易hash")
+    }))
     public RpcResult transfer(List<Object> params) {
         VerifyUtils.verifyParams(params, 6);
         int chainId, assetId;
@@ -254,7 +286,9 @@ public class TransactionController {
                         .addTo(toAddress, new BigInteger(amount)).setRemark(remark);
         Result<String> result = transferService.transfer(builder.build());
         if (result.isSuccess()) {
-            return RpcResult.success(result.getData());
+            Map resultMap = new HashMap(2);
+            resultMap.put("hash", result.getData());
+            return RpcResult.success(resultMap);
         } else {
             return RpcResult.failed(ErrorCode.init(result.getStatus()), result.getMessage());
         }

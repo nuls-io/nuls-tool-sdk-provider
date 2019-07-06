@@ -616,7 +616,7 @@ public class DocTool {
                 writer.write(new Heading("ContentType: application/json;charset=UTF-8", 3).toString());
                 writer.newLine();
                 writer.newLine();
-                buildParam(writer, cmd.parameters);
+                buildParam(writer, cmd.parameters, ApiType.JSONRPC.name().equals(cmd.cmdType));
                 buildResult(writer, cmd.result);
                 writer.newLine();
                 writer.newLine();
@@ -651,7 +651,7 @@ public class DocTool {
             });
         }
 
-        private static void buildParam(BufferedWriter writer, List<ResultDes> parameters) throws IOException {
+        private static void buildParam(BufferedWriter writer, List<ResultDes> parameters, boolean jsonrpc) throws IOException {
             parameters.forEach(des -> {
                 if(des.formJsonOfRestful != null) {
                     try {
@@ -682,16 +682,18 @@ public class DocTool {
 //            parameters.forEach(p->{
 //                tableBuilder.addRow(p.parameterName(),p.parameterType().toLowerCase(),p.parameterDes(),!p.canNull() ? "是" : "否");
 //            });
-            buildParam(tableBuilder, parameters, 0);
+            buildParam(tableBuilder, parameters, 0, jsonrpc);
             writer.newLine();
             writer.write(tableBuilder.build().toString());
         }
 
-        private static void buildParam(Table.Builder tableBuilder, List<ResultDes> result, int depth) {
+        private static void buildParam(Table.Builder tableBuilder, List<ResultDes> result, int depth, boolean jsonrpc) {
             result.forEach(r -> {
-                tableBuilder.addRow("&nbsp;".repeat(depth * 8) + r.name, r.type.toLowerCase(), r.des, !r.canNull ? "是" : "否");
+                //if(!jsonrpc || (r.list == null || depth > 0)) {
+                    tableBuilder.addRow("&nbsp;".repeat(depth * 8) + r.name, r.type.toLowerCase(), r.des, !r.canNull ? "是" : "否");
+                //}
                 if (r.list != null) {
-                    buildParam(tableBuilder, r.list, depth + 1);
+                    buildParam(tableBuilder, r.list, depth + 1, jsonrpc);
                 }
             });
         }
@@ -714,7 +716,15 @@ public class DocTool {
                 request.setMethod(des.httpMethod);
                 request.setBody(body);
                 if(jsonrpc) {
-                    List<String> nameList = des.getParameters().stream().map(p -> p.name).collect(Collectors.toList());
+                    // 排除表单title参数
+                    List<String> nameList = des.getParameters().stream().map(p -> {
+                        if(p.list == null) {
+                            return p.name;
+                        } else {
+                            String formData = p.list.stream().map(pp -> pp.name).collect(Collectors.toList()).toString();
+                            return formData.substring(1, formData.length() - 1);
+                        }
+                    }).collect(Collectors.toList());
                     body.setRaw(String.format(
                             "{\n\"jsonrpc\":\"2.0\",\n\"method\":\"%s\",\n\"params\":%s,\n\"id\":1234\n}\n",
                             des.cmdName,
