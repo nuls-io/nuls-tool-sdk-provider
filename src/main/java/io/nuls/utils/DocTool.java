@@ -9,22 +9,19 @@ import io.nuls.core.core.ioc.SpringLiteContext;
 import io.nuls.core.log.Log;
 import io.nuls.core.model.StringUtils;
 import io.nuls.core.parse.JSONUtils;
-import io.nuls.core.rpc.cmd.BaseCmd;
 import io.nuls.core.rpc.model.*;
 import io.nuls.v2.model.annotation.Api;
 import io.nuls.v2.model.annotation.ApiOperation;
 import io.nuls.v2.model.annotation.ApiType;
-import net.sf.cglib.beans.BeanMap;
+import lombok.Data;
 import net.steppschuh.markdowngenerator.table.Table;
 import net.steppschuh.markdowngenerator.text.Text;
 import net.steppschuh.markdowngenerator.text.heading.Heading;
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.collections.ListUtils;
 
 import javax.ws.rs.*;
 import java.io.*;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -198,6 +195,7 @@ public class DocTool {
         SpringLiteContext.init("io.nuls");
         //Gen.genJSON();
         Gen.genDoc();
+        Gen.genPostmanJSON();
         System.exit(0);
     }
 
@@ -314,6 +312,15 @@ public class DocTool {
             List<CmdDes> jsonrpcCmdDesList = cmdDesList[1];
             System.out.println("生成RESTFUL文档成功：" + createJSONConfig(restfulCmdDesList, ApiType.RESTFUL, "/Users/pierreluo/IdeaProjects/nuls-engine/nuls-sdk-provider/documents"));
             System.out.println("生成JSONRPC文档成功：" + createJSONConfig(jsonrpcCmdDesList, ApiType.JSONRPC, "/Users/pierreluo/IdeaProjects/nuls-engine/nuls-sdk-provider/documents"));
+//            System.exit(0);
+        }
+
+        public static void genPostmanJSON() throws IOException {
+            List<CmdDes>[] cmdDesList = buildData();
+            List<CmdDes> restfulCmdDesList = cmdDesList[0];
+            List<CmdDes> jsonrpcCmdDesList = cmdDesList[1];
+            System.out.println("生成Postman-RESTFUL导入文件成功：" + createPostmanJSONConfig(restfulCmdDesList, ApiType.RESTFUL, "/Users/pierreluo/IdeaProjects/nuls-engine/nuls-sdk-provider/documents"));
+            System.out.println("生成Postman-JSONRPC导入文件成功：" + createPostmanJSONConfig(jsonrpcCmdDesList, ApiType.JSONRPC, "/Users/pierreluo/IdeaProjects/nuls-engine/nuls-sdk-provider/documents"));
 //            System.exit(0);
         }
 
@@ -552,6 +559,23 @@ public class DocTool {
             return mdFile.getAbsolutePath();
         }
 
+        public static String createPostmanJSONConfig(List<CmdDes> cmdDesList, ApiType apiType, String path) throws IOException {
+            ConfigurationLoader configurationLoader = SpringLiteContext.getBean(ConfigurationLoader.class);
+            ConfigurationLoader.ConfigItem configItem = configurationLoader.getConfigItem("APP_NAME");
+            String appName = configItem.getValue();
+            File mdFile = new File(path + File.separator + appName + "_Postman_" + apiType.name() + ".json");
+            if (mdFile.exists()) {
+                mdFile.delete();
+            }
+            mdFile.createNewFile();
+
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(mdFile))) {
+                String postmanFormatJson = genPostmanFormatJson(cmdDesList, apiType);
+                writer.write(postmanFormatJson);
+            }
+            return mdFile.getAbsolutePath();
+        }
+
         public static String createMarketDownDoc(List<CmdDes> cmdDesList, ApiType apiType, String tempFile) throws IOException {
             ConfigurationLoader configurationLoader = SpringLiteContext.getBean(ConfigurationLoader.class);
             String appName = configurationLoader.getConfigItem("APP_NAME").getValue();
@@ -670,6 +694,139 @@ public class DocTool {
                 }
             });
         }
+
+        public static String genPostmanFormatJson(List<CmdDes> cmdDesList, ApiType apiType) throws JsonProcessingException {
+            boolean restful = apiType.equals(ApiType.RESTFUL);
+            boolean jsonrpc = apiType.equals(ApiType.JSONRPC);
+            PostmanFormat format = new PostmanFormat();
+            Info info = new Info();
+            format.setInfo(info);
+            info.setName("SDK-Provider-" + apiType.name());
+            info.setSchema("https://schema.getpostman.com/json/collection/v2.1.0/collection.json");
+            List<Item> item = new ArrayList<>();
+            for(CmdDes des : cmdDesList) {
+                Item aItem = new Item();
+                aItem.setName(des.des + " - " + des.cmdName);
+                Request request = new Request();
+                Body body = new Body();
+                Url url = new Url();
+                request.setMethod(des.httpMethod);
+                request.setBody(body);
+
+
+                if(jsonrpc) {
+                    body.setRaw(String.format(
+                            "{\n\"jsonrpc\":\"2.0\",\n\"method\":\"%s\",\n\"params\":[],\n\"id\":1234\n}\n",
+                            des.cmdName
+                    ));
+                    url = Url.jsonrpcInstance();
+                } else if(restful) {
+                    Optional<ResultDes> first = des.getParameters().stream().filter(p -> p.formJsonOfRestful != null).findFirst();
+                    if(!first.isEmpty()) {
+                        body.setRaw(first.get().formJsonOfRestful);
+                    }
+                    url.path.add(des.cmdName.substring(1));
+                    url.raw = String.format("%s://%s:%s/%s", url.protocol, url.host.get(0), url.port, url.path.get(0));
+                }
+                request.setUrl(url);
+                aItem.setRequest(request);
+                item.add(aItem);
+            }
+            format.setItem(item);
+            String formatStr = JSONUtils.obj2json(format);
+            System.out.println(formatStr);
+            return formatStr;
+        }
+
+        @Data
+        private static class PostmanFormat {
+            private Info info;
+            private List<Item> item;
+        }
+
+        @Data
+        private static class Info {
+            private String _postman_id;
+            private String name;
+            private String schema;
+
+            public Info() {
+                this._postman_id = UUID.randomUUID().toString();
+            }
+        }
+
+        @Data
+        private static class Item {
+            private String name;
+            private Request request;
+            private List<String> response;
+
+            public Item() {
+                this.response = new ArrayList<>();
+            }
+        }
+
+        @Data
+        private static class Request {
+            private String method;
+            private List<Header> header;
+            private Body body;
+            private Url url;
+
+            public Request() {
+                this.header = new ArrayList<>();
+                Header header = new Header();
+                header.setKey("Content-Type");
+                header.setName("Content-Type");
+                header.setValue("application/json");
+                header.setType("text");
+                this.header.add(header);
+            }
+        }
+
+        @Data
+        private static class Header {
+            private String key;
+            private String name;
+            private String value;
+            private String type;
+        }
+
+        @Data
+        private static class Body {
+            private String mode;
+            private String raw;
+
+            public Body() {
+                this.mode = "raw";
+            }
+        }
+
+        @Data
+        private static class Url {
+            private String raw;
+            private String protocol;
+            private List<String> host;
+            private String port;
+            private List<String> path;
+
+            public Url() {
+                this.protocol = "http";
+                this.host = new ArrayList<>();
+                this.host.add("localhost");
+                this.port = "9898";
+                this.path = new ArrayList<>();
+            }
+
+            public static Url jsonrpcInstance() {
+                Url url = new Url();
+                url.path.add("jsonrpc");
+                url.raw = "http://localhost:9898/jsonrpc";
+                return url;
+            }
+        }
     }
+
+
 
 }
