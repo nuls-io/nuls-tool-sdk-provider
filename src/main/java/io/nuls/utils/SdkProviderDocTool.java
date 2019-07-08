@@ -28,6 +28,7 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
@@ -35,7 +36,7 @@ import java.util.stream.Collectors;
  * @Time: 2019-06-19 14:26
  * @Description: 生成rpc接口文档
  */
-public class DocTool {
+public class SdkProviderDocTool {
 
     static Set<String> exclusion = Set.of("io.nuls.base.protocol.cmd", "io.nuls.core.rpc.cmd.kernel", "io.nuls.core.rpc.modulebootstrap");
 
@@ -119,9 +120,11 @@ public class DocTool {
         public void setFormJsonOfRestful(String formJsonOfRestful) {
             this.formJsonOfRestful = formJsonOfRestful;
         }
+
     }
 
     public static class CmdDes implements Serializable {
+        int order;
         String cmdName;
         String cmdType;
         String des;
@@ -185,6 +188,36 @@ public class DocTool {
         public void setResult(List<ResultDes> result) {
             this.result = result;
         }
+
+        public int getOrder() {
+            return order;
+        }
+
+        public void setOrder(int order) {
+            this.order = order;
+        }
+
+        public int compareTo(int thatOrder) {
+            if(this.order > thatOrder) {
+                return 1;
+            } else if(this.order < thatOrder) {
+                return -1;
+            }
+            return 0;
+        }
+
+        @Override
+        public String toString() {
+            final StringBuilder sb = new StringBuilder("{");
+            sb.append("\"order\":")
+                    .append(order);
+            sb.append(",\"cmdName\":")
+                    .append('\"').append(cmdName).append('\"');
+            sb.append(",\"des\":")
+                    .append('\"').append(des).append('\"');
+            sb.append('}');
+            return sb.toString();
+        }
     }
 
     public static void main(String[] args) throws IOException {
@@ -194,9 +227,8 @@ public class DocTool {
         int defaultChainId = Integer.parseInt(configurationLoader.getValue("chainId"));
         ServiceManager.init(defaultChainId, providerType);
         SpringLiteContext.init("io.nuls");
-        //Gen.genJSON();
         Gen.genDoc();
-        Gen.genPostmanJSON();
+        //Gen.genPostmanJSON();
         System.exit(0);
     }
 
@@ -239,6 +271,7 @@ public class DocTool {
                     }
                     ApiOperation cmdAnnotation = (ApiOperation) annotation;
                     CmdDes cmdDes = new CmdDes();
+                    cmdDes.order = cmdAnnotation.order();
                     cmdDes.cmdType = apiType.name();
                     if (restful) {
                         Path methodPathAnnotation = method.getAnnotation(Path.class);
@@ -301,7 +334,13 @@ public class DocTool {
             List<CmdDes>[] cmdDesList = buildData();
             List<CmdDes> restfulCmdDesList = cmdDesList[0];
             List<CmdDes> jsonrpcCmdDesList = cmdDesList[1];
-            System.out.println("生成RESTFUL文档成功：" + createMarketDownDoc(restfulCmdDesList, ApiType.RESTFUL, "./readme.md"));
+            restfulCmdDesList.sort((a, b) -> {
+                return a.compareTo(b.order);
+            });
+            jsonrpcCmdDesList.sort((a, b) -> {
+                return a.compareTo(b.order);
+            });
+            //System.out.println("生成RESTFUL文档成功：" + createMarketDownDoc(restfulCmdDesList, ApiType.RESTFUL, "./readme.md"));
             System.out.println("生成JSONRPC文档成功：" + createMarketDownDoc(jsonrpcCmdDesList, ApiType.JSONRPC, "./readme.md"));
 //            System.exit(0);
         }
@@ -311,8 +350,14 @@ public class DocTool {
             Log.info("{}", cmdDesList);
             List<CmdDes> restfulCmdDesList = cmdDesList[0];
             List<CmdDes> jsonrpcCmdDesList = cmdDesList[1];
-            System.out.println("生成RESTFUL文档成功：" + createJSONConfig(restfulCmdDesList, ApiType.RESTFUL, "/Users/pierreluo/IdeaProjects/nuls-engine/nuls-sdk-provider/documents"));
-            System.out.println("生成JSONRPC文档成功：" + createJSONConfig(jsonrpcCmdDesList, ApiType.JSONRPC, "/Users/pierreluo/IdeaProjects/nuls-engine/nuls-sdk-provider/documents"));
+            restfulCmdDesList.sort((a, b) -> {
+                return a.compareTo(b.order);
+            });
+            jsonrpcCmdDesList.sort((a, b) -> {
+                return a.compareTo(b.order);
+            });
+            System.out.println("生成RESTFUL文档成功：" + createJSONConfig(restfulCmdDesList, ApiType.RESTFUL, "./readme.md"));
+            System.out.println("生成JSONRPC文档成功：" + createJSONConfig(jsonrpcCmdDesList, ApiType.JSONRPC, "./readme.md"));
 //            System.exit(0);
         }
 
@@ -320,8 +365,14 @@ public class DocTool {
             List<CmdDes>[] cmdDesList = buildData();
             List<CmdDes> restfulCmdDesList = cmdDesList[0];
             List<CmdDes> jsonrpcCmdDesList = cmdDesList[1];
-            System.out.println("生成Postman-RESTFUL导入文件成功：" + createPostmanJSONConfig(restfulCmdDesList, ApiType.RESTFUL, "/Users/pierreluo/IdeaProjects/nuls-engine/nuls-sdk-provider/documents"));
-            System.out.println("生成Postman-JSONRPC导入文件成功：" + createPostmanJSONConfig(jsonrpcCmdDesList, ApiType.JSONRPC, "/Users/pierreluo/IdeaProjects/nuls-engine/nuls-sdk-provider/documents"));
+            restfulCmdDesList.sort((a, b) -> {
+                return a.compareTo(b.order);
+            });
+            jsonrpcCmdDesList.sort((a, b) -> {
+                return a.compareTo(b.order);
+            });
+            System.out.println("生成Postman-RESTFUL导入文件成功：" + createPostmanJSONConfig(restfulCmdDesList, ApiType.RESTFUL, "./readme.md"));
+            System.out.println("生成Postman-JSONRPC导入文件成功：" + createPostmanJSONConfig(jsonrpcCmdDesList, ApiType.JSONRPC, "./readme.md"));
 //            System.exit(0);
         }
 
@@ -532,11 +583,15 @@ public class DocTool {
             return filedList;
         }
 
-        public static String createJSONConfig(List<CmdDes> cmdDesList, ApiType apiType, String path) throws IOException {
+        public static String createJSONConfig(List<CmdDes> cmdDesList, ApiType apiType, String tempFile) throws IOException {
             ConfigurationLoader configurationLoader = SpringLiteContext.getBean(ConfigurationLoader.class);
             ConfigurationLoader.ConfigItem configItem = configurationLoader.getConfigItem("APP_NAME");
             String appName = configItem.getValue();
-            File mdFile = new File(path + File.separator + appName + "_" + apiType.name() + ".json");
+            File file = new File(tempFile);
+            if (!file.exists()) {
+                throw new RuntimeException("模板文件不存在");
+            }
+            File mdFile = new File(file.getParentFile().getAbsolutePath() + File.separator + "documents" + File.separator + appName + "_" + apiType.name() + ".json");
             if (mdFile.exists()) {
                 mdFile.delete();
             }
@@ -547,7 +602,7 @@ public class DocTool {
                     try {
                         StringWriter stringWriter = new StringWriter();
                         try (BufferedWriter sbw = new BufferedWriter(stringWriter)) {
-                            writeMarkdown(cmd, sbw);
+                            writeMarkdown(cmd, sbw, null);
                             sbw.flush();
                             cmd.md = stringWriter.toString();
                         }
@@ -560,11 +615,15 @@ public class DocTool {
             return mdFile.getAbsolutePath();
         }
 
-        public static String createPostmanJSONConfig(List<CmdDes> cmdDesList, ApiType apiType, String path) throws IOException {
+        public static String createPostmanJSONConfig(List<CmdDes> cmdDesList, ApiType apiType, String tempFile) throws IOException {
             ConfigurationLoader configurationLoader = SpringLiteContext.getBean(ConfigurationLoader.class);
             ConfigurationLoader.ConfigItem configItem = configurationLoader.getConfigItem("APP_NAME");
             String appName = configItem.getValue();
-            File mdFile = new File(path + File.separator + appName + "_Postman_" + apiType.name() + ".json");
+            File file = new File(tempFile);
+            if (!file.exists()) {
+                throw new RuntimeException("模板文件不存在");
+            }
+            File mdFile = new File(file.getParentFile().getAbsolutePath() + File.separator + "documents" + File.separator + appName + "_Postman_" + apiType.name() + ".json");
             if (mdFile.exists()) {
                 mdFile.delete();
             }
@@ -596,16 +655,31 @@ public class DocTool {
             }
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(mdFile, true))) {
                 writer.newLine();
+                AtomicInteger i = new AtomicInteger(0);
                 cmdDesList.forEach(cmd -> {
-                    writeMarkdown(cmd, writer);
+                    writeMarkdown(cmd, writer, i);
                 });
             }
             return mdFile.getAbsolutePath();
         }
 
-        private static void writeMarkdown(CmdDes cmd, BufferedWriter writer) {
+        private static void writeMarkdown(CmdDes cmd, BufferedWriter writer, AtomicInteger i) {
             try {
-                writer.write(new Heading(cmd.des, 1).toString());
+                String order = "";
+                if(i != null) {
+                    if(i.get() == 0) {
+                        i.set(cmd.order);
+                    } else {
+                        String currentFirstLetterOfOrder = String.valueOf(i.get()).substring(0, 1);
+                        String firstLetterOfOrder = String.valueOf(cmd.order).substring(0, 1);
+                        if(!currentFirstLetterOfOrder.equals(firstLetterOfOrder)) {
+                            i.set(cmd.order);
+                        }
+                    }
+                    order = String.valueOf(i.getAndIncrement());
+                    order = order.substring(0, 1) + "." + Integer.parseInt(order.substring(1)) + " ";
+                }
+                writer.write(new Heading(order + cmd.des, 1).toString());
                 writer.newLine();
                 writer.write(new Heading("Cmd: " + cmd.cmdName.replaceAll("_", "\\\\_"), 2).toString());
                 writer.newLine();
