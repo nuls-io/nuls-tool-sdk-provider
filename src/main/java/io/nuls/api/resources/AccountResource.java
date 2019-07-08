@@ -352,8 +352,8 @@ public class AccountResource {
             @Key(name = "hash", description = "交易hash"),
             @Key(name = "txHex", description = "签名后的交易16进制字符串")
     }))
-    public RpcClientResult multiSign(List<SignDto> dtoList, String txHex) {
-        io.nuls.core.basic.Result result = NulsSDKTool.sign(dtoList, txHex);
+    public RpcClientResult multiSign(MultiSignForm form) {
+        io.nuls.core.basic.Result result = NulsSDKTool.sign(form.getDtoList(), form.getTxHex());
         return ResultUtil.getRpcClientResult(result);
     }
 
@@ -370,8 +370,8 @@ public class AccountResource {
             @Key(name = "hash", description = "交易hash"),
             @Key(name = "txHex", description = "签名后的交易16进制字符串")
     }))
-    public RpcClientResult priKeySign(String txHex, String address, String priKey) {
-        io.nuls.core.basic.Result result = NulsSDKTool.sign(txHex, address, priKey);
+    public RpcClientResult priKeySign(PriKeySignForm form) {
+        io.nuls.core.basic.Result result = NulsSDKTool.sign(form.getTxHex(), form.getAddress(), form.getPriKey());
         return ResultUtil.getRpcClientResult(result);
     }
 
@@ -388,8 +388,8 @@ public class AccountResource {
             @Key(name = "hash", description = "交易hash"),
             @Key(name = "txHex", description = "签名后的交易16进制字符串")
     }))
-    public RpcClientResult encryptedPriKeySign(String txHex, String address, String encryptedPriKey, String password) {
-        io.nuls.core.basic.Result result = NulsSDKTool.sign(txHex, address, encryptedPriKey, password);
+    public RpcClientResult encryptedPriKeySign(EncryptedPriKeySignForm form) {
+        io.nuls.core.basic.Result result = NulsSDKTool.sign(form.getTxHex(), form.getAddress(), form.getEncryptedPriKey(), form.getPassword());
         return ResultUtil.getRpcClientResult(result);
     }
 }
