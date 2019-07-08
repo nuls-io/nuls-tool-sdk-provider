@@ -32,8 +32,10 @@ import io.nuls.core.core.annotation.RpcMethod;
 import io.nuls.core.crypto.HexUtil;
 import io.nuls.core.model.FormatValidUtils;
 import io.nuls.core.model.StringUtils;
+import io.nuls.core.parse.JSONUtils;
 import io.nuls.core.rpc.model.*;
 import io.nuls.model.dto.AccountBalanceDto;
+import io.nuls.model.dto.AccountKeyStoreDto;
 import io.nuls.model.jsonrpc.RpcResult;
 import io.nuls.model.jsonrpc.RpcResultError;
 import io.nuls.rpctools.AccountTools;
@@ -45,8 +47,10 @@ import io.nuls.v2.model.annotation.Api;
 import io.nuls.v2.model.annotation.ApiOperation;
 import io.nuls.v2.model.annotation.ApiType;
 import io.nuls.v2.model.dto.AccountDto;
+import io.nuls.v2.model.dto.SignDto;
 import io.nuls.v2.util.NulsSDKTool;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -163,6 +167,44 @@ public class AccountController {
         return rpcResult;
     }
 
+    @RpcMethod("getPriKey")
+    public RpcResult getPriKey(List<Object> params) {
+        int chainId;
+        String address, password;
+        try {
+            chainId = (int) params.get(0);
+        } catch (Exception e) {
+            return RpcResult.paramError("[chainId] is inValid");
+        }
+        try {
+            address = (String) params.get(1);
+        } catch (Exception e) {
+            return RpcResult.paramError("[address] is inValid");
+        }
+        try {
+            password = (String) params.get(2);
+        } catch (Exception e) {
+            return RpcResult.paramError("[password] is inValid");
+        }
+        if (!AddressTool.validAddress(chainId, address)) {
+            return RpcResult.paramError("[address] is inValid");
+        }
+        if (!FormatValidUtils.validPassword(password)) {
+            return RpcResult.paramError("[password] is inValid");
+        }
+
+        GetAccountPrivateKeyByAddressReq req = new GetAccountPrivateKeyByAddressReq(password, address);
+        req.setChainId(chainId);
+        Result<String> result = accountService.getAccountPrivateKey(req);
+        RpcResult rpcResult = new RpcResult();
+        if (result.isSuccess()) {
+            rpcResult.setResult(result.getData());
+        } else {
+            rpcResult.setError(new RpcResultError(result.getStatus(), result.getMessage(), null));
+        }
+        return rpcResult;
+    }
+
 
     @RpcMethod("importPriKey")
     @ApiOperation(description = "根据私钥导入账户")
@@ -216,7 +258,7 @@ public class AccountController {
     @ApiOperation(description = "根据keystore导入账户")
     @Parameters(value = {
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
-            @Parameter(parameterName = "keyStoreJson", requestType = @TypeDescriptor(value = String.class), parameterDes = "keyStore字符串"),
+            @Parameter(parameterName = "keyStore", requestType = @TypeDescriptor(value = AccountKeyStoreDto.class), parameterDes = "keyStore"),
             @Parameter(parameterName = "password", requestType = @TypeDescriptor(value = String.class), parameterDes = "keystore密码")
     })
     @ResponseData(name = "返回值", description = "返回账户地址", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
@@ -225,14 +267,16 @@ public class AccountController {
     public RpcResult importKeystore(List<Object> params) {
         VerifyUtils.verifyParams(params, 3);
         int chainId;
-        String keyStoreJson, password;
+        String password, keyStoreJson;
+        Map keyStoreMap;
         try {
             chainId = (int) params.get(0);
         } catch (Exception e) {
             return RpcResult.paramError("[chainId] is inValid");
         }
         try {
-            keyStoreJson = (String) params.get(1);
+            keyStoreMap = (Map) params.get(1);
+            keyStoreJson = JSONUtils.obj2json(keyStoreMap);
         } catch (Exception e) {
             return RpcResult.paramError("[keyStoreJson] is inValid");
         }
@@ -240,9 +284,6 @@ public class AccountController {
             password = (String) params.get(2);
         } catch (Exception e) {
             return RpcResult.paramError("[password] is inValid");
-        }
-        if (StringUtils.isBlank(keyStoreJson)) {
-            return RpcResult.paramError("[keyStoreJson] is inValid");
         }
         if (!FormatValidUtils.validPassword(password)) {
             return RpcResult.paramError("[password] is inValid");
@@ -389,6 +430,152 @@ public class AccountController {
             return RpcResult.paramError(String.format("chainId [%s] is invalid", chainId));
         }
         io.nuls.core.basic.Result<List<AccountDto>> result = NulsSDKTool.createOffLineAccount(count, password);
+        return ResultUtil.getJsonRpcResult(result);
+    }
+
+    @RpcMethod("multiSign")
+    @ApiOperation(description = "多账户摘要签名")
+    @Parameters({
+            @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
+            @Parameter(parameterName = "signDtoList", parameterDes = "摘要签名表单", requestType = @TypeDescriptor(value = SignDto.class)),
+            @Parameter(parameterName = "txHex", parameterType = "String", parameterDes = "交易序列化16进制字符串")
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "hash", description = "交易hash"),
+            @Key(name = "txHex", description = "签名后的交易16进制字符串")
+    }))
+    public RpcResult multiSign(List<Object> params) {
+        int chainId;
+        String txHex;
+        List<Map> signMap;
+        List<SignDto> signDtoList = new ArrayList<>();
+        try {
+            chainId = (int) params.get(0);
+        } catch (Exception e) {
+            return RpcResult.paramError("[chainId] is inValid");
+        }
+        if (!Context.isChainExist(chainId)) {
+            return RpcResult.paramError(String.format("chainId [%s] is invalid", chainId));
+        }
+
+        try {
+            signMap = (List<Map>) params.get(1);
+            for (Map map : signMap) {
+                SignDto signDto = JSONUtils.map2pojo(map, SignDto.class);
+                signDtoList.add(signDto);
+            }
+        } catch (Exception e) {
+            return RpcResult.paramError("[signDto] is inValid");
+        }
+        txHex = (String) params.get(2);
+
+        io.nuls.core.basic.Result result = NulsSDKTool.sign(signDtoList, txHex);
+        return ResultUtil.getJsonRpcResult(result);
+    }
+
+    @RpcMethod("priKeySign")
+    @ApiOperation(description = "明文私钥摘要签名")
+    @Parameters({
+            @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
+            @Parameter(parameterName = "txHex", parameterType = "String", parameterDes = "交易序列化16进制字符串"),
+            @Parameter(parameterName = "address", parameterType = "String", parameterDes = "账户地址"),
+            @Parameter(parameterName = "privateKey", parameterType = "String", parameterDes = "账户明文私钥")
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "hash", description = "交易hash"),
+            @Key(name = "txHex", description = "签名后的交易16进制字符串")
+    }))
+    public RpcResult sign(List<Object> params) {
+        int chainId;
+        String txHex, address, priKey;
+        try {
+            chainId = (int) params.get(0);
+        } catch (Exception e) {
+            return RpcResult.paramError("[chainId] is inValid");
+        }
+        try {
+            txHex = (String) params.get(1);
+        } catch (Exception e) {
+            return RpcResult.paramError("[txHex] is inValid");
+        }
+        try {
+            address = (String) params.get(2);
+        } catch (Exception e) {
+            return RpcResult.paramError("[address] is inValid");
+        }
+        try {
+            priKey = (String) params.get(3);
+        } catch (Exception e) {
+            return RpcResult.paramError("[priKey] is inValid");
+        }
+        if (!Context.isChainExist(chainId)) {
+            return RpcResult.paramError(String.format("chainId [%s] is invalid", chainId));
+        }
+        if (StringUtils.isBlank(txHex)) {
+            return RpcResult.paramError("[txHex] is inValid");
+        }
+        if (!AddressTool.validAddress(chainId, address)) {
+            return RpcResult.paramError("[address] is inValid");
+        }
+        if (StringUtils.isBlank(priKey)) {
+            return RpcResult.paramError("[priKey] is inValid");
+        }
+
+        io.nuls.core.basic.Result result = NulsSDKTool.sign(txHex, address, priKey);
+        return ResultUtil.getJsonRpcResult(result);
+    }
+
+    @RpcMethod("encryptedPriKeySign")
+    @ApiOperation(description = "密文私钥摘要签名")
+    @Parameters({
+            @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
+            @Parameter(parameterName = "txHex", parameterType = "String", parameterDes = "交易序列化16进制字符串"),
+            @Parameter(parameterName = "address", parameterType = "String", parameterDes = "账户地址"),
+            @Parameter(parameterName = "encryptedPrivateKey", parameterType = "String", parameterDes = "账户密文私钥"),
+            @Parameter(parameterName = "password", parameterType = "String", parameterDes = "密码")
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "hash", description = "交易hash"),
+            @Key(name = "txHex", description = "签名后的交易16进制字符串")
+    }))
+    public RpcResult encryptedPriKeySign(List<Object> params) {
+        int chainId;
+        String txHex, address, encryptedPriKey, password;
+        try {
+            chainId = (int) params.get(0);
+        } catch (Exception e) {
+            return RpcResult.paramError("[chainId] is inValid");
+        }
+        try {
+            txHex = (String) params.get(1);
+        } catch (Exception e) {
+            return RpcResult.paramError("[txHex] is inValid");
+        }
+        try {
+            address = (String) params.get(2);
+        } catch (Exception e) {
+            return RpcResult.paramError("[address] is inValid");
+        }
+        try {
+            encryptedPriKey = (String) params.get(3);
+        } catch (Exception e) {
+            return RpcResult.paramError("[encryptedPriKey] is inValid");
+        }
+        try {
+            password = (String) params.get(4);
+        } catch (Exception e) {
+            return RpcResult.paramError("[password] is inValid");
+        }
+        if (StringUtils.isBlank(txHex)) {
+            return RpcResult.paramError("[txHex] is inValid");
+        }
+        if (!AddressTool.validAddress(chainId, address)) {
+            return RpcResult.paramError("[address] is inValid");
+        }
+        if (StringUtils.isBlank(encryptedPriKey)) {
+            return RpcResult.paramError("[encryptedPriKey] is inValid");
+        }
+        io.nuls.core.basic.Result result = NulsSDKTool.sign(txHex, address, encryptedPriKey, password);
         return ResultUtil.getJsonRpcResult(result);
     }
 }

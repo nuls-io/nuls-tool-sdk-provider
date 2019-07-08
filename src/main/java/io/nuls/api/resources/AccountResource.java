@@ -44,6 +44,7 @@ import io.nuls.model.form.*;
 import io.nuls.utils.Log;
 import io.nuls.utils.ResultUtil;
 import io.nuls.v2.model.dto.AccountDto;
+import io.nuls.v2.model.dto.SignDto;
 import io.nuls.v2.util.NulsSDKTool;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -338,5 +339,57 @@ public class AccountResource {
                 }
             }
         }
+    }
+
+    @POST
+    @Path("/multi/sign")
+    @ApiOperation(description = "多账户摘要签名")
+    @Parameters({
+            @Parameter(parameterName = "signDtoList", parameterDes = "摘要签名表单", requestType = @TypeDescriptor(value = SignDto.class)),
+            @Parameter(parameterName = "txHex", parameterType = "String", parameterDes = "交易序列化16进制字符串")
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "hash", description = "交易hash"),
+            @Key(name = "txHex", description = "签名后的交易16进制字符串")
+    }))
+    public RpcClientResult multiSign(List<SignDto> dtoList, String txHex) {
+        io.nuls.core.basic.Result result = NulsSDKTool.sign(dtoList, txHex);
+        return ResultUtil.getRpcClientResult(result);
+    }
+
+
+    @POST
+    @Path("/priKey/sign")
+    @ApiOperation(description = "明文私钥摘要签名")
+    @Parameters({
+            @Parameter(parameterName = "txHex", parameterType = "String", parameterDes = "交易序列化16进制字符串"),
+            @Parameter(parameterName = "address", parameterType = "String", parameterDes = "账户地址"),
+            @Parameter(parameterName = "privateKey", parameterType = "String", parameterDes = "账户明文私钥")
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "hash", description = "交易hash"),
+            @Key(name = "txHex", description = "签名后的交易16进制字符串")
+    }))
+    public RpcClientResult priKeySign(String txHex, String address, String priKey) {
+        io.nuls.core.basic.Result result = NulsSDKTool.sign(txHex, address, priKey);
+        return ResultUtil.getRpcClientResult(result);
+    }
+
+    @POST
+    @Path("/encryptedPriKey/sign")
+    @ApiOperation(description = "密文私钥摘要签名")
+    @Parameters({
+            @Parameter(parameterName = "txHex", parameterType = "String", parameterDes = "交易序列化16进制字符串"),
+            @Parameter(parameterName = "address", parameterType = "String", parameterDes = "账户地址"),
+            @Parameter(parameterName = "encryptedPrivateKey", parameterType = "String", parameterDes = "账户密文私钥"),
+            @Parameter(parameterName = "password", parameterType = "String", parameterDes = "密码")
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "hash", description = "交易hash"),
+            @Key(name = "txHex", description = "签名后的交易16进制字符串")
+    }))
+    public RpcClientResult encryptedPriKeySign(String txHex, String address, String encryptedPriKey, String password) {
+        io.nuls.core.basic.Result result = NulsSDKTool.sign(txHex, address, encryptedPriKey, password);
+        return ResultUtil.getRpcClientResult(result);
     }
 }

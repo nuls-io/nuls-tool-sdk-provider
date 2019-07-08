@@ -319,13 +319,13 @@ public class ConsensusController {
             return RpcResult.paramError("[commissionRate] is inValid");
         }
         try {
-            deposit = (String) params.get(5);
+            deposit = params.get(5).toString();
         } catch (Exception e) {
             return RpcResult.paramError("[deposit] is inValid");
         }
         try {
             map = (Map) params.get(6);
-            String amount = (String) map.get("amount");
+            String amount = map.get("amount").toString();
             map.put("amount", new BigInteger(amount));
             fromDto = JSONUtils.map2pojo(map, CoinFromDto.class);
         } catch (Exception e) {
@@ -464,7 +464,7 @@ public class ConsensusController {
             return RpcResult.paramError("[address] is inValid");
         }
         try {
-            deposit = (String) params.get(2);
+            deposit = params.get(2).toString();
         } catch (Exception e) {
             return RpcResult.paramError("[deposit] is inValid");
         }
