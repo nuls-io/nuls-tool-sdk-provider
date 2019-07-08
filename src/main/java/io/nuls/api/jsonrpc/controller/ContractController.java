@@ -482,6 +482,7 @@ public class ContractController {
     @RpcMethod("getContractTxResult")
     @ApiOperation(description = "获取智能合约执行结果")
     @Parameters({
+        @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
         @Parameter(parameterName = "hash", parameterDes = "交易hash")
     })
     @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = ContractResultDto.class))
