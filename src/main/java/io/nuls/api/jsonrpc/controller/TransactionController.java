@@ -304,7 +304,7 @@ public class TransactionController {
             @Key(name = "txHex", description = "交易序列化16进制字符串")
     }))
     public RpcResult createTransferTxOffline(List<Object> params) {
-        List<Map> inputList, outpuList;
+        List<Map> inputList, outputList;
         String remark;
 
         List<CoinFromDto> froms = new ArrayList<>();
@@ -321,8 +321,8 @@ public class TransactionController {
             return RpcResult.paramError("[inputList] is inValid");
         }
         try {
-            outpuList = (List<Map>) params.get(1);
-            for (Map map : outpuList) {
+            outputList = (List<Map>) params.get(1);
+            for (Map map : outputList) {
                 String amount = (String) map.get("amount");
                 map.put("amount", new BigInteger(amount));
                 CoinToDto toDto = JSONUtils.map2pojo(map, CoinToDto.class);
