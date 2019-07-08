@@ -41,6 +41,9 @@ import io.nuls.core.exception.NulsException;
 import io.nuls.core.model.StringUtils;
 import io.nuls.core.parse.JSONUtils;
 import io.nuls.core.rpc.model.*;
+import io.nuls.model.ErrorData;
+import io.nuls.model.RpcClientResult;
+import io.nuls.model.dto.TransactionDto;
 import io.nuls.model.jsonrpc.RpcErrorCode;
 import io.nuls.model.jsonrpc.RpcResult;
 import io.nuls.model.txdata.CallContractData;
@@ -49,6 +52,7 @@ import io.nuls.model.txdata.DeleteContractData;
 import io.nuls.rpctools.ContractTools;
 import io.nuls.rpctools.TransactionTools;
 import io.nuls.utils.Log;
+import io.nuls.utils.ResultUtil;
 import io.nuls.utils.VerifyUtils;
 import io.nuls.v2.model.annotation.Api;
 import io.nuls.v2.model.annotation.ApiOperation;
@@ -60,6 +64,7 @@ import io.nuls.v2.util.CommonValidator;
 import io.nuls.v2.util.NulsSDKTool;
 import io.nuls.v2.util.ValidateUtil;
 
+import javax.ws.rs.PathParam;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -84,8 +89,70 @@ public class TransactionController {
 
     TransferService transferService = ServiceManager.get(TransferService.class);
 
+    @RpcMethod("getTx")
+    @ApiOperation(description = "根据hash获取交易，只查已确认交易", order = 301)
+    @Parameters({
+            @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链id"),
+            @Parameter(parameterName = "hash", parameterDes = "交易hash")
+    })
+    @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = TransactionDto.class))
+    public RpcResult getTx(List<Object> params) {
+        VerifyUtils.verifyParams(params, 2);
+        int chainId;
+        String txHash;
+        try {
+            chainId = (int) params.get(0);
+        } catch (Exception e) {
+            return RpcResult.paramError("[chainId] is inValid");
+        }
+        try {
+            txHash = (String) params.get(1);
+        } catch (Exception e) {
+            return RpcResult.paramError("[txHash] is inValid");
+        }
+        if (!Context.isChainExist(chainId)) {
+            return RpcResult.dataNotFound();
+        }
+        if (StringUtils.isBlank(txHash) || !ValidateUtil.validHash(txHash)) {
+            return RpcResult.paramError("[txHash] is inValid");
+        }
+        Result<TransactionDto> result = transactionTools.getConfirmedTx(chainId, txHash);
+        return ResultUtil.getJsonRpcResult(result);
+    }
+
+    @RpcMethod("getTxImmediately")
+    @ApiOperation(description = "根据hash获取交易，先查未确认，查不到再查已确认", order = 302)
+    @Parameters({
+            @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链id"),
+            @Parameter(parameterName = "hash", requestType = @TypeDescriptor(value = String.class), parameterDes = "交易hash")
+    })
+    @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = TransactionDto.class))
+    public RpcResult getTxImmediately(List<Object> params) {
+        VerifyUtils.verifyParams(params, 2);
+        int chainId;
+        String txHash;
+        try {
+            chainId = (int) params.get(0);
+        } catch (Exception e) {
+            return RpcResult.paramError("[chainId] is inValid");
+        }
+        try {
+            txHash = (String) params.get(1);
+        } catch (Exception e) {
+            return RpcResult.paramError("[txHash] is inValid");
+        }
+        if (!Context.isChainExist(chainId)) {
+            return RpcResult.dataNotFound();
+        }
+        if (StringUtils.isBlank(txHash) || !ValidateUtil.validHash(txHash)) {
+            return RpcResult.paramError("[txHash] is inValid");
+        }
+        Result<TransactionDto> result = transactionTools.getTx(chainId, txHash);
+        return ResultUtil.getJsonRpcResult(result);
+    }
+
     @RpcMethod("validateTx")
-    @ApiOperation(description = "验证交易", order = 302)
+    @ApiOperation(description = "验证交易", order = 303)
     @Parameters({
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链id"),
             @Parameter(parameterName = "tx", parameterDes = "交易序列化字符串"),
@@ -122,7 +189,7 @@ public class TransactionController {
     }
 
     @RpcMethod("broadcastTx")
-    @ApiOperation(description = "广播交易", order = 303)
+    @ApiOperation(description = "广播交易", order = 304)
     @Parameters({
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链id"),
             @Parameter(parameterName = "tx", parameterDes = "交易序列化字符串"),
@@ -211,7 +278,7 @@ public class TransactionController {
     }
 
     @RpcMethod("transfer")
-    @ApiOperation(description = "单笔转账", order = 304)
+    @ApiOperation(description = "单笔转账", order = 305)
     @Parameters({
         @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链id"),
         @Parameter(parameterName = "assetId", requestType = @TypeDescriptor(value = int.class), parameterDes = "资产id"),
