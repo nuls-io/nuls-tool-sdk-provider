@@ -509,8 +509,8 @@ public class ContractController {
         if (contractResult.isFailed()) {
             return rpcResult.setError(new RpcResultError(contractResult.getStatus(), contractResult.getMessage(), null));
         }
-        Map dto = contractResult.getData();
-        rpcResult.setResult(dto);
+        Map map = contractResult.getData();
+        rpcResult.setResult(map.get("data"));
         return rpcResult;
     }
 

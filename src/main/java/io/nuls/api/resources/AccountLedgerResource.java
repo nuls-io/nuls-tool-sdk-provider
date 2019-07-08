@@ -24,6 +24,8 @@
 package io.nuls.api.resources;
 
 import io.nuls.api.config.Config;
+import io.nuls.api.config.Context;
+import io.nuls.base.RPCUtil;
 import io.nuls.base.api.provider.Result;
 import io.nuls.base.api.provider.ServiceManager;
 import io.nuls.base.api.provider.ledger.LedgerProvider;
@@ -31,17 +33,30 @@ import io.nuls.base.api.provider.ledger.facade.AccountBalanceInfo;
 import io.nuls.base.api.provider.ledger.facade.GetBalanceReq;
 import io.nuls.base.api.provider.transaction.TransferService;
 import io.nuls.base.api.provider.transaction.facade.TransferReq;
+import io.nuls.base.basic.AddressTool;
+import io.nuls.base.basic.NulsByteBuffer;
+import io.nuls.base.data.Transaction;
 import io.nuls.core.constant.CommonCodeConstanst;
+import io.nuls.core.constant.ErrorCode;
 import io.nuls.core.core.annotation.Autowired;
 import io.nuls.core.core.annotation.Component;
 import io.nuls.core.exception.NulsException;
+import io.nuls.core.model.StringUtils;
 import io.nuls.core.rpc.model.*;
 import io.nuls.model.ErrorData;
 import io.nuls.model.RpcClientResult;
 import io.nuls.model.dto.AccountBalanceDto;
 import io.nuls.model.dto.TransactionDto;
 import io.nuls.model.form.TransferForm;
+import io.nuls.model.form.TxForm;
+import io.nuls.model.jsonrpc.RpcErrorCode;
+import io.nuls.model.jsonrpc.RpcResult;
+import io.nuls.model.txdata.CallContractData;
+import io.nuls.model.txdata.CreateContractData;
+import io.nuls.model.txdata.DeleteContractData;
+import io.nuls.rpctools.ContractTools;
 import io.nuls.rpctools.TransactionTools;
+import io.nuls.utils.Log;
 import io.nuls.utils.ResultUtil;
 import io.nuls.v2.model.annotation.Api;
 import io.nuls.v2.model.annotation.ApiOperation;
@@ -52,6 +67,9 @@ import io.nuls.v2.util.NulsSDKTool;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.Map;
+
+import static io.nuls.core.constant.TxType.*;
+import static io.nuls.utils.Utils.extractTxTypeFromTx;
 
 /**
  * @author: PierreLuo
@@ -69,6 +87,8 @@ public class AccountLedgerResource {
     LedgerProvider ledgerProvider = ServiceManager.get(LedgerProvider.class);
     @Autowired
     TransactionTools transactionTools;
+    @Autowired
+    private ContractTools contractTools;
 
     @POST
     @Path("/transfer")
@@ -158,4 +178,94 @@ public class AccountLedgerResource {
         return clientResult;
     }
 
+    @POST
+    @Path("/transaction/validate")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "验证交易是否正确")
+    @Parameters({
+        @Parameter(parameterName = "验证交易是否正确", parameterDes = "验证交易是否正确表单", requestType = @TypeDescriptor(value = TxForm.class))
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+        @Key(name = "value", description = "交易hash")
+    }))
+    public RpcClientResult validate(TxForm form) {
+        if (form == null || StringUtils.isBlank(form.getTxHex())) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
+        }
+        Result result = transactionTools.validateTx(config.getChainId(), form.getTxHex());
+        return ResultUtil.getRpcClientResult(result);
+    }
+
+
+    @POST
+    @Path("/transaction/broadcast")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "广播交易")
+    @Parameters({
+        @Parameter(parameterName = "广播交易", parameterDes = "广播交易表单", requestType = @TypeDescriptor(value = TxForm.class))
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+        @Key(name = "value", valueType = boolean.class, description = "是否成功"),
+        @Key(name = "hash", description = "交易hash")
+    }))
+    public RpcClientResult broadcast(TxForm form) {
+        if (form == null || StringUtils.isBlank(form.getTxHex())) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
+        }
+        try {
+            String txHex = form.getTxHex();
+            int type = extractTxTypeFromTx(txHex);
+            Result result = null;
+            switch (type) {
+                case CREATE_CONTRACT:
+                    Transaction tx = new Transaction();
+                    tx.parse(new NulsByteBuffer(RPCUtil.decode(txHex)));
+                    CreateContractData create = new CreateContractData();
+                    create.parse(new NulsByteBuffer(tx.getTxData()));
+                    result = contractTools.validateContractCreate(config.getChainId(),
+                            AddressTool.getStringAddressByBytes(create.getSender()),
+                            create.getGasLimit(),
+                            create.getPrice(),
+                            RPCUtil.encode(create.getCode()),
+                            create.getArgs());
+                    break;
+                case CALL_CONTRACT:
+                    Transaction callTx = new Transaction();
+                    callTx.parse(new NulsByteBuffer(RPCUtil.decode(txHex)));
+                    CallContractData call = new CallContractData();
+                    call.parse(new NulsByteBuffer(callTx.getTxData()));
+                    result = contractTools.validateContractCall(config.getChainId(),
+                            AddressTool.getStringAddressByBytes(call.getSender()),
+                            call.getValue(),
+                            call.getGasLimit(),
+                            call.getPrice(),
+                            AddressTool.getStringAddressByBytes(call.getContractAddress()),
+                            call.getMethodName(),
+                            call.getMethodDesc(),
+                            call.getArgs());
+                    break;
+                case DELETE_CONTRACT:
+                    Transaction deleteTx = new Transaction();
+                    deleteTx.parse(new NulsByteBuffer(RPCUtil.decode(txHex)));
+                    DeleteContractData delete = new DeleteContractData();
+                    delete.parse(new NulsByteBuffer(deleteTx.getTxData()));
+                    result = contractTools.validateContractDelete(config.getChainId(),
+                            AddressTool.getStringAddressByBytes(delete.getSender()),
+                            AddressTool.getStringAddressByBytes(delete.getContractAddress()));
+                    break;
+                default:
+                    break;
+            }
+            Map contractMap = (Map) result.getData();
+            if (contractMap != null && Boolean.FALSE.equals(contractMap.get("success"))) {
+                return RpcClientResult.getFailed((String) contractMap.get("msg"));
+            }
+
+            result = transactionTools.newTx(config.getChainId(), txHex);
+            return ResultUtil.getRpcClientResult(result);
+        } catch (Exception e) {
+            Log.error(e);
+            return RpcClientResult.getFailed(e.getMessage());
+        }
+    }
 }
