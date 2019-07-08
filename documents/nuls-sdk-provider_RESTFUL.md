@@ -46,37 +46,6 @@ Cmd: /api/tx/hash/{hash}
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount        |     string      | 数量                                        |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lockTime      |      long       | 解锁时间，-1为永久锁定                              |
 
-注销共识节点
-======
-Cmd: /api/consensus/agent/stop
-------------------------------
-### CmdType: RESTFUL
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
-
-### Form json data: 
-```json
-{
-  "address" : null,
-  "password" : null
-}
-```
-
-参数列表
-----
-| 参数名                                                      |     参数类型      | 参数描述     | 是否非空 |
-| -------------------------------------------------------- |:-------------:| -------- |:----:|
-| 注销共识节点                                                   | stopagentform | 注销共识节点表单 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address  |    string     | 共识节点地址   |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password |    string     | 密码       |  是   |
-
-返回值
----
-| 字段名   |  字段类型  | 参数描述   |
-| ----- |:------:| ------ |
-| value | string | 交易hash |
-
 Create an agent for consensus! 创建共识(代理)节点
 =========================================
 Cmd: /api/consensus/agent
@@ -109,6 +78,37 @@ Cmd: /api/consensus/agent
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;commissionRate |       int       | 佣金比例         |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deposit        |     string      | 抵押金额         |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password       |     string      | 密码           |  是   |
+
+返回值
+---
+| 字段名   |  字段类型  | 参数描述   |
+| ----- |:------:| ------ |
+| value | string | 交易hash |
+
+注销共识节点
+======
+Cmd: /api/consensus/agent/stop
+------------------------------
+### CmdType: RESTFUL
+### HttpMethod: POST
+### ContentType: application/json;charset=UTF-8
+
+
+### Form json data: 
+```json
+{
+  "address" : null,
+  "password" : null
+}
+```
+
+参数列表
+----
+| 参数名                                                      |     参数类型      | 参数描述     | 是否非空 |
+| -------------------------------------------------------- |:-------------:| -------- |:----:|
+| 注销共识节点                                                   | stopagentform | 注销共识节点表单 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address  |    string     | 共识节点地址   |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password |    string     | 密码       |  是   |
 
 返回值
 ---
@@ -1273,36 +1273,6 @@ Cmd: /api/account
 | ---- |:---------------:| ---- |
 | list | list&lt;string> | 账户地址 |
 
-账户备份，导出账户私钥，只能导出本地创建或导入的账户
-==========================
-Cmd: /api/account/prikey/{address}
-----------------------------------
-### CmdType: RESTFUL
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
-
-### Form json data: 
-```json
-{
-  "password" : null
-}
-```
-
-参数列表
-----
-| 参数名                                                      |        参数类型         | 参数描述     | 是否非空 |
-| -------------------------------------------------------- |:-------------------:| -------- |:----:|
-| address                                                  |       string        | 账户地址     |  是   |
-| 账户密码信息                                                   | accountpasswordform | 账户密码信息表单 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password |       string        | 密码       |  是   |
-
-返回值
----
-| 字段名   |  字段类型  | 参数描述 |
-| ----- |:------:| ---- |
-| value | string | 私钥   |
-
 [修改密码] 根据原密码修改账户密码
 ==================
 Cmd: /api/account/password/{address}
@@ -1334,6 +1304,36 @@ Cmd: /api/account/password/{address}
 | 字段名   |  字段类型   | 参数描述   |
 | ----- |:-------:| ------ |
 | value | boolean | 是否修改成功 |
+
+账户备份，导出账户私钥，只能导出本地创建或导入的账户
+==========================
+Cmd: /api/account/prikey/{address}
+----------------------------------
+### CmdType: RESTFUL
+### HttpMethod: POST
+### ContentType: application/json;charset=UTF-8
+
+
+### Form json data: 
+```json
+{
+  "password" : null
+}
+```
+
+参数列表
+----
+| 参数名                                                      |        参数类型         | 参数描述     | 是否非空 |
+| -------------------------------------------------------- |:-------------------:| -------- |:----:|
+| address                                                  |       string        | 账户地址     |  是   |
+| 账户密码信息                                                   | accountpasswordform | 账户密码信息表单 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password |       string        | 密码       |  是   |
+
+返回值
+---
+| 字段名   |  字段类型  | 参数描述 |
+| ----- |:------:| ---- |
+| value | string | 私钥   |
 
 根据私钥导入账户
 ========
@@ -1838,29 +1838,6 @@ Cmd: /api/accountledger/tx/{hash}
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount        |     string      | 数量                                        |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lockTime      |      long       | 解锁时间，-1为永久锁定                              |
 
-查询账户余额
-======
-Cmd: /api/accountledger/balance/{address}
------------------------------------------
-### CmdType: RESTFUL
-### HttpMethod: GET
-### ContentType: application/json;charset=UTF-8
-
-
-参数列表
-----
-| 参数名     |  参数类型  | 参数描述 | 是否非空 |
-| ------- |:------:| ---- |:----:|
-| address | string | 账户地址 |  是   |
-
-返回值
----
-| 字段名       |  字段类型  | 参数描述 |
-| --------- |:------:| ---- |
-| total     | string | 总余额  |
-| freeze    | string | 锁定金额 |
-| available | string | 可用余额 |
-
 离线组装转账交易
 ========
 Cmd: /api/accountledger/createTransferTxOffline
@@ -1916,4 +1893,27 @@ Cmd: /api/accountledger/createTransferTxOffline
 | ----- |:------:| ------------ |
 | hash  | string | 交易hash       |
 | txHex | string | 交易序列化16进制字符串 |
+
+查询账户余额
+======
+Cmd: /api/accountledger/balance/{address}
+-----------------------------------------
+### CmdType: RESTFUL
+### HttpMethod: GET
+### ContentType: application/json;charset=UTF-8
+
+
+参数列表
+----
+| 参数名     |  参数类型  | 参数描述 | 是否非空 |
+| ------- |:------:| ---- |:----:|
+| address | string | 账户地址 |  是   |
+
+返回值
+---
+| 字段名       |  字段类型  | 参数描述 |
+| --------- |:------:| ---- |
+| total     | string | 总余额  |
+| freeze    | string | 锁定金额 |
+| available | string | 可用余额 |
 
