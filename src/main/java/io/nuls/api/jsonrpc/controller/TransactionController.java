@@ -41,9 +41,6 @@ import io.nuls.core.exception.NulsException;
 import io.nuls.core.model.StringUtils;
 import io.nuls.core.parse.JSONUtils;
 import io.nuls.core.rpc.model.*;
-import io.nuls.model.ErrorData;
-import io.nuls.model.RpcClientResult;
-import io.nuls.model.form.TransferForm;
 import io.nuls.model.jsonrpc.RpcErrorCode;
 import io.nuls.model.jsonrpc.RpcResult;
 import io.nuls.model.txdata.CallContractData;
@@ -52,7 +49,6 @@ import io.nuls.model.txdata.DeleteContractData;
 import io.nuls.rpctools.ContractTools;
 import io.nuls.rpctools.TransactionTools;
 import io.nuls.utils.Log;
-import io.nuls.utils.ResultUtil;
 import io.nuls.utils.VerifyUtils;
 import io.nuls.v2.model.annotation.Api;
 import io.nuls.v2.model.annotation.ApiOperation;
@@ -64,10 +60,6 @@ import io.nuls.v2.util.CommonValidator;
 import io.nuls.v2.util.NulsSDKTool;
 import io.nuls.v2.util.ValidateUtil;
 
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -233,7 +225,7 @@ public class TransactionController {
         @Key(name = "hash", description = "交易hash")
     }))
     public RpcResult transfer(List<Object> params) {
-        VerifyUtils.verifyParams(params, 6);
+        VerifyUtils.verifyParams(params, 7);
         int chainId, assetId;
         String address, toAddress, password, amount, remark;
         try {
@@ -329,7 +321,7 @@ public class TransactionController {
                 tos.add(toDto);
             }
         } catch (Exception e) {
-            return RpcResult.paramError("[outpuList] is inValid");
+            return RpcResult.paramError("[outputList] is inValid");
         }
         try {
             remark = (String) params.get(2);

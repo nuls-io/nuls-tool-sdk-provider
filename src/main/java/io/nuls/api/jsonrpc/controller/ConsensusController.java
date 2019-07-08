@@ -20,6 +20,7 @@
 
 package io.nuls.api.jsonrpc.controller;
 
+import io.nuls.api.config.Context;
 import io.nuls.base.api.provider.Result;
 import io.nuls.base.api.provider.ServiceManager;
 import io.nuls.base.api.provider.consensus.ConsensusProvider;
@@ -40,6 +41,7 @@ import io.nuls.model.form.consensus.StopAgentForm;
 import io.nuls.model.form.consensus.WithdrawForm;
 import io.nuls.model.jsonrpc.RpcResult;
 import io.nuls.utils.ResultUtil;
+import io.nuls.utils.VerifyUtils;
 import io.nuls.v2.model.annotation.Api;
 import io.nuls.v2.model.annotation.ApiOperation;
 import io.nuls.v2.model.annotation.ApiType;
@@ -71,8 +73,10 @@ public class ConsensusController {
             @Key(name = "value", description = "交易hash")
     }))
     public RpcResult createAgent(List<Object> params) {
-        String agentAddress, packingAddress, rewardAddress, deposit, password;
+        VerifyUtils.verifyParams(params, 7);
         int chainId, commissionRate;
+        String agentAddress, packingAddress, rewardAddress, deposit, password;
+
         try {
             chainId = (int) params.get(0);
         } catch (Exception e) {
@@ -94,14 +98,14 @@ public class ConsensusController {
             return RpcResult.paramError("[rewardAddress] is inValid");
         }
         try {
-            deposit = (String) params.get(4);
-        } catch (Exception e) {
-            return RpcResult.paramError("[deposit] is inValid");
-        }
-        try {
-            commissionRate = (int) params.get(5);
+            commissionRate = (int) params.get(4);
         } catch (Exception e) {
             return RpcResult.paramError("[commissionRate] is inValid");
+        }
+        try {
+            deposit = (String) params.get(5);
+        } catch (Exception e) {
+            return RpcResult.paramError("[deposit] is inValid");
         }
         try {
             password = (String) params.get(6);
@@ -257,6 +261,16 @@ public class ConsensusController {
         } catch (Exception e) {
             return RpcResult.paramError("[password] is inValid");
         }
+        if (!AddressTool.validAddress(chainId, address)) {
+            return RpcResult.paramError("[address] is inValid");
+        }
+        if (StringUtils.isBlank(txHash)) {
+            return RpcResult.paramError("[txHash] is inValid");
+        }
+        if (!FormatValidUtils.validPassword(password)) {
+            return RpcResult.paramError("[password] is inValid");
+        }
+
         WithdrawReq req = new WithdrawReq(address, txHash, password);
         req.setChainId(chainId);
         Result<String> result = consensusProvider.withdraw(req);
@@ -300,32 +314,26 @@ public class ConsensusController {
             return RpcResult.paramError("[rewardAddress] is inValid");
         }
         try {
-            deposit = (String) params.get(4);
-        } catch (Exception e) {
-            return RpcResult.paramError("[deposit] is inValid");
-        }
-        try {
-            commissionRate = (int) params.get(5);
+            commissionRate = (int) params.get(4);
         } catch (Exception e) {
             return RpcResult.paramError("[commissionRate] is inValid");
         }
         try {
-            map = (Map) params.get(5);
+            deposit = (String) params.get(5);
+        } catch (Exception e) {
+            return RpcResult.paramError("[deposit] is inValid");
+        }
+        try {
+            map = (Map) params.get(6);
             String amount = (String) map.get("amount");
             map.put("amount", new BigInteger(amount));
             fromDto = JSONUtils.map2pojo(map, CoinFromDto.class);
         } catch (Exception e) {
             return RpcResult.paramError("[input] is inValid");
         }
-
-        ConsensusDto form = new ConsensusDto();
-        form.setAgentAddress(agentAddress);
-        form.setPackingAddress(packingAddress);
-        form.setRewardAddress(rewardAddress);
-        form.setDeposit(new BigInteger(deposit));
-        form.setCommissionRate(commissionRate);
-        form.setInput(fromDto);
-
+        if (!Context.isChainExist(chainId)) {
+            return RpcResult.paramError(String.format("chainId [%s] is invalid", chainId));
+        }
         if (!AddressTool.validAddress(chainId, agentAddress)) {
             return RpcResult.paramError("[agentAddress] is inValid");
         }
@@ -339,11 +347,17 @@ public class ConsensusController {
             return RpcResult.paramError("[deposit] is inValid");
         }
 
+        ConsensusDto form = new ConsensusDto();
+        form.setAgentAddress(agentAddress);
+        form.setPackingAddress(packingAddress);
+        form.setRewardAddress(rewardAddress);
+        form.setDeposit(new BigInteger(deposit));
+        form.setCommissionRate(commissionRate);
+        form.setInput(fromDto);
         io.nuls.core.basic.Result result = NulsSDKTool.createConsensusTxOffline(form);
         RpcResult rpcResult = ResultUtil.getJsonRpcResult(result);
         return rpcResult;
     }
-
 
     @RpcMethod("stopAgentOffline")
     @ApiOperation(description = "离线组装 - 注销共识节点")
@@ -398,6 +412,9 @@ public class ConsensusController {
         } catch (Exception e) {
             return RpcResult.paramError("[depositList] is inValid");
         }
+        if (!Context.isChainExist(chainId)) {
+            return RpcResult.paramError(String.format("chainId [%s] is invalid", chainId));
+        }
         if (!AddressTool.validAddress(chainId, agentAddress)) {
             return RpcResult.paramError("[agentAddress] is inValid");
         }
@@ -447,20 +464,23 @@ public class ConsensusController {
             return RpcResult.paramError("[address] is inValid");
         }
         try {
-            agentHash = (String) params.get(2);
-        } catch (Exception e) {
-            return RpcResult.paramError("[agentHash] is inValid");
-        }
-        try {
-            deposit = (String) params.get(3);
+            deposit = (String) params.get(2);
         } catch (Exception e) {
             return RpcResult.paramError("[deposit] is inValid");
+        }
+        try {
+            agentHash = (String) params.get(3);
+        } catch (Exception e) {
+            return RpcResult.paramError("[agentHash] is inValid");
         }
         try {
             map = (Map) params.get(4);
             fromDto = JSONUtils.map2pojo(map, CoinFromDto.class);
         } catch (Exception e) {
             return RpcResult.paramError("[input] is inValid");
+        }
+        if (!Context.isChainExist(chainId)) {
+            return RpcResult.paramError(String.format("chainId [%s] is invalid", chainId));
         }
         if (!AddressTool.validAddress(chainId, address)) {
             return RpcResult.paramError("[address] is inValid");
@@ -521,6 +541,9 @@ public class ConsensusController {
             fromDto = JSONUtils.map2pojo(map, CoinFromDto.class);
         } catch (Exception e) {
             return RpcResult.paramError("[input] is inValid");
+        }
+        if (!Context.isChainExist(chainId)) {
+            return RpcResult.paramError(String.format("chainId [%s] is invalid", chainId));
         }
         if (!AddressTool.validAddress(chainId, address)) {
             return RpcResult.paramError("[address] is inValid");

@@ -46,9 +46,7 @@ import io.nuls.v2.model.annotation.ApiOperation;
 import io.nuls.v2.model.annotation.ApiType;
 import io.nuls.v2.model.dto.AccountDto;
 import io.nuls.v2.util.NulsSDKTool;
-import org.checkerframework.checker.units.qual.K;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -93,7 +91,7 @@ public class AccountController {
         } catch (Exception e) {
             return RpcResult.paramError("[password] is inValid");
         }
-        if(!FormatValidUtils.validPassword(password)) {
+        if (!FormatValidUtils.validPassword(password)) {
             return RpcResult.paramError("[password] is inValid");
         }
 
@@ -144,7 +142,6 @@ public class AccountController {
         } catch (Exception e) {
             return RpcResult.paramError("[newPassword] is inValid");
         }
-
         if (!AddressTool.validAddress(chainId, address)) {
             return RpcResult.paramError("[address] is inValid");
         }
@@ -299,7 +296,8 @@ public class AccountController {
             return RpcResult.paramError("[password] is inValid");
         }
         KeyStoreReq req = new KeyStoreReq(password, address);
-        Result<String > result = accountService.getAccountKeyStore(req);
+        req.setChainId(chainId);
+        Result<String> result = accountService.getAccountKeyStore(req);
         RpcResult rpcResult = new RpcResult();
         if (result.isSuccess()) {
             rpcResult.setResult(result.getData());
@@ -313,8 +311,9 @@ public class AccountController {
     @ApiOperation(description = "获取账户余额")
     @Parameters(value = {
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
-            @Parameter(parameterName = "address", requestType = @TypeDescriptor(value = String.class), parameterDes = "账户地址"),
-            @Parameter(parameterName = "password", requestType = @TypeDescriptor(value = String.class), parameterDes = "账户密码")
+            @Parameter(parameterName = "assetChainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "资产的链ID"),
+            @Parameter(parameterName = "assetId", requestType = @TypeDescriptor(value = int.class), parameterDes = "资产ID"),
+            @Parameter(parameterName = "address", requestType = @TypeDescriptor(value = String.class), parameterDes = "账户地址")
     })
     @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = AccountBalanceDto.class))
     public RpcResult getAccountBalance(List<Object> params) {
@@ -383,8 +382,11 @@ public class AccountController {
         } catch (Exception e) {
             return RpcResult.paramError("[password] is inValid");
         }
-        if(!FormatValidUtils.validPassword(password)) {
+        if (!FormatValidUtils.validPassword(password)) {
             return RpcResult.paramError("[password] is inValid");
+        }
+        if (!Context.isChainExist(chainId)) {
+            return RpcResult.paramError(String.format("chainId [%s] is invalid", chainId));
         }
         io.nuls.core.basic.Result<List<AccountDto>> result = NulsSDKTool.createOffLineAccount(count, password);
         return ResultUtil.getJsonRpcResult(result);
