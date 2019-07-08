@@ -108,7 +108,7 @@ public class BlockResource {
     })
     @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = BlockHeaderDto.class))
     public RpcClientResult getBlockHeaderByHash(@PathParam("hash") String hash) {
-        if (hash == null || ValidateUtil.validHash(hash)) {
+        if (hash == null || !ValidateUtil.validHash(hash)) {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "hash is invalid"));
         }
         GetBlockHeaderByHashReq req = new GetBlockHeaderByHashReq(hash);
@@ -198,7 +198,7 @@ public class BlockResource {
     })
     @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = BlockHeaderDto.class))
     public RpcClientResult getBlockByHeight(@PathParam("hash") String hash) {
-        if (hash == null || ValidateUtil.validHash(hash)) {
+        if (hash == null || !ValidateUtil.validHash(hash)) {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "hash is invalid"));
         }
         Result<Block> result = blockTools.getBlockByHash(config.getChainId(), hash);
