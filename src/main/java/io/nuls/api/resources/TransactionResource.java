@@ -70,7 +70,7 @@ public class TransactionResource {
     })
     @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = TransactionDto.class))
     public RpcClientResult getTx(@PathParam("hash") String hash) {
-        if (hash == null || ValidateUtil.validHash(hash)) {
+        if (hash == null || !ValidateUtil.validHash(hash)) {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "hash is invalid"));
         }
         Result<TransactionDto> result = transactionTools.getConfirmedTx(config.getChainId(), hash);
