@@ -228,7 +228,7 @@ public class SdkProviderDocTool {
         ServiceManager.init(defaultChainId, providerType);
         SpringLiteContext.init("io.nuls");
         Gen.genDoc();
-        //Gen.genPostmanJSON();
+        Gen.genPostmanJSON();
         System.exit(0);
     }
 
@@ -340,7 +340,7 @@ public class SdkProviderDocTool {
             jsonrpcCmdDesList.sort((a, b) -> {
                 return a.compareTo(b.order);
             });
-            //System.out.println("生成RESTFUL文档成功：" + createMarketDownDoc(restfulCmdDesList, ApiType.RESTFUL, "./readme.md"));
+            System.out.println("生成RESTFUL文档成功：" + createMarketDownDoc(restfulCmdDesList, ApiType.RESTFUL, "./readme.md"));
             System.out.println("生成JSONRPC文档成功：" + createMarketDownDoc(jsonrpcCmdDesList, ApiType.JSONRPC, "./readme.md"));
 //            System.exit(0);
         }
