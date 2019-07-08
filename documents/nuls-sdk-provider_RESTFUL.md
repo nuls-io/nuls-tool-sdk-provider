@@ -566,298 +566,6 @@ Cmd: /api/contract/result/{hash}
 | contractTxList                                                                                        | list&lt;string> | 合约生成交易的序列化字符串列表                             |
 | remark                                                                                                |     string      | 备注                                          |
 
-获取账户地址的指定token余额
-================
-Cmd: /api/contract/balance/token/{contractAddress}/{address}
-------------------------------------------------------------
-### CmdType: RESTFUL
-### HttpMethod: GET
-### ContentType: application/json;charset=UTF-8
-
-
-参数列表
-----
-| 参数名             |  参数类型  | 参数描述 | 是否非空 |
-| --------------- |:------:| ---- |:----:|
-| contractAddress | string | 合约地址 |  是   |
-| address         | string | 账户地址 |  是   |
-
-返回值
----
-| 字段名             |  字段类型  | 参数描述                    |
-| --------------- |:------:| ----------------------- |
-| contractAddress | string | 合约地址                    |
-| name            | string | token名称                 |
-| symbol          | string | token符号                 |
-| amount          | string | token数量                 |
-| decimals        |  long  | token支持的小数位数            |
-| blockHeight     |  long  | 合约创建时的区块高度              |
-| status          |  int   | 合约状态(0-不存在, 1-正常, 2-终止) |
-
-获取合约代码构造函数
-==========
-Cmd: /api/contract/constructor
-------------------------------
-### CmdType: RESTFUL
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
-
-### Form json data: 
-```json
-{
-  "contractCode" : null
-}
-```
-
-参数列表
-----
-| 参数名                                                          |     参数类型     | 参数描述                 | 是否非空 |
-| ------------------------------------------------------------ |:------------:| -------------------- |:----:|
-| 获取合约代码构造函数                                                   | contractcode | 获取合约代码构造函数表单         |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractCode |    string    | 智能合约代码(字节码的Hex编码字符串) |  是   |
-
-返回值
----
-| 字段名                                                                                                      |      字段类型       | 参数描述               |
-| -------------------------------------------------------------------------------------------------------- |:---------------:| ------------------ |
-| constructor                                                                                              |     object      | 合约构造函数详情           |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name                                                     |     string      | 方法名称               |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;desc                                                     |     string      | 方法描述               |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args                                                     | list&lt;object> | 方法参数列表             |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;type     |     string      | 参数类型               |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name     |     string      | 参数名称               |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;required |     boolean     | 是否必填               |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;returnArg                                                |     string      | 返回值类型              |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;view                                                     |     boolean     | 是否视图方法（调用此方法数据不上链） |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;event                                                    |     boolean     | 是否是事件              |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;payable                                                  |     boolean     | 是否是可接受主链资产转账的方法    |
-| isNrc20                                                                                                  |     boolean     | 是否是NRC20合约         |
-
-验证发布合约
-======
-Cmd: /api/contract/validate/create
-----------------------------------
-### CmdType: RESTFUL
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
-
-### Form json data: 
-```json
-{
-  "sender" : null,
-  "gasLimit" : 0,
-  "price" : 0,
-  "contractCode" : null,
-  "args" : null
-}
-```
-
-参数列表
-----
-| 参数名                                                          |          参数类型          | 参数描述                 | 是否非空 |
-| ------------------------------------------------------------ |:----------------------:| -------------------- |:----:|
-| 验证发布合约                                                       | contractvalidatecreate | 验证发布合约表单             |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sender       |         string         | 交易创建者                |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gasLimit     |          long          | 最大gas消耗              |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price        |          long          | 执行合约单价               |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractCode |         string         | 智能合约代码(字节码的Hex编码字符串) |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args         |        object[]        | 参数列表                 |  是   |
-
-返回值
----
-| 字段名     |  字段类型   | 参数描述      |
-| ------- |:-------:| --------- |
-| success | boolean | 验证成功与否    |
-| code    | string  | 验证失败的错误码  |
-| msg     | string  | 验证失败的错误信息 |
-
-验证调用合约
-======
-Cmd: /api/contract/validate/call
---------------------------------
-### CmdType: RESTFUL
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
-
-### Form json data: 
-```json
-{
-  "sender" : null,
-  "value" : 0,
-  "gasLimit" : 0,
-  "price" : 0,
-  "contractAddress" : null,
-  "methodName" : null,
-  "methodDesc" : null,
-  "args" : null
-}
-```
-
-参数列表
-----
-| 参数名                                                             |         参数类型         | 参数描述                       | 是否非空 |
-| --------------------------------------------------------------- |:--------------------:| -------------------------- |:----:|
-| 验证调用合约                                                          | contractvalidatecall | 验证调用合约表单                   |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sender          |        string        | 交易创建者                      |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value           |         long         | 调用者向合约地址转入的主网资产金额，没有此业务时填0 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gasLimit        |         long         | 最大gas消耗                    |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price           |         long         | 执行合约单价                     |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractAddress |        string        | 智能合约地址                     |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodName      |        string        | 方法名称                       |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodDesc      |        string        | 方法描述，若合约内方法没有重载，则此参数可以为空   |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args            |       object[]       | 参数列表                       |  是   |
-
-返回值
----
-| 字段名     |  字段类型   | 参数描述      |
-| ------- |:-------:| --------- |
-| success | boolean | 验证成功与否    |
-| code    | string  | 验证失败的错误码  |
-| msg     | string  | 验证失败的错误信息 |
-
-验证删除合约
-======
-Cmd: /api/contract/validate/delete
-----------------------------------
-### CmdType: RESTFUL
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
-
-### Form json data: 
-```json
-{
-  "sender" : null,
-  "contractAddress" : null
-}
-```
-
-参数列表
-----
-| 参数名                                                             |          参数类型          | 参数描述     | 是否非空 |
-| --------------------------------------------------------------- |:----------------------:| -------- |:----:|
-| 验证删除合约                                                          | contractvalidatedelete | 验证删除合约表单 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sender          |         string         | 交易创建者    |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractAddress |         string         | 智能合约地址   |  是   |
-
-返回值
----
-| 字段名     |  字段类型   | 参数描述      |
-| ------- |:-------:| --------- |
-| success | boolean | 验证成功与否    |
-| code    | string  | 验证失败的错误码  |
-| msg     | string  | 验证失败的错误信息 |
-
-估算发布合约交易的GAS
-============
-Cmd: /api/contract/imputedgas/create
-------------------------------------
-### CmdType: RESTFUL
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
-
-### Form json data: 
-```json
-{
-  "sender" : null,
-  "contractCode" : null,
-  "args" : null
-}
-```
-
-参数列表
-----
-| 参数名                                                          |           参数类型           | 参数描述                 | 是否非空 |
-| ------------------------------------------------------------ |:------------------------:| -------------------- |:----:|
-| 估算发布合约交易的GAS                                                 | imputedgascontractcreate | 估算发布合约交易的GAS表单       |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sender       |          string          | 交易创建者                |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractCode |          string          | 智能合约代码(字节码的Hex编码字符串) |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args         |         object[]         | 参数列表                 |  是   |
-
-返回值
----
-| 字段名      | 字段类型 | 参数描述              |
-| -------- |:----:| ----------------- |
-| gasLimit | long | 消耗的gas值，执行失败返回数值1 |
-
-估算调用合约交易的GAS
-============
-Cmd: /api/contract/imputedgas/call
-----------------------------------
-### CmdType: RESTFUL
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
-
-### Form json data: 
-```json
-{
-  "sender" : null,
-  "value" : null,
-  "contractAddress" : null,
-  "methodName" : null,
-  "methodDesc" : null,
-  "args" : null
-}
-```
-
-参数列表
-----
-| 参数名                                                             |          参数类型          | 参数描述                       | 是否非空 |
-| --------------------------------------------------------------- |:----------------------:| -------------------------- |:----:|
-| 估算调用合约交易的GAS                                                    | imputedgascontractcall | 估算调用合约交易的GAS表单             |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sender          |         string         | 交易创建者                      |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value           |       biginteger       | 调用者向合约地址转入的主网资产金额，没有此业务时填0 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractAddress |         string         | 智能合约地址                     |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodName      |         string         | 方法名称                       |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodDesc      |         string         | 方法描述，若合约内方法没有重载，则此参数可以为空   |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args            |        object[]        | 参数列表                       |  是   |
-
-返回值
----
-| 字段名      | 字段类型 | 参数描述              |
-| -------- |:----:| ----------------- |
-| gasLimit | long | 消耗的gas值，执行失败返回数值1 |
-
-调用合约不上链方法
-=========
-Cmd: /api/contract/view
------------------------
-### CmdType: RESTFUL
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
-
-### Form json data: 
-```json
-{
-  "contractAddress" : null,
-  "methodName" : null,
-  "methodDesc" : null,
-  "args" : null
-}
-```
-
-参数列表
-----
-| 参数名                                                             |       参数类型       | 参数描述                     | 是否非空 |
-| --------------------------------------------------------------- |:----------------:| ------------------------ |:----:|
-| 调用合约不上链方法                                                       | contractviewcall | 调用合约不上链方法表单              |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractAddress |      string      | 智能合约地址                   |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodName      |      string      | 方法名称                     |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodDesc      |      string      | 方法描述，若合约内方法没有重载，则此参数可以为空 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args            |     object[]     | 参数列表                     |  是   |
-
-返回值
----
-| 字段名    |  字段类型  | 参数描述      |
-| ------ |:------:| --------- |
-| result | string | 视图方法的调用结果 |
-
 token转账
 =======
 Cmd: /api/contract/tokentransfer
@@ -1052,6 +760,298 @@ Cmd: /api/contract/method/argstypes
 | 字段名 |      字段类型       | 参数描述 |
 | --- |:---------------:| ---- |
 | 返回值 | list&lt;string> |      |
+
+估算发布合约交易的GAS
+============
+Cmd: /api/contract/imputedgas/create
+------------------------------------
+### CmdType: RESTFUL
+### HttpMethod: POST
+### ContentType: application/json;charset=UTF-8
+
+
+### Form json data: 
+```json
+{
+  "sender" : null,
+  "contractCode" : null,
+  "args" : null
+}
+```
+
+参数列表
+----
+| 参数名                                                          |           参数类型           | 参数描述                 | 是否非空 |
+| ------------------------------------------------------------ |:------------------------:| -------------------- |:----:|
+| 估算发布合约交易的GAS                                                 | imputedgascontractcreate | 估算发布合约交易的GAS表单       |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sender       |          string          | 交易创建者                |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractCode |          string          | 智能合约代码(字节码的Hex编码字符串) |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args         |         object[]         | 参数列表                 |  是   |
+
+返回值
+---
+| 字段名      | 字段类型 | 参数描述              |
+| -------- |:----:| ----------------- |
+| gasLimit | long | 消耗的gas值，执行失败返回数值1 |
+
+估算调用合约交易的GAS
+============
+Cmd: /api/contract/imputedgas/call
+----------------------------------
+### CmdType: RESTFUL
+### HttpMethod: POST
+### ContentType: application/json;charset=UTF-8
+
+
+### Form json data: 
+```json
+{
+  "sender" : null,
+  "value" : null,
+  "contractAddress" : null,
+  "methodName" : null,
+  "methodDesc" : null,
+  "args" : null
+}
+```
+
+参数列表
+----
+| 参数名                                                             |          参数类型          | 参数描述                       | 是否非空 |
+| --------------------------------------------------------------- |:----------------------:| -------------------------- |:----:|
+| 估算调用合约交易的GAS                                                    | imputedgascontractcall | 估算调用合约交易的GAS表单             |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sender          |         string         | 交易创建者                      |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value           |       biginteger       | 调用者向合约地址转入的主网资产金额，没有此业务时填0 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractAddress |         string         | 智能合约地址                     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodName      |         string         | 方法名称                       |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodDesc      |         string         | 方法描述，若合约内方法没有重载，则此参数可以为空   |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args            |        object[]        | 参数列表                       |  是   |
+
+返回值
+---
+| 字段名      | 字段类型 | 参数描述              |
+| -------- |:----:| ----------------- |
+| gasLimit | long | 消耗的gas值，执行失败返回数值1 |
+
+获取账户地址的指定token余额
+================
+Cmd: /api/contract/balance/token/{contractAddress}/{address}
+------------------------------------------------------------
+### CmdType: RESTFUL
+### HttpMethod: GET
+### ContentType: application/json;charset=UTF-8
+
+
+参数列表
+----
+| 参数名             |  参数类型  | 参数描述 | 是否非空 |
+| --------------- |:------:| ---- |:----:|
+| contractAddress | string | 合约地址 |  是   |
+| address         | string | 账户地址 |  是   |
+
+返回值
+---
+| 字段名             |  字段类型  | 参数描述                    |
+| --------------- |:------:| ----------------------- |
+| contractAddress | string | 合约地址                    |
+| name            | string | token名称                 |
+| symbol          | string | token符号                 |
+| amount          | string | token数量                 |
+| decimals        |  long  | token支持的小数位数            |
+| blockHeight     |  long  | 合约创建时的区块高度              |
+| status          |  int   | 合约状态(0-不存在, 1-正常, 2-终止) |
+
+获取合约代码构造函数
+==========
+Cmd: /api/contract/constructor
+------------------------------
+### CmdType: RESTFUL
+### HttpMethod: POST
+### ContentType: application/json;charset=UTF-8
+
+
+### Form json data: 
+```json
+{
+  "contractCode" : null
+}
+```
+
+参数列表
+----
+| 参数名                                                          |     参数类型     | 参数描述                 | 是否非空 |
+| ------------------------------------------------------------ |:------------:| -------------------- |:----:|
+| 获取合约代码构造函数                                                   | contractcode | 获取合约代码构造函数表单         |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractCode |    string    | 智能合约代码(字节码的Hex编码字符串) |  是   |
+
+返回值
+---
+| 字段名                                                                                                      |      字段类型       | 参数描述               |
+| -------------------------------------------------------------------------------------------------------- |:---------------:| ------------------ |
+| constructor                                                                                              |     object      | 合约构造函数详情           |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name                                                     |     string      | 方法名称               |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;desc                                                     |     string      | 方法描述               |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args                                                     | list&lt;object> | 方法参数列表             |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;type     |     string      | 参数类型               |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name     |     string      | 参数名称               |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;required |     boolean     | 是否必填               |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;returnArg                                                |     string      | 返回值类型              |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;view                                                     |     boolean     | 是否视图方法（调用此方法数据不上链） |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;event                                                    |     boolean     | 是否是事件              |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;payable                                                  |     boolean     | 是否是可接受主链资产转账的方法    |
+| isNrc20                                                                                                  |     boolean     | 是否是NRC20合约         |
+
+验证发布合约
+======
+Cmd: /api/contract/validate/create
+----------------------------------
+### CmdType: RESTFUL
+### HttpMethod: POST
+### ContentType: application/json;charset=UTF-8
+
+
+### Form json data: 
+```json
+{
+  "sender" : null,
+  "gasLimit" : 0,
+  "price" : 0,
+  "contractCode" : null,
+  "args" : null
+}
+```
+
+参数列表
+----
+| 参数名                                                          |          参数类型          | 参数描述                 | 是否非空 |
+| ------------------------------------------------------------ |:----------------------:| -------------------- |:----:|
+| 验证发布合约                                                       | contractvalidatecreate | 验证发布合约表单             |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sender       |         string         | 交易创建者                |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gasLimit     |          long          | 最大gas消耗              |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price        |          long          | 执行合约单价               |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractCode |         string         | 智能合约代码(字节码的Hex编码字符串) |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args         |        object[]        | 参数列表                 |  是   |
+
+返回值
+---
+| 字段名     |  字段类型   | 参数描述      |
+| ------- |:-------:| --------- |
+| success | boolean | 验证成功与否    |
+| code    | string  | 验证失败的错误码  |
+| msg     | string  | 验证失败的错误信息 |
+
+验证调用合约
+======
+Cmd: /api/contract/validate/call
+--------------------------------
+### CmdType: RESTFUL
+### HttpMethod: POST
+### ContentType: application/json;charset=UTF-8
+
+
+### Form json data: 
+```json
+{
+  "sender" : null,
+  "value" : 0,
+  "gasLimit" : 0,
+  "price" : 0,
+  "contractAddress" : null,
+  "methodName" : null,
+  "methodDesc" : null,
+  "args" : null
+}
+```
+
+参数列表
+----
+| 参数名                                                             |         参数类型         | 参数描述                       | 是否非空 |
+| --------------------------------------------------------------- |:--------------------:| -------------------------- |:----:|
+| 验证调用合约                                                          | contractvalidatecall | 验证调用合约表单                   |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sender          |        string        | 交易创建者                      |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value           |         long         | 调用者向合约地址转入的主网资产金额，没有此业务时填0 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gasLimit        |         long         | 最大gas消耗                    |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price           |         long         | 执行合约单价                     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractAddress |        string        | 智能合约地址                     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodName      |        string        | 方法名称                       |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodDesc      |        string        | 方法描述，若合约内方法没有重载，则此参数可以为空   |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args            |       object[]       | 参数列表                       |  是   |
+
+返回值
+---
+| 字段名     |  字段类型   | 参数描述      |
+| ------- |:-------:| --------- |
+| success | boolean | 验证成功与否    |
+| code    | string  | 验证失败的错误码  |
+| msg     | string  | 验证失败的错误信息 |
+
+验证删除合约
+======
+Cmd: /api/contract/validate/delete
+----------------------------------
+### CmdType: RESTFUL
+### HttpMethod: POST
+### ContentType: application/json;charset=UTF-8
+
+
+### Form json data: 
+```json
+{
+  "sender" : null,
+  "contractAddress" : null
+}
+```
+
+参数列表
+----
+| 参数名                                                             |          参数类型          | 参数描述     | 是否非空 |
+| --------------------------------------------------------------- |:----------------------:| -------- |:----:|
+| 验证删除合约                                                          | contractvalidatedelete | 验证删除合约表单 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sender          |         string         | 交易创建者    |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractAddress |         string         | 智能合约地址   |  是   |
+
+返回值
+---
+| 字段名     |  字段类型   | 参数描述      |
+| ------- |:-------:| --------- |
+| success | boolean | 验证成功与否    |
+| code    | string  | 验证失败的错误码  |
+| msg     | string  | 验证失败的错误信息 |
+
+调用合约不上链方法
+=========
+Cmd: /api/contract/view
+-----------------------
+### CmdType: RESTFUL
+### HttpMethod: POST
+### ContentType: application/json;charset=UTF-8
+
+
+### Form json data: 
+```json
+{
+  "contractAddress" : null,
+  "methodName" : null,
+  "methodDesc" : null,
+  "args" : null
+}
+```
+
+参数列表
+----
+| 参数名                                                             |       参数类型       | 参数描述                     | 是否非空 |
+| --------------------------------------------------------------- |:----------------:| ------------------------ |:----:|
+| 调用合约不上链方法                                                       | contractviewcall | 调用合约不上链方法表单              |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractAddress |      string      | 智能合约地址                   |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodName      |      string      | 方法名称                     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodDesc      |      string      | 方法描述，若合约内方法没有重载，则此参数可以为空 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args            |     object[]     | 参数列表                     |  是   |
+
+返回值
+---
+| 字段名    |  字段类型  | 参数描述      |
+| ------ |:------:| --------- |
+| result | string | 视图方法的调用结果 |
 
 离线组装 - 发布合约的交易
 ==============
@@ -1523,6 +1523,92 @@ Cmd: /api/account/offline
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prikey              |     string      | 明文私钥         |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;encryptedPrivateKey |     string      | 加密后的私钥       |
 
+多账户摘要签名
+=======
+Cmd: /api/account/multi/sign
+----------------------------
+### CmdType: RESTFUL
+### HttpMethod: POST
+### ContentType: application/json;charset=UTF-8
+
+
+### Form json data: 
+```json
+{
+  "address" : null,
+  "priKey" : null,
+  "encryptedPrivateKey" : null,
+  "password" : null
+}
+```
+
+参数列表
+----
+| 参数名                                                                 |  参数类型   | 参数描述         | 是否非空 |
+| ------------------------------------------------------------------- |:-------:| ------------ |:----:|
+| signDtoList                                                         | signdto | 摘要签名表单       |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address             | string  | 地址           |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;priKey              | string  | 明文私钥         |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;encryptedPrivateKey | string  | 加密私钥         |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password            | string  | 密码           |  是   |
+| txHex                                                               | string  | 交易序列化16进制字符串 |  是   |
+
+返回值
+---
+| 字段名   |  字段类型  | 参数描述          |
+| ----- |:------:| ------------- |
+| hash  | string | 交易hash        |
+| txHex | string | 签名后的交易16进制字符串 |
+
+明文私钥摘要签名
+========
+Cmd: /api/account/priKey/sign
+-----------------------------
+### CmdType: RESTFUL
+### HttpMethod: POST
+### ContentType: application/json;charset=UTF-8
+
+
+参数列表
+----
+| 参数名        |  参数类型  | 参数描述         | 是否非空 |
+| ---------- |:------:| ------------ |:----:|
+| txHex      | string | 交易序列化16进制字符串 |  是   |
+| address    | string | 账户地址         |  是   |
+| privateKey | string | 账户明文私钥       |  是   |
+
+返回值
+---
+| 字段名   |  字段类型  | 参数描述          |
+| ----- |:------:| ------------- |
+| hash  | string | 交易hash        |
+| txHex | string | 签名后的交易16进制字符串 |
+
+密文私钥摘要签名
+========
+Cmd: /api/account/encryptedPriKey/sign
+--------------------------------------
+### CmdType: RESTFUL
+### HttpMethod: POST
+### ContentType: application/json;charset=UTF-8
+
+
+参数列表
+----
+| 参数名                 |  参数类型  | 参数描述         | 是否非空 |
+| ------------------- |:------:| ------------ |:----:|
+| txHex               | string | 交易序列化16进制字符串 |  是   |
+| address             | string | 账户地址         |  是   |
+| encryptedPrivateKey | string | 账户密文私钥       |  是   |
+| password            | string | 密码           |  是   |
+
+返回值
+---
+| 字段名   |  字段类型  | 参数描述          |
+| ----- |:------:| ------------- |
+| hash  | string | 交易hash        |
+| txHex | string | 签名后的交易16进制字符串 |
+
 根据区块hash查询区块头
 =============
 Cmd: /api/block/header/hash/{hash}
@@ -1759,6 +1845,35 @@ Cmd: /api/block/header/newest
 | blockVersion         | short  | 区块的版本，可以理解为本地钱包的版本   |
 | stateRoot            | string | 智能合约世界状态根            |
 
+验证交易是否正确
+========
+Cmd: /api/accountledger/transaction/validate
+--------------------------------------------
+### CmdType: RESTFUL
+### HttpMethod: POST
+### ContentType: application/json;charset=UTF-8
+
+
+### Form json data: 
+```json
+{
+  "txHex" : null
+}
+```
+
+参数列表
+----
+| 参数名                                                   |  参数类型  | 参数描述       | 是否非空 |
+| ----------------------------------------------------- |:------:| ---------- |:----:|
+| 验证交易是否正确                                              | txform | 验证交易是否正确表单 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;txHex | string | 交易序列化字符串   |  是   |
+
+返回值
+---
+| 字段名   |  字段类型  | 参数描述   |
+| ----- |:------:| ------ |
+| value | string | 交易hash |
+
 单笔转账
 ====
 Cmd: /api/accountledger/transfer
@@ -1795,6 +1910,29 @@ Cmd: /api/accountledger/transfer
 | 字段名   |  字段类型  | 参数描述   |
 | ----- |:------:| ------ |
 | value | string | 交易hash |
+
+查询账户余额
+======
+Cmd: /api/accountledger/balance/{address}
+-----------------------------------------
+### CmdType: RESTFUL
+### HttpMethod: GET
+### ContentType: application/json;charset=UTF-8
+
+
+参数列表
+----
+| 参数名     |  参数类型  | 参数描述 | 是否非空 |
+| ------- |:------:| ---- |:----:|
+| address | string | 账户地址 |  是   |
+
+返回值
+---
+| 字段名       |  字段类型  | 参数描述 |
+| --------- |:------:| ---- |
+| total     | string | 总余额  |
+| freeze    | string | 锁定金额 |
+| available | string | 可用余额 |
 
 根据hash获取交易，先查未确认，查不到再查已确认
 =========================
@@ -1894,26 +2032,33 @@ Cmd: /api/accountledger/createTransferTxOffline
 | hash  | string | 交易hash       |
 | txHex | string | 交易序列化16进制字符串 |
 
-查询账户余额
-======
-Cmd: /api/accountledger/balance/{address}
------------------------------------------
+广播交易
+====
+Cmd: /api/accountledger/transaction/broadcast
+---------------------------------------------
 ### CmdType: RESTFUL
-### HttpMethod: GET
+### HttpMethod: POST
 ### ContentType: application/json;charset=UTF-8
 
 
+### Form json data: 
+```json
+{
+  "txHex" : null
+}
+```
+
 参数列表
 ----
-| 参数名     |  参数类型  | 参数描述 | 是否非空 |
-| ------- |:------:| ---- |:----:|
-| address | string | 账户地址 |  是   |
+| 参数名                                                   |  参数类型  | 参数描述     | 是否非空 |
+| ----------------------------------------------------- |:------:| -------- |:----:|
+| 广播交易                                                  | txform | 广播交易表单   |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;txHex | string | 交易序列化字符串 |  是   |
 
 返回值
 ---
-| 字段名       |  字段类型  | 参数描述 |
-| --------- |:------:| ---- |
-| total     | string | 总余额  |
-| freeze    | string | 锁定金额 |
-| available | string | 可用余额 |
+| 字段名   |  字段类型   | 参数描述   |
+| ----- |:-------:| ------ |
+| value | boolean | 是否成功   |
+| hash  | string  | 交易hash |
 
