@@ -169,7 +169,7 @@ public class AccountController {
     }
 
     @RpcMethod("getPriKey")
-    @ApiOperation(description = "账户备份，导出账户私钥，只能导出本地创建或导入的账户",order = 103)
+    @ApiOperation(description = "账户备份，导出账户私钥，只能导出本地创建或导入的账户", order = 103)
     @Parameters({
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
             @Parameter(parameterName = "address", parameterDes = "账户地址"),
@@ -585,6 +585,88 @@ public class AccountController {
             return RpcResult.paramError("[encryptedPriKey] is inValid");
         }
         io.nuls.core.basic.Result result = NulsSDKTool.sign(txHex, address, encryptedPriKey, password);
+        return ResultUtil.getJsonRpcResult(result);
+    }
+
+    @RpcMethod("getPriKeyOffline")
+    @ApiOperation(description = "离线获取账户明文私钥", order = 114)
+    @Parameters({
+            @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
+            @Parameter(parameterName = "address", parameterType = "String", parameterDes = "账户地址"),
+            @Parameter(parameterName = "encryptedPrivateKey", parameterType = "String", parameterDes = "账户密文私钥"),
+            @Parameter(parameterName = "password", parameterType = "String", parameterDes = "密码")
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "value", description = "明文私钥")
+    }))
+    public RpcResult getPriKeyOffline(List<Object> params) {
+        int chainId;
+        String address, encryptedPriKey, password;
+        try {
+            chainId = (int) params.get(0);
+        } catch (Exception e) {
+            return RpcResult.paramError("[chainId] is inValid");
+        }
+        try {
+            address = (String) params.get(1);
+        } catch (Exception e) {
+            return RpcResult.paramError("[address] is inValid");
+        }
+        try {
+            encryptedPriKey = (String) params.get(2);
+        } catch (Exception e) {
+            return RpcResult.paramError("[encryptedPriKey] is inValid");
+        }
+        try {
+            password = (String) params.get(3);
+        } catch (Exception e) {
+            return RpcResult.paramError("[password] is inValid");
+        }
+        io.nuls.core.basic.Result result = NulsSDKTool.getPriKeyOffline(address, encryptedPriKey, password);
+        return ResultUtil.getJsonRpcResult(result);
+    }
+
+    @RpcMethod("resetPasswordOffline")
+    @ApiOperation(description = "离线修改账户密码", order = 115)
+    @Parameters({
+            @Parameter(parameterName = "address", parameterType = "String", parameterDes = "账户地址"),
+            @Parameter(parameterName = "encryptedPrivateKey", parameterType = "String", parameterDes = "账户密文私钥"),
+            @Parameter(parameterName = "oldPassword", parameterType = "String", parameterDes = "原密码"),
+            @Parameter(parameterName = "newPassword", parameterType = "String", parameterDes = "新密码")
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "value", description = "重置密码后的加密私钥")
+    }))
+    public RpcResult resetPasswordOffline(List<Object> params) {
+        int chainId;
+        String address, encryptedPriKey, oldPassword, newPassword;
+        try {
+            chainId = (int) params.get(0);
+        } catch (Exception e) {
+            return RpcResult.paramError("[chainId] is inValid");
+        }
+        try {
+            address = (String) params.get(1);
+        } catch (Exception e) {
+            return RpcResult.paramError("[address] is inValid");
+        }
+        try {
+            encryptedPriKey = (String) params.get(2);
+        } catch (Exception e) {
+            return RpcResult.paramError("[encryptedPriKey] is inValid");
+        }
+        try {
+            oldPassword = (String) params.get(3);
+        } catch (Exception e) {
+            return RpcResult.paramError("[oldPassword] is inValid");
+        }
+        try {
+            newPassword = (String) params.get(3);
+        } catch (Exception e) {
+            return RpcResult.paramError("[newPassword] is inValid");
+        }
+
+        io.nuls.core.basic.Result result = NulsSDKTool.resetPasswordOffline(address, encryptedPriKey, oldPassword, newPassword);
         return ResultUtil.getJsonRpcResult(result);
     }
 }

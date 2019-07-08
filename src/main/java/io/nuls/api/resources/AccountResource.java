@@ -125,7 +125,7 @@ public class AccountResource {
     @POST
     @Path("/prikey/{address}")
     @Produces({MediaType.APPLICATION_JSON})
-    @ApiOperation(description = "账户备份，导出账户私钥，只能导出本地创建或导入的账户",order = 103)
+    @ApiOperation(description = "账户备份，导出账户私钥，只能导出本地创建或导入的账户", order = 103)
     @Parameters({
             @Parameter(parameterName = "address", parameterDes = "账户地址"),
             @Parameter(parameterName = "账户密码信息", parameterDes = "账户密码信息表单", requestType = @TypeDescriptor(value = AccountPasswordForm.class))
@@ -153,7 +153,7 @@ public class AccountResource {
     @POST
     @Path("/import/pri")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "根据私钥导入账户",order = 104)
+    @ApiOperation(description = "根据私钥导入账户", order = 104)
     @Parameters({
             @Parameter(parameterName = "根据私钥导入账户", parameterDes = "根据私钥导入账户表单", requestType = @TypeDescriptor(value = AccountPriKeyPasswordForm.class))
     })
@@ -220,7 +220,7 @@ public class AccountResource {
     @ResponseData(name = "返回值", description = "返回账户地址", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "value", description = "账户地址")
     }))
-    public RpcClientResult imporAccountByKeystoreFilePath(AccountKeyStoreImportForm form) {
+    public RpcClientResult importAccountByKeystoreFilePath(AccountKeyStoreImportForm form) {
         if (form == null) {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
         }
@@ -263,7 +263,7 @@ public class AccountResource {
     @POST
     @Path("/export/{address}")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "账户备份，导出AccountKeyStore文件到指定目录",order = 108)
+    @ApiOperation(description = "账户备份，导出AccountKeyStore文件到指定目录", order = 108)
     @Parameters({
             @Parameter(parameterName = "address", parameterDes = "账户地址", requestType = @TypeDescriptor(value = String.class)),
             @Parameter(parameterName = "keystone导出信息", parameterDes = "keystone导出信息表单", requestType = @TypeDescriptor(value = AccountKeyStoreBackup.class))
@@ -390,6 +390,39 @@ public class AccountResource {
     }))
     public RpcClientResult encryptedPriKeySign(EncryptedPriKeySignForm form) {
         io.nuls.core.basic.Result result = NulsSDKTool.sign(form.getTxHex(), form.getAddress(), form.getEncryptedPriKey(), form.getPassword());
+        return ResultUtil.getRpcClientResult(result);
+    }
+
+    @POST
+    @Path("/priKey/offline")
+    @ApiOperation(description = "离线获取账户明文私钥", order = 114)
+    @Parameters({
+            @Parameter(parameterName = "address", parameterType = "String", parameterDes = "账户地址"),
+            @Parameter(parameterName = "encryptedPrivateKey", parameterType = "String", parameterDes = "账户密文私钥"),
+            @Parameter(parameterName = "password", parameterType = "String", parameterDes = "密码")
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "value", description = "明文私钥")
+    }))
+    public RpcClientResult getPriKeyOffline(GetPriKeyForm form) {
+        io.nuls.core.basic.Result result = NulsSDKTool.getPriKeyOffline(form.getAddress(), form.getEncryptedPriKey(), form.getPassword());
+        return ResultUtil.getRpcClientResult(result);
+    }
+
+    @PUT
+    @Path("/password/offline/{address}")
+    @ApiOperation(description = "离线修改账户密码", order = 115)
+    @Parameters({
+            @Parameter(parameterName = "address", parameterType = "String", parameterDes = "账户地址"),
+            @Parameter(parameterName = "encryptedPrivateKey", parameterType = "String", parameterDes = "账户密文私钥"),
+            @Parameter(parameterName = "oldPassword", parameterType = "String", parameterDes = "原密码"),
+            @Parameter(parameterName = "newPassword", parameterType = "String", parameterDes = "新密码")
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "value", description = "重置密码后的加密私钥")
+    }))
+    public RpcClientResult resetPasswordOffline(ResetPasswordForm form) {
+        io.nuls.core.basic.Result result = NulsSDKTool.resetPasswordOffline(form.getAddress(), form.getEncryptedPriKey(), form.getOldPassword(), form.getNewPassword());
         return ResultUtil.getRpcClientResult(result);
     }
 }
