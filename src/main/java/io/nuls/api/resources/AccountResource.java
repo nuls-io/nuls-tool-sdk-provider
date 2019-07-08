@@ -73,7 +73,7 @@ public class AccountResource {
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "批量创建账户")
+    @ApiOperation(description = "批量创建账户", order = 101)
     @Parameters({
             @Parameter(parameterName = "批量创建账户", parameterDes = "批量创建账户表单", requestType = @TypeDescriptor(value = AccountCreateForm.class))
     })
@@ -96,8 +96,8 @@ public class AccountResource {
 
     @PUT
     @Path("/password/{address}")
-    @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "[修改密码] 根据原密码修改账户密码")
+    @Produces({MediaType.APPLICATION_JSON})
+    @ApiOperation(description = "[修改密码] 根据原密码修改账户密码", order = 102)
     @Parameters({
             @Parameter(parameterName = "address", parameterDes = "账户地址"),
             @Parameter(parameterName = "账户密码信息", parameterDes = "账户密码信息表单", requestType = @TypeDescriptor(value = AccountUpdatePasswordForm.class))
@@ -123,9 +123,37 @@ public class AccountResource {
     }
 
     @POST
+    @Path("/prikey/{address}")
+    @Produces({MediaType.APPLICATION_JSON})
+    @ApiOperation(description = "账户备份，导出账户私钥，只能导出本地创建或导入的账户",order = 103)
+    @Parameters({
+            @Parameter(parameterName = "address", parameterDes = "账户地址"),
+            @Parameter(parameterName = "账户密码信息", parameterDes = "账户密码信息表单", requestType = @TypeDescriptor(value = AccountPasswordForm.class))
+    })
+    @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "value", description = "私钥")
+    }))
+    public RpcClientResult getPrikey(@PathParam("address") String address, AccountPasswordForm form) {
+        if (form == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
+        }
+        if (address == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "address is empty"));
+        }
+        GetAccountPrivateKeyByAddressReq req = new GetAccountPrivateKeyByAddressReq(form.getPassword(), address);
+        req.setChainId(config.getChainId());
+        Result<String> result = accountService.getAccountPrivateKey(req);
+        RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
+        if (clientResult.isSuccess()) {
+            return clientResult.resultMap().map("value", clientResult.getData()).mapToData();
+        }
+        return clientResult;
+    }
+
+    @POST
     @Path("/import/pri")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "根据私钥导入账户")
+    @ApiOperation(description = "根据私钥导入账户",order = 104)
     @Parameters({
             @Parameter(parameterName = "根据私钥导入账户", parameterDes = "根据私钥导入账户表单", requestType = @TypeDescriptor(value = AccountPriKeyPasswordForm.class))
     })
@@ -150,7 +178,7 @@ public class AccountResource {
     @Path("/import/keystore")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @ApiOperation(description = "根据AccountKeyStore导入账户")
+    @ApiOperation(description = "根据AccountKeyStore导入账户", order = 105)
     @Parameters({
             @Parameter(parameterName = "根据私钥导入账户", parameterDes = "根据私钥导入账户表单", requestType = @TypeDescriptor(value = InputStream.class))
     })
@@ -185,7 +213,7 @@ public class AccountResource {
     @POST
     @Path("/import/keystore/path")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "根据keystore文件路径导入账户")
+    @ApiOperation(description = "根据keystore文件路径导入账户", order = 106)
     @Parameters({
             @Parameter(parameterName = "根据keystore文件路径导入账户", parameterDes = "根据keystore文件路径导入账户表单", requestType = @TypeDescriptor(value = AccountKeyStoreImportForm.class))
     })
@@ -210,7 +238,7 @@ public class AccountResource {
     @POST
     @Path("/import/keystore/string")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "根据keystore字符串导入账户")
+    @ApiOperation(description = "根据keystore字符串导入账户", order = 107)
     @Parameters({
             @Parameter(parameterName = "根据keystore字符串导入账户", parameterDes = "根据keystore字符串导入账户表单", requestType = @TypeDescriptor(value = AccountKeyStoreStringImportForm.class))
     })
@@ -235,7 +263,7 @@ public class AccountResource {
     @POST
     @Path("/export/{address}")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "账户备份，导出AccountKeyStore文件到指定目录")
+    @ApiOperation(description = "账户备份，导出AccountKeyStore文件到指定目录",order = 108)
     @Parameters({
             @Parameter(parameterName = "address", parameterDes = "账户地址", requestType = @TypeDescriptor(value = String.class)),
             @Parameter(parameterName = "keystone导出信息", parameterDes = "keystone导出信息表单", requestType = @TypeDescriptor(value = AccountKeyStoreBackup.class))
@@ -261,37 +289,9 @@ public class AccountResource {
     }
 
     @POST
-    @Path("/prikey/{address}")
-    @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "账户备份，导出账户私钥，只能导出本地创建或导入的账户")
-    @Parameters({
-            @Parameter(parameterName = "address", parameterDes = "账户地址"),
-            @Parameter(parameterName = "账户密码信息", parameterDes = "账户密码信息表单", requestType = @TypeDescriptor(value = AccountPasswordForm.class))
-    })
-    @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
-            @Key(name = "value", description = "私钥")
-    }))
-    public RpcClientResult getPrikey(@PathParam("address") String address, AccountPasswordForm form) {
-        if (form == null) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
-        }
-        if (address == null) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "address is empty"));
-        }
-        GetAccountPrivateKeyByAddressReq req = new GetAccountPrivateKeyByAddressReq(form.getPassword(), address);
-        req.setChainId(config.getChainId());
-        Result<String> result = accountService.getAccountPrivateKey(req);
-        RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
-        if (clientResult.isSuccess()) {
-            return clientResult.resultMap().map("value", clientResult.getData()).mapToData();
-        }
-        return clientResult;
-    }
-
-    @POST
     @Path("/offline")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "离线 - 批量创建账户")
+    @ApiOperation(description = "离线 - 批量创建账户", order = 110)
     @Parameters({
             @Parameter(parameterName = "离线批量创建账户", parameterDes = "离线批量创建账户表单", requestType = @TypeDescriptor(value = AccountCreateForm.class))
     })
@@ -343,7 +343,7 @@ public class AccountResource {
 
     @POST
     @Path("/multi/sign")
-    @ApiOperation(description = "多账户摘要签名")
+    @ApiOperation(description = "多账户摘要签名", order = 111)
     @Parameters({
             @Parameter(parameterName = "signDtoList", parameterDes = "摘要签名表单", requestType = @TypeDescriptor(value = SignDto.class)),
             @Parameter(parameterName = "txHex", parameterType = "String", parameterDes = "交易序列化16进制字符串")
@@ -360,7 +360,7 @@ public class AccountResource {
 
     @POST
     @Path("/priKey/sign")
-    @ApiOperation(description = "明文私钥摘要签名")
+    @ApiOperation(description = "明文私钥摘要签名", order = 112)
     @Parameters({
             @Parameter(parameterName = "txHex", parameterType = "String", parameterDes = "交易序列化16进制字符串"),
             @Parameter(parameterName = "address", parameterType = "String", parameterDes = "账户地址"),
@@ -377,7 +377,7 @@ public class AccountResource {
 
     @POST
     @Path("/encryptedPriKey/sign")
-    @ApiOperation(description = "密文私钥摘要签名")
+    @ApiOperation(description = "密文私钥摘要签名", order = 113)
     @Parameters({
             @Parameter(parameterName = "txHex", parameterType = "String", parameterDes = "交易序列化16进制字符串"),
             @Parameter(parameterName = "address", parameterType = "String", parameterDes = "账户地址"),

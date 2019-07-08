@@ -36,6 +36,7 @@ import io.nuls.core.parse.JSONUtils;
 import io.nuls.core.rpc.model.*;
 import io.nuls.model.dto.AccountBalanceDto;
 import io.nuls.model.dto.AccountKeyStoreDto;
+import io.nuls.model.form.AccountPasswordForm;
 import io.nuls.model.jsonrpc.RpcResult;
 import io.nuls.model.jsonrpc.RpcResultError;
 import io.nuls.rpctools.AccountTools;
@@ -69,7 +70,7 @@ public class AccountController {
     AccountService accountService = ServiceManager.get(AccountService.class);
 
     @RpcMethod("createAccount")
-    @ApiOperation(description = "批量创建账户")
+    @ApiOperation(description = "批量创建账户", order = 101)
     @Parameters(value = {
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
             @Parameter(parameterName = "count", requestType = @TypeDescriptor(value = int.class), parameterDes = "创建数量"),
@@ -112,7 +113,7 @@ public class AccountController {
     }
 
     @RpcMethod("updatePassword")
-    @ApiOperation(description = "重置账密码")
+    @ApiOperation(description = "重置账密码", order = 102)
     @Parameters(value = {
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
             @Parameter(parameterName = "address", requestType = @TypeDescriptor(value = String.class), parameterDes = "账户地址"),
@@ -168,6 +169,15 @@ public class AccountController {
     }
 
     @RpcMethod("getPriKey")
+    @ApiOperation(description = "账户备份，导出账户私钥，只能导出本地创建或导入的账户",order = 103)
+    @Parameters({
+            @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
+            @Parameter(parameterName = "address", parameterDes = "账户地址"),
+            @Parameter(parameterName = "password", parameterDes = "密码")
+    })
+    @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "value", description = "私钥")
+    }))
     public RpcResult getPriKey(List<Object> params) {
         int chainId;
         String address, password;
@@ -205,9 +215,8 @@ public class AccountController {
         return rpcResult;
     }
 
-
     @RpcMethod("importPriKey")
-    @ApiOperation(description = "根据私钥导入账户")
+    @ApiOperation(description = "根据私钥导入账户", order = 104)
     @Parameters(value = {
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
             @Parameter(parameterName = "priKey", requestType = @TypeDescriptor(value = String.class), parameterDes = "账户明文私钥"),
@@ -255,7 +264,7 @@ public class AccountController {
     }
 
     @RpcMethod("importKeystore")
-    @ApiOperation(description = "根据keystore导入账户")
+    @ApiOperation(description = "根据keystore导入账户", order = 105)
     @Parameters(value = {
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
             @Parameter(parameterName = "keyStore", requestType = @TypeDescriptor(value = AccountKeyStoreDto.class), parameterDes = "keyStore"),
@@ -302,7 +311,7 @@ public class AccountController {
     }
 
     @RpcMethod("exportKeystore")
-    @ApiOperation(description = "根据keystore导入账户")
+    @ApiOperation(description = "根据keystore导入账户", order = 108)
     @Parameters(value = {
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
             @Parameter(parameterName = "address", requestType = @TypeDescriptor(value = String.class), parameterDes = "账户地址"),
@@ -349,7 +358,7 @@ public class AccountController {
     }
 
     @RpcMethod("getAccountBalance")
-    @ApiOperation(description = "获取账户余额")
+    @ApiOperation(description = "获取账户余额", order = 109)
     @Parameters(value = {
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
             @Parameter(parameterName = "assetChainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "资产的链ID"),
@@ -397,7 +406,7 @@ public class AccountController {
     }
 
     @RpcMethod("createAccountOffline")
-    @ApiOperation(description = "离线 - 批量创建账户")
+    @ApiOperation(description = "离线 - 批量创建账户", order = 110)
     @Parameters(value = {
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
             @Parameter(parameterName = "count", requestType = @TypeDescriptor(value = int.class), parameterDes = "创建数量"),
@@ -434,7 +443,7 @@ public class AccountController {
     }
 
     @RpcMethod("multiSign")
-    @ApiOperation(description = "多账户摘要签名")
+    @ApiOperation(description = "多账户摘要签名", order = 111)
     @Parameters({
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
             @Parameter(parameterName = "signDtoList", parameterDes = "摘要签名表单", requestType = @TypeDescriptor(value = SignDto.class)),
@@ -474,7 +483,7 @@ public class AccountController {
     }
 
     @RpcMethod("priKeySign")
-    @ApiOperation(description = "明文私钥摘要签名")
+    @ApiOperation(description = "明文私钥摘要签名", order = 112)
     @Parameters({
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
             @Parameter(parameterName = "txHex", parameterType = "String", parameterDes = "交易序列化16进制字符串"),
@@ -526,7 +535,7 @@ public class AccountController {
     }
 
     @RpcMethod("encryptedPriKeySign")
-    @ApiOperation(description = "密文私钥摘要签名")
+    @ApiOperation(description = "密文私钥摘要签名", order = 113)
     @Parameters({
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
             @Parameter(parameterName = "txHex", parameterType = "String", parameterDes = "交易序列化16进制字符串"),

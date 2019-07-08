@@ -74,7 +74,7 @@ public class ContractResource {
     @POST
     @Path("/create")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "发布合约")
+    @ApiOperation(description = "发布合约",order = 401)
     @Parameters({
             @Parameter(parameterName = "发布合约", parameterDes = "发布合约表单", requestType = @TypeDescriptor(value = ContractCreate.class))
     })
@@ -109,7 +109,7 @@ public class ContractResource {
     @POST
     @Path("/call")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "调用合约")
+    @ApiOperation(description = "调用合约", order = 402)
     @Parameters({
             @Parameter(parameterName = "调用合约", parameterDes = "调用合约表单", requestType = @TypeDescriptor(value = ContractCall.class))
     })
@@ -153,7 +153,7 @@ public class ContractResource {
     @POST
     @Path("/delete")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "删除合约")
+    @ApiOperation(description = "删除合约", order = 403)
     @Parameters({
             @Parameter(parameterName = "删除合约", parameterDes = "删除合约表单", requestType = @TypeDescriptor(value = ContractDelete.class))
     })
@@ -178,7 +178,7 @@ public class ContractResource {
     @POST
     @Path("/tokentransfer")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "token转账")
+    @ApiOperation(description = "token转账", order = 404)
     @Parameters({
             @Parameter(parameterName = "token转账", parameterDes = "token转账表单", requestType = @TypeDescriptor(value = ContractTokenTransfer.class))
     })
@@ -208,11 +208,10 @@ public class ContractResource {
         return clientResult;
     }
 
-
     @POST
     @Path("/transfer2contract")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "从账户地址向合约地址转账(主链资产)的合约交易")
+    @ApiOperation(description = "从账户地址向合约地址转账(主链资产)的合约交易", order = 405)
     @Parameters({
             @Parameter(parameterName = "向合约地址转账", parameterDes = "向合约地址转账表单", requestType = @TypeDescriptor(value = ContractTransfer.class))
     })
@@ -245,7 +244,7 @@ public class ContractResource {
     @GET
     @Path("/balance/token/{contractAddress}/{address}")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "获取账户地址的指定token余额")
+    @ApiOperation(description = "获取账户地址的指定token余额", order = 406)
     @Parameters({
             @Parameter(parameterName = "contractAddress", parameterDes = "合约地址"),
             @Parameter(parameterName = "address", parameterDes = "账户地址")
@@ -263,7 +262,7 @@ public class ContractResource {
     @GET
     @Path("/info/{address}")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "获取智能合约详细信息")
+    @ApiOperation(description = "获取智能合约详细信息", order = 407)
     @Parameters({
             @Parameter(parameterName = "address", parameterDes = "合约地址")
     })
@@ -280,7 +279,7 @@ public class ContractResource {
     @GET
     @Path("/result/{hash}")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "获取智能合约执行结果")
+    @ApiOperation(description = "获取智能合约执行结果", order = 408)
     @Parameters({
             @Parameter(parameterName = "hash", parameterDes = "交易hash")
     })
@@ -298,7 +297,7 @@ public class ContractResource {
     @POST
     @Path("/constructor")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "获取合约代码构造函数")
+    @ApiOperation(description = "获取合约代码构造函数", order = 409)
     @Parameters({
         @Parameter(parameterName = "获取合约代码构造函数", parameterDes = "获取合约代码构造函数表单", requestType = @TypeDescriptor(value = ContractCode.class))
     })
@@ -316,7 +315,7 @@ public class ContractResource {
     @POST
     @Path("/method")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "获取已发布合约指定函数的信息")
+    @ApiOperation(description = "获取已发布合约指定函数的信息", order = 410)
     @Parameters({
         @Parameter(parameterName = "获取已发布合约指定函数的信息", parameterDes = "获取已发布合约指定函数的信息表单", requestType = @TypeDescriptor(value = ContractMethodForm.class))
     })
@@ -363,7 +362,7 @@ public class ContractResource {
     @POST
     @Path("/method/argstypes")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "获取已发布合约指定函数的参数类型列表")
+    @ApiOperation(description = "获取已发布合约指定函数的参数类型列表", order = 411)
     @Parameters({
         @Parameter(parameterName = "获取已发布合约指定函数的参数类型列表", parameterDes = "获取已发布合约指定函数的参数类型表单", requestType = @TypeDescriptor(value = ContractMethodForm.class))
     })
@@ -395,7 +394,7 @@ public class ContractResource {
     @POST
     @Path("/validate/create")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "验证发布合约")
+    @ApiOperation(description = "验证发布合约", order = 412)
     @Parameters(value = {
         @Parameter(parameterName = "验证发布合约", parameterDes = "验证发布合约表单", requestType = @TypeDescriptor(value = ContractValidateCreate.class))
     })
@@ -427,7 +426,7 @@ public class ContractResource {
     @POST
     @Path("/validate/call")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "验证调用合约")
+    @ApiOperation(description = "验证调用合约", order = 413)
     @Parameters(value = {
         @Parameter(parameterName = "验证调用合约", parameterDes = "验证调用合约表单", requestType = @TypeDescriptor(value = ContractValidateCall.class))
     })
@@ -462,7 +461,7 @@ public class ContractResource {
     @POST
     @Path("/validate/delete")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "验证删除合约")
+    @ApiOperation(description = "验证删除合约", order = 414)
     @Parameters(value = {
         @Parameter(parameterName = "验证删除合约", parameterDes = "验证删除合约表单", requestType = @TypeDescriptor(value = ContractValidateDelete.class))
     })
@@ -485,7 +484,7 @@ public class ContractResource {
     @POST
     @Path("/imputedgas/create")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "估算发布合约交易的GAS")
+    @ApiOperation(description = "估算发布合约交易的GAS", order = 415)
     @Parameters(value = {
         @Parameter(parameterName = "估算发布合约交易的GAS", parameterDes = "估算发布合约交易的GAS表单", requestType = @TypeDescriptor(value = ImputedGasContractCreate.class))
     })
@@ -507,7 +506,7 @@ public class ContractResource {
     @POST
     @Path("/imputedgas/call")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "估算调用合约交易的GAS")
+    @ApiOperation(description = "估算调用合约交易的GAS", order = 416)
     @Parameters(value = {
         @Parameter(parameterName = "估算调用合约交易的GAS", parameterDes = "估算调用合约交易的GAS表单", requestType = @TypeDescriptor(value = ImputedGasContractCall.class))
     })
@@ -532,7 +531,7 @@ public class ContractResource {
     @POST
     @Path("/view")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "调用合约不上链方法")
+    @ApiOperation(description = "调用合约不上链方法", order = 417)
     @Parameters(value = {
         @Parameter(parameterName = "调用合约不上链方法", parameterDes = "调用合约不上链方法表单", requestType = @TypeDescriptor(value = ContractViewCall.class))
     })
@@ -555,7 +554,7 @@ public class ContractResource {
     @POST
     @Path("/create/offline")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "离线组装 - 发布合约的交易")
+    @ApiOperation(description = "离线组装 - 发布合约的交易", order = 450)
     @Parameters(value = {
         @Parameter(parameterName = "发布合约离线交易", parameterDes = "发布合约离线交易表单", requestType = @TypeDescriptor(value = ContractCreateOffline.class))
     })
@@ -577,7 +576,7 @@ public class ContractResource {
     @POST
     @Path("/call/offline")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "离线组装 - 调用合约的交易")
+    @ApiOperation(description = "离线组装 - 调用合约的交易", order = 451)
     @Parameters(value = {
         @Parameter(parameterName = "调用合约离线交易", parameterDes = "调用合约离线交易表单", requestType = @TypeDescriptor(value = ContractCallOffline.class))
     })
@@ -601,7 +600,7 @@ public class ContractResource {
     @POST
     @Path("/delete/offline")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "离线组装 - 删除合约交易")
+    @ApiOperation(description = "离线组装 - 删除合约交易", order = 452)
     @Parameters(value = {
         @Parameter(parameterName = "删除合约离线交易", parameterDes = "删除合约离线交易表单", requestType = @TypeDescriptor(value = ContractDeleteOffline.class))
     })
@@ -620,7 +619,7 @@ public class ContractResource {
     @POST
     @Path("/tokentransfer/offline")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "离线组装 - token转账交易")
+    @ApiOperation(description = "离线组装 - token转账交易", order = 453)
     @Parameters(value = {
         @Parameter(parameterName = "token转账离线交易", parameterDes = "token转账离线交易表单", requestType = @TypeDescriptor(value = ContractTokenTransferOffline.class))
     })
@@ -641,7 +640,7 @@ public class ContractResource {
     @POST
     @Path("/transfer2contract/offline")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "离线组装 - 从账户地址向合约地址转账(主链资产)的合约交易")
+    @ApiOperation(description = "离线组装 - 从账户地址向合约地址转账(主链资产)的合约交易", order = 454)
     @Parameters(value = {
         @Parameter(parameterName = "向合约地址转账离线交易", parameterDes = "向合约地址转账离线交易表单", requestType = @TypeDescriptor(value = ContractTransferOffline.class))
     })

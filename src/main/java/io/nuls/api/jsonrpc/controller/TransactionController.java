@@ -85,7 +85,7 @@ public class TransactionController {
     TransferService transferService = ServiceManager.get(TransferService.class);
 
     @RpcMethod("validateTx")
-    @ApiOperation(description = "验证交易")
+    @ApiOperation(description = "验证交易", order = 302)
     @Parameters({
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链id"),
             @Parameter(parameterName = "tx", parameterDes = "交易序列化字符串"),
@@ -122,7 +122,7 @@ public class TransactionController {
     }
 
     @RpcMethod("broadcastTx")
-    @ApiOperation(description = "广播交易")
+    @ApiOperation(description = "广播交易", order = 303)
     @Parameters({
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链id"),
             @Parameter(parameterName = "tx", parameterDes = "交易序列化字符串"),
@@ -211,7 +211,7 @@ public class TransactionController {
     }
 
     @RpcMethod("transfer")
-    @ApiOperation(description = "单笔转账")
+    @ApiOperation(description = "单笔转账", order = 304)
     @Parameters({
         @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链id"),
         @Parameter(parameterName = "assetId", requestType = @TypeDescriptor(value = int.class), parameterDes = "资产id"),
@@ -287,7 +287,7 @@ public class TransactionController {
     }
 
     @RpcMethod("createTransferTxOffline")
-    @ApiOperation(description = "离线组装转账交易")
+    @ApiOperation(description = "离线组装转账交易", order = 350)
     @Parameters({
             @Parameter(parameterName = "transferDto", parameterDes = "转账交易表单", requestType = @TypeDescriptor(value = TransferDto.class))
     })

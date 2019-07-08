@@ -64,7 +64,7 @@ public class TransactionResource {
     @GET
     @Path("/hash/{hash}")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "根据hash获取交易，只查已确认交易")
+    @ApiOperation(description = "根据hash获取交易，只查已确认交易", order = 301)
     @Parameters({
         @Parameter(parameterName = "hash", parameterDes = "交易hash")
     })

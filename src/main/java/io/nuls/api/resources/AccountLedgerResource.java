@@ -93,7 +93,7 @@ public class AccountLedgerResource {
     @POST
     @Path("/transfer")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "单笔转账")
+    @ApiOperation(description = "单笔转账", order = 304)
     @Parameters({
             @Parameter(parameterName = "单笔转账", parameterDes = "单笔转账表单", requestType = @TypeDescriptor(value = TransferForm.class))
     })
@@ -119,7 +119,7 @@ public class AccountLedgerResource {
     @POST
     @Path("/createTransferTxOffline")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "离线组装转账交易")
+    @ApiOperation(description = "离线组装转账交易", order = 350)
     @Parameters({
             @Parameter(parameterName = "transferDto", parameterDes = "转账交易表单", requestType = @TypeDescriptor(value = TransferDto.class))
     })
@@ -140,7 +140,7 @@ public class AccountLedgerResource {
     @GET
     @Path("/balance/{address}")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "查询账户余额")
+    @ApiOperation(description = "查询账户余额", order = 109)
     @Parameters({
             @Parameter(parameterName = "address", requestType = @TypeDescriptor(value = String.class), parameterDes = "账户地址")
     })
@@ -164,7 +164,7 @@ public class AccountLedgerResource {
     @GET
     @Path("/tx/{hash}")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "根据hash获取交易，先查未确认，查不到再查已确认")
+    @ApiOperation(description = "根据hash获取交易，先查未确认，查不到再查已确认", order = 301)
     @Parameters({
             @Parameter(parameterName = "hash", requestType = @TypeDescriptor(value = String.class), parameterDes = "交易hash")
     })
@@ -181,7 +181,7 @@ public class AccountLedgerResource {
     @POST
     @Path("/transaction/validate")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "验证交易是否正确")
+    @ApiOperation(description = "验证交易是否正确", order = 302)
     @Parameters({
         @Parameter(parameterName = "验证交易是否正确", parameterDes = "验证交易是否正确表单", requestType = @TypeDescriptor(value = TxForm.class))
     })
@@ -200,7 +200,7 @@ public class AccountLedgerResource {
     @POST
     @Path("/transaction/broadcast")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "广播交易")
+    @ApiOperation(description = "广播交易", order = 303)
     @Parameters({
         @Parameter(parameterName = "广播交易", parameterDes = "广播交易表单", requestType = @TypeDescriptor(value = TxForm.class))
     })

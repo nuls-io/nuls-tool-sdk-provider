@@ -44,13 +44,13 @@ import io.nuls.core.rpc.model.ResponseData;
 import io.nuls.core.rpc.model.TypeDescriptor;
 import io.nuls.model.ErrorData;
 import io.nuls.model.RpcClientResult;
-import io.nuls.v2.model.annotation.Api;
-import io.nuls.v2.model.annotation.ApiOperation;
 import io.nuls.model.dto.block.BlockDto;
 import io.nuls.model.dto.block.BlockHeaderDto;
 import io.nuls.rpctools.BlockTools;
 import io.nuls.utils.Log;
 import io.nuls.utils.ResultUtil;
+import io.nuls.v2.model.annotation.Api;
+import io.nuls.v2.model.annotation.ApiOperation;
 import io.nuls.v2.util.ValidateUtil;
 
 import javax.ws.rs.GET;
@@ -77,7 +77,7 @@ public class BlockResource {
     @GET
     @Path("/header/height/{height}")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "根据区块高度查询区块头")
+    @ApiOperation(description = "根据区块高度查询区块头", order = 201)
     @Parameters({
             @Parameter(parameterName = "height", requestType = @TypeDescriptor(value = Long.class), parameterDes = "区块高度")
     })
@@ -102,7 +102,7 @@ public class BlockResource {
     @GET
     @Path("/header/hash/{hash}")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "根据区块hash查询区块头")
+    @ApiOperation(description = "根据区块hash查询区块头",order = 202)
     @Parameters({
             @Parameter(parameterName = "hash", parameterDes = "区块hash")
     })
@@ -127,7 +127,7 @@ public class BlockResource {
     @GET
     @Path("/header/newest")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "查询最新区块头信息")
+    @ApiOperation(description = "查询最新区块头信息",order = 203)
     @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = BlockHeaderDto.class))
     public RpcClientResult getBestBlockHeader() {
         GetBlockHeaderByLastHeightReq req = new GetBlockHeaderByLastHeightReq();
@@ -146,7 +146,7 @@ public class BlockResource {
     @GET
     @Path("/newest")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "查询最新区块")
+    @ApiOperation(description = "查询最新区块", order = 204)
     @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = BlockDto.class))
     public RpcClientResult getBestBlock() {
         Result<Block> result = blockTools.getBestBlock(Context.getChainId());
@@ -165,7 +165,7 @@ public class BlockResource {
     @GET
     @Path("/height/{height}")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "根据区块高度查询区块，包含区块打包的所有交易信息，此接口返回数据量较多，谨慎调用")
+    @ApiOperation(description = "根据区块高度查询区块，包含区块打包的所有交易信息，此接口返回数据量较多，谨慎调用", order = 205)
     @Parameters({
             @Parameter(parameterName = "height", requestType = @TypeDescriptor(value = Long.class), parameterDes = "区块高度")
     })
@@ -192,7 +192,7 @@ public class BlockResource {
     @GET
     @Path("/hash/{hash}")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "根据区块hash查询区块，包含区块打包的所有交易信息，此接口返回数据量较多，谨慎调用")
+    @ApiOperation(description = "根据区块hash查询区块，包含区块打包的所有交易信息，此接口返回数据量较多，谨慎调用", order = 206)
     @Parameters({
             @Parameter(parameterName = "hash", parameterDes = "区块hash")
     })

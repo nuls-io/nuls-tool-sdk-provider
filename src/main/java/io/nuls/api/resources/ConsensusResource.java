@@ -77,7 +77,7 @@ public class ConsensusResource {
     @POST
     @Path("/agent")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "Create an agent for consensus! 创建共识(代理)节点")
+    @ApiOperation(description = "Create an agent for consensus! 创建共识(代理)节点", order = 501)
     @Parameters({
             @Parameter(parameterName = "创建共识(代理)节点", parameterDes = "创建共识(代理)节点表单", requestType = @TypeDescriptor(value = CreateAgentForm.class))
     })
@@ -107,7 +107,7 @@ public class ConsensusResource {
     @POST
     @Path("/agent/stop")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "注销共识节点")
+    @ApiOperation(description = "注销共识节点", order = 502)
     @Parameters({
             @Parameter(parameterName = "注销共识节点", parameterDes = "注销共识节点表单", requestType = @TypeDescriptor(value = StopAgentForm.class))
     })
@@ -133,7 +133,7 @@ public class ConsensusResource {
     @POST
     @Path("/deposit")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "deposit nuls to a bank! 申请参与共识")
+    @ApiOperation(description = "deposit nuls to a bank! 申请参与共识", order = 503)
     @Parameters({
             @Parameter(parameterName = "申请参与共识", parameterDes = "申请参与共识表单", requestType = @TypeDescriptor(value = DepositForm.class))
     })
@@ -162,7 +162,7 @@ public class ConsensusResource {
     @POST
     @Path("/withdraw")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "退出共识")
+    @ApiOperation(description = "退出共识", order = 504)
     @Parameters({
             @Parameter(parameterName = "退出共识", parameterDes = "退出共识表单", requestType = @TypeDescriptor(value = WithdrawForm.class))
     })
@@ -190,7 +190,7 @@ public class ConsensusResource {
     @POST
     @Path("/agent/offline")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "离线组装 - 创建共识(代理)节点")
+    @ApiOperation(description = "离线组装 - 创建共识(代理)节点", order = 550)
     @Parameters({
             @Parameter(parameterName = "离线创建共识(代理)节点", parameterDes = "离线创建共识(代理)节点表单", requestType = @TypeDescriptor(value = ConsensusDto.class))
     })
@@ -210,7 +210,7 @@ public class ConsensusResource {
     @POST
     @Path("/agent/stop/offline")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "离线组装 - 注销共识节点")
+    @ApiOperation(description = "离线组装 - 注销共识节点", order = 551)
     @Parameters({
             @Parameter(parameterName = "离线注销共识节点", parameterDes = "离线注销共识节点表单", requestType = @TypeDescriptor(value = StopConsensusDto.class))
     })
@@ -230,7 +230,7 @@ public class ConsensusResource {
     @POST
     @Path("/deposit/offline")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "离线组装 - 申请参与共识")
+    @ApiOperation(description = "离线组装 - 申请参与共识", order = 552)
     @Parameters({
             @Parameter(parameterName = "离线申请参与共识", parameterDes = "离线申请参与共识表单", requestType = @TypeDescriptor(value = DepositDto.class))
     })
@@ -250,7 +250,7 @@ public class ConsensusResource {
     @POST
     @Path("/withdraw/offline")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "离线组装 - 退出共识")
+    @ApiOperation(description = "离线组装 - 退出共识", order = 553)
     @Parameters({
             @Parameter(parameterName = "离线退出共识", parameterDes = "离线退出共识表单", requestType = @TypeDescriptor(value = WithDrawDto.class))
     })
