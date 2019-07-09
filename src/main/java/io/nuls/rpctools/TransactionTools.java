@@ -4,6 +4,7 @@ import io.nuls.base.RPCUtil;
 import io.nuls.base.api.provider.Result;
 import io.nuls.base.basic.NulsByteBuffer;
 import io.nuls.base.data.Transaction;
+import io.nuls.core.constant.CommonCodeConstanst;
 import io.nuls.core.constant.TxStatusEnum;
 import io.nuls.core.core.annotation.Component;
 import io.nuls.core.crypto.HexUtil;
@@ -95,11 +96,11 @@ public class TransactionTools implements CallRpc {
         params.put("txHash", txHash);
         try {
             return callRpc(ModuleE.TX.abbr, "tx_getTxClient", params, (Function<Map<String, Object>, Result<TransactionDto>>) res -> {
-                if (res == null) {
-                    return null;
+                if (res == null || res.get("tx") == null) {
+                    return Result.fail(CommonCodeConstanst.DATA_NOT_FOUND.getCode(), CommonCodeConstanst.DATA_NOT_FOUND.getMsg());
                 }
                 String txStr = (String) res.get("tx");
-                Long height = Long.parseLong(res.get("height").toString()) ;
+                Long height = Long.parseLong(res.get("height").toString());
                 Integer status = (Integer) res.get("status");
                 Transaction tx = new Transaction();
                 try {
@@ -123,11 +124,11 @@ public class TransactionTools implements CallRpc {
         params.put("txHash", txHash);
         try {
             return callRpc(ModuleE.TX.abbr, "tx_getConfirmedTxClient", params, (Function<Map<String, Object>, Result<TransactionDto>>) res -> {
-                if (res == null) {
-                    return null;
+                if (res == null || res.get("tx") == null) {
+                    return Result.fail(CommonCodeConstanst.DATA_NOT_FOUND.getCode(), CommonCodeConstanst.DATA_NOT_FOUND.getMsg());
                 }
                 String txStr = (String) res.get("tx");
-                Long height = Long.parseLong(res.get("height").toString()) ;
+                Long height = Long.parseLong(res.get("height").toString());
                 Integer status = (Integer) res.get("status");
                 Transaction tx = new Transaction();
                 try {

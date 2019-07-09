@@ -113,11 +113,11 @@ public class AccountController {
     }
 
     @RpcMethod("updatePassword")
-    @ApiOperation(description = "重置账密码", order = 102)
+    @ApiOperation(description = "修改账户密码", order = 102)
     @Parameters(value = {
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
             @Parameter(parameterName = "address", requestType = @TypeDescriptor(value = String.class), parameterDes = "账户地址"),
-            @Parameter(parameterName = "oldPassword", requestType = @TypeDescriptor(value = String.class), parameterDes = "账户密码"),
+            @Parameter(parameterName = "oldPassword", requestType = @TypeDescriptor(value = String.class), parameterDes = "原密码"),
             @Parameter(parameterName = "newPassword", requestType = @TypeDescriptor(value = String.class), parameterDes = "新密码")
     })
     @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
@@ -267,7 +267,7 @@ public class AccountController {
     @ApiOperation(description = "根据keystore导入账户", order = 105)
     @Parameters(value = {
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
-            @Parameter(parameterName = "keyStore", requestType = @TypeDescriptor(value = AccountKeyStoreDto.class), parameterDes = "keyStore"),
+            @Parameter(parameterName = "keyStoreJson", requestType = @TypeDescriptor(value = Map.class), parameterDes = "keyStoreJson"),
             @Parameter(parameterName = "password", requestType = @TypeDescriptor(value = String.class), parameterDes = "keystore密码")
     })
     @ResponseData(name = "返回值", description = "返回账户地址", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
@@ -629,6 +629,7 @@ public class AccountController {
     @RpcMethod("resetPasswordOffline")
     @ApiOperation(description = "离线修改账户密码", order = 115)
     @Parameters({
+            @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
             @Parameter(parameterName = "address", parameterType = "String", parameterDes = "账户地址"),
             @Parameter(parameterName = "encryptedPrivateKey", parameterType = "String", parameterDes = "账户密文私钥"),
             @Parameter(parameterName = "oldPassword", parameterType = "String", parameterDes = "原密码"),

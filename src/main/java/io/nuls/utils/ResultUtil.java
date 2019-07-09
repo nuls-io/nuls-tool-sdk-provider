@@ -101,7 +101,12 @@ public class ResultUtil {
                 obj = null;
             }
         } while (false);
-        return rpcResult.setResult(obj);
+        if (obj != null) {
+            rpcResult.setResult(obj);
+        } else {
+            rpcResult.setError(new RpcResultError(CommonCodeConstanst.DATA_NOT_FOUND.getCode(), CommonCodeConstanst.DATA_NOT_FOUND.getMsg(), null));
+        }
+        return rpcResult;
     }
 
     public static RpcResult getJsonRpcResult(io.nuls.core.basic.Result result) {

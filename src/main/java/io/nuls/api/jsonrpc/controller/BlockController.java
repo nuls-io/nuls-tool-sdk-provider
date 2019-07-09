@@ -35,7 +35,6 @@ import io.nuls.core.core.annotation.Autowired;
 import io.nuls.core.core.annotation.Controller;
 import io.nuls.core.core.annotation.RpcMethod;
 import io.nuls.core.exception.NulsException;
-import io.nuls.core.model.StringUtils;
 import io.nuls.core.rpc.model.Parameter;
 import io.nuls.core.rpc.model.Parameters;
 import io.nuls.core.rpc.model.ResponseData;
@@ -50,6 +49,7 @@ import io.nuls.utils.VerifyUtils;
 import io.nuls.v2.model.annotation.Api;
 import io.nuls.v2.model.annotation.ApiOperation;
 import io.nuls.v2.model.annotation.ApiType;
+import io.nuls.v2.util.ValidateUtil;
 
 import java.util.List;
 
@@ -69,8 +69,8 @@ public class BlockController {
     @RpcMethod("getHeaderByHeight")
     @ApiOperation(description = "根据区块高度查询区块头", order = 201)
     @Parameters({
-        @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
-        @Parameter(parameterName = "height", requestType = @TypeDescriptor(value = long.class), parameterDes = "区块高度")
+            @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
+            @Parameter(parameterName = "height", requestType = @TypeDescriptor(value = long.class), parameterDes = "区块高度")
     })
     @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = BlockHeaderDto.class))
     public RpcResult getHeaderByHeight(List<Object> params) {
@@ -97,7 +97,7 @@ public class BlockController {
         GetBlockHeaderByHeightReq req = new GetBlockHeaderByHeightReq(height);
         req.setChainId(config.getChainId());
         Result<BlockHeaderData> result = blockService.getBlockHeaderByHeight(req);
-        if(result.isSuccess()) {
+        if (result.isSuccess() && result.getData() != null) {
             BlockHeaderData data = result.getData();
             BlockHeaderDto dto = new BlockHeaderDto();
             BeanCopierManager.beanCopier(data, dto);
@@ -109,8 +109,8 @@ public class BlockController {
     @RpcMethod("getHeaderByHash")
     @ApiOperation(description = "根据区块hash查询区块头", order = 202)
     @Parameters({
-        @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
-        @Parameter(parameterName = "hash", parameterDes = "区块hash")
+            @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
+            @Parameter(parameterName = "hash", parameterDes = "区块hash")
     })
     @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = BlockHeaderDto.class))
     public RpcResult getHeaderByHash(List<Object> params) {
@@ -130,14 +130,13 @@ public class BlockController {
         } catch (Exception e) {
             return RpcResult.paramError("[hash] is invalid");
         }
-        if (StringUtils.isBlank(hash)) {
+        if (!ValidateUtil.validHash(hash)) {
             return RpcResult.paramError("[hash] is required");
         }
-
         GetBlockHeaderByHashReq req = new GetBlockHeaderByHashReq(hash);
         req.setChainId(config.getChainId());
         Result<BlockHeaderData> result = blockService.getBlockHeaderByHash(req);
-        if(result.isSuccess()) {
+        if (result.isSuccess() && result.getData() != null) {
             BlockHeaderData data = result.getData();
             BlockHeaderDto dto = new BlockHeaderDto();
             BeanCopierManager.beanCopier(data, dto);
@@ -150,7 +149,7 @@ public class BlockController {
     @RpcMethod("getBestBlockHeader")
     @ApiOperation(description = "查询最新区块头信息", order = 203)
     @Parameters({
-        @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID")
+            @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID")
     })
     @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = BlockHeaderDto.class))
     public RpcResult getBestBlockHeader(List<Object> params) {
@@ -167,7 +166,7 @@ public class BlockController {
         GetBlockHeaderByLastHeightReq req = new GetBlockHeaderByLastHeightReq();
         req.setChainId(config.getChainId());
         Result<BlockHeaderData> result = blockService.getBlockHeaderByLastHeight(req);
-        if(result.isSuccess()) {
+        if (result.isSuccess()) {
             BlockHeaderData data = result.getData();
             BlockHeaderDto dto = new BlockHeaderDto();
             BeanCopierManager.beanCopier(data, dto);
@@ -180,7 +179,7 @@ public class BlockController {
     @RpcMethod("getBestBlock")
     @ApiOperation(description = "查询最新区块，包含区块打包的所有交易信息，此接口返回数据量较多，谨慎调用", order = 204)
     @Parameters({
-        @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID")
+            @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID")
     })
     @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = BlockDto.class))
     public RpcResult getBestBlock(List<Object> params) {
@@ -195,7 +194,7 @@ public class BlockController {
             return RpcResult.paramError(String.format("chainId [%s] is invalid", chainId));
         }
         Result<Block> result = blockTools.getBestBlock(Context.getChainId());
-        if(result.isSuccess()) {
+        if (result.isSuccess() && result.getData() != null) {
             Block data = result.getData();
             try {
                 BlockDto dto = new BlockDto(data);
@@ -213,8 +212,8 @@ public class BlockController {
     @RpcMethod("getBlockByHeight")
     @ApiOperation(description = "根据区块高度查询区块，包含区块打包的所有交易信息，此接口返回数据量较多，谨慎调用", order = 205)
     @Parameters({
-        @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
-        @Parameter(parameterName = "height", requestType = @TypeDescriptor(value = long.class), parameterDes = "区块高度")
+            @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
+            @Parameter(parameterName = "height", requestType = @TypeDescriptor(value = long.class), parameterDes = "区块高度")
     })
     @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = BlockDto.class))
     public RpcResult getBlockByHeight(List<Object> params) {
@@ -234,12 +233,11 @@ public class BlockController {
         if (height < 0) {
             return RpcResult.paramError("[height] is invalid");
         }
-
         if (!Context.isChainExist(chainId)) {
             return RpcResult.paramError(String.format("chainId [%s] is invalid", chainId));
         }
-        Result<Block> result = blockTools.getBlockByHeight(config.getChainId(), height);
-        if(result.isSuccess()) {
+        Result<Block> result = blockTools.getBlockByHeight(chainId, height);
+        if (result.isSuccess() && result.getData() != null) {
             Block data = result.getData();
             try {
                 BlockDto dto = new BlockDto(data);
@@ -253,12 +251,11 @@ public class BlockController {
         return ResultUtil.getJsonRpcResult(result);
     }
 
-
     @RpcMethod("getBlockByHash")
     @ApiOperation(description = "根据区块hash查询区块，包含区块打包的所有交易信息，此接口返回数据量较多，谨慎调用", order = 206)
     @Parameters({
-        @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
-        @Parameter(parameterName = "hash", parameterDes = "区块hash")
+            @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
+            @Parameter(parameterName = "hash", parameterDes = "区块hash")
     })
     @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = BlockDto.class))
     public RpcResult getBlockByHash(List<Object> params) {
@@ -275,15 +272,14 @@ public class BlockController {
         } catch (Exception e) {
             return RpcResult.paramError("[hash] is invalid");
         }
-        if (StringUtils.isBlank(hash)) {
-            return RpcResult.paramError("[hash] is required");
+        if (!ValidateUtil.validHash(hash)) {
+            return RpcResult.paramError("[hash] is invalid");
         }
-
         if (!Context.isChainExist(chainId)) {
             return RpcResult.paramError(String.format("chainId [%s] is invalid", chainId));
         }
-        Result<Block> result = blockTools.getBlockByHash(config.getChainId(), hash);
-        if(result.isSuccess()) {
+        Result<Block> result = blockTools.getBlockByHash(chainId, hash);
+        if (result.isSuccess() && result.getData() != null) {
             Block data = result.getData();
             try {
                 BlockDto dto = new BlockDto(data);
