@@ -24,10 +24,7 @@ import io.nuls.api.config.Context;
 import io.nuls.base.api.provider.Result;
 import io.nuls.base.api.provider.ServiceManager;
 import io.nuls.base.api.provider.consensus.ConsensusProvider;
-import io.nuls.base.api.provider.consensus.facade.CreateAgentReq;
-import io.nuls.base.api.provider.consensus.facade.DepositToAgentReq;
-import io.nuls.base.api.provider.consensus.facade.StopAgentReq;
-import io.nuls.base.api.provider.consensus.facade.WithdrawReq;
+import io.nuls.base.api.provider.consensus.facade.*;
 import io.nuls.base.basic.AddressTool;
 import io.nuls.core.core.annotation.Controller;
 import io.nuls.core.core.annotation.RpcMethod;
@@ -103,7 +100,7 @@ public class ConsensusController {
             return RpcResult.paramError("[commissionRate] is inValid");
         }
         try {
-            deposit = (String) params.get(5);
+            deposit = params.get(5).toString();
         } catch (Exception e) {
             return RpcResult.paramError("[deposit] is inValid");
         }
@@ -201,7 +198,7 @@ public class ConsensusController {
             return RpcResult.paramError("[agentHash] is inValid");
         }
         try {
-            deposit = (String) params.get(3);
+            deposit = params.get(3).toString();
         } catch (Exception e) {
             return RpcResult.paramError("[deposit] is inValid");
         }
@@ -390,12 +387,12 @@ public class ConsensusController {
             return RpcResult.paramError("[agentAddress] is inValid");
         }
         try {
-            deposit = (String) params.get(3);
+            deposit = params.get(3).toString();
         } catch (Exception e) {
             return RpcResult.paramError("[deposit] is inValid");
         }
         try {
-            price = (String) params.get(4);
+            price = params.get(4).toString();
         } catch (Exception e) {
             return RpcResult.paramError("[price] is inValid");
         }
@@ -439,7 +436,7 @@ public class ConsensusController {
     }
 
     @RpcMethod("depositToAgentOffline")
-    @ApiOperation(description = "离线组装 - 申请参与共识",order = 552)
+    @ApiOperation(description = "离线组装 - 申请参与共识", order = 552)
     @Parameters({
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
             @Parameter(parameterName = "离线申请参与共识", parameterDes = "离线申请参与共识表单", requestType = @TypeDescriptor(value = DepositDto.class))
@@ -532,7 +529,7 @@ public class ConsensusController {
             return RpcResult.paramError("[depositHash] is inValid");
         }
         try {
-            price = (String) params.get(3);
+            price = params.get(3).toString();
         } catch (Exception e) {
             return RpcResult.paramError("[price] is inValid");
         }
@@ -563,5 +560,34 @@ public class ConsensusController {
 
         io.nuls.core.basic.Result result = NulsSDKTool.createWithdrawDepositTxOffline(withDrawDto);
         return ResultUtil.getJsonRpcResult(result);
+    }
+
+    @RpcMethod("getDepositList")
+    public RpcResult getDepositList(List<Object> params) {
+        int chainId;
+        String agentHash;
+        try {
+            chainId = (int) params.get(0);
+        } catch (Exception e) {
+            return RpcResult.paramError("[chainId] is inValid");
+        }
+        try {
+            agentHash = (String) params.get(1);
+        } catch (Exception e) {
+            return RpcResult.paramError("[agentHash] is inValid");
+        }
+        if (!ValidateUtil.validHash(agentHash)) {
+            return RpcResult.paramError("[agentHash] is inValid");
+        }
+
+        GetDepositListReq req = new GetDepositListReq();
+        req.setChainId(chainId);
+        req.setPageNumber(1);
+        req.setPageSize(300);
+        req.setAgentHash(agentHash);
+
+        Result<String> result = consensusProvider.getDepositList(req);
+        RpcResult rpcResult = ResultUtil.getJsonRpcResult(result);
+        return rpcResult;
     }
 }

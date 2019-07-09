@@ -73,6 +73,7 @@ import java.util.Map;
 
 import static io.nuls.core.constant.TxType.*;
 import static io.nuls.utils.Utils.extractTxTypeFromTx;
+import static io.nuls.v2.util.ContractUtil.getSuccess;
 
 /**
  * @author: PierreLuo
@@ -218,7 +219,7 @@ public class TransactionController {
                 return RpcResult.dataNotFound();
             }
             int type = extractTxTypeFromTx(txHex);
-            Result result = null;
+            Result result = new Result();
             switch (type) {
                 case CREATE_CONTRACT:
                     Transaction tx = new Transaction();
@@ -280,16 +281,16 @@ public class TransactionController {
     @RpcMethod("transfer")
     @ApiOperation(description = "单笔转账", order = 305)
     @Parameters({
-        @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链id"),
-        @Parameter(parameterName = "assetId", requestType = @TypeDescriptor(value = int.class), parameterDes = "资产id"),
-        @Parameter(parameterName = "address", parameterDes = "转出账户地址"),
-        @Parameter(parameterName = "toAddress", parameterDes = "转入账户地址"),
-        @Parameter(parameterName = "password", parameterDes = "转出账户密码"),
-        @Parameter(parameterName = "amount", parameterDes = "转出金额"),
-        @Parameter(parameterName = "remark", parameterDes = "备注"),
+            @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链id"),
+            @Parameter(parameterName = "assetId", requestType = @TypeDescriptor(value = int.class), parameterDes = "资产id"),
+            @Parameter(parameterName = "address", parameterDes = "转出账户地址"),
+            @Parameter(parameterName = "toAddress", parameterDes = "转入账户地址"),
+            @Parameter(parameterName = "password", parameterDes = "转出账户密码"),
+            @Parameter(parameterName = "amount", parameterDes = "转出金额"),
+            @Parameter(parameterName = "remark", parameterDes = "备注"),
     })
     @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
-        @Key(name = "hash", description = "交易hash")
+            @Key(name = "hash", description = "交易hash")
     }))
     public RpcResult transfer(List<Object> params) {
         VerifyUtils.verifyParams(params, 7);
@@ -371,7 +372,7 @@ public class TransactionController {
         try {
             inputList = (List<Map>) params.get(0);
             for (Map map : inputList) {
-                String amount = (String) map.get("amount");
+                String amount = map.get("amount").toString();
                 map.put("amount", new BigInteger(amount));
                 CoinFromDto fromDto = JSONUtils.map2pojo(map, CoinFromDto.class);
                 froms.add(fromDto);
@@ -382,7 +383,7 @@ public class TransactionController {
         try {
             outputList = (List<Map>) params.get(1);
             for (Map map : outputList) {
-                String amount = (String) map.get("amount");
+                String amount = map.get("amount").toString();
                 map.put("amount", new BigInteger(amount));
                 CoinToDto toDto = JSONUtils.map2pojo(map, CoinToDto.class);
                 tos.add(toDto);
