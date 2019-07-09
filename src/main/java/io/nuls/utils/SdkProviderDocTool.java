@@ -629,6 +629,19 @@ public class SdkProviderDocTool {
             }
             mdFile.createNewFile();
 
+            cmdDesList.forEach(cmd -> {
+                try {
+                    StringWriter stringWriter = new StringWriter();
+                    try (BufferedWriter sbw = new BufferedWriter(stringWriter)) {
+                        writePostmanDescMarkdown(cmd, sbw);
+                        sbw.flush();
+                        cmd.md = stringWriter.toString();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(mdFile))) {
                 String postmanFormatJson = genPostmanFormatJson(cmdDesList, apiType);
                 writer.write(postmanFormatJson);
@@ -699,6 +712,17 @@ public class SdkProviderDocTool {
             }
         }
 
+        private static void writePostmanDescMarkdown(CmdDes cmd, BufferedWriter writer) {
+            try {
+                writer.newLine();
+                buildParam(writer, cmd.parameters, true);
+                buildResult(writer, cmd.result);
+                writer.newLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         private static void buildResult(BufferedWriter writer, List<ResultDes> result) throws IOException {
             writer.newLine();
             writer.newLine();
@@ -726,23 +750,25 @@ public class SdkProviderDocTool {
         }
 
         private static void buildParam(BufferedWriter writer, List<ResultDes> parameters, boolean jsonrpc) throws IOException {
-            parameters.forEach(des -> {
-                if(des.formJsonOfRestful != null) {
-                    try {
-                        writer.newLine();
-                        writer.write(new Heading("Form json data: ", 3).toString());
-                        writer.newLine();
-                        writer.write(new Text("```json").toString());
-                        writer.newLine();
-                        writer.write(new Text(des.formJsonOfRestful).toString());
-                        writer.newLine();
-                        writer.write(new Text("```").toString());
-                        writer.newLine();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+            if(!jsonrpc) {
+                parameters.forEach(des -> {
+                    if(des.formJsonOfRestful != null) {
+                        try {
+                            writer.newLine();
+                            writer.write(new Heading("Form json data: ", 3).toString());
+                            writer.newLine();
+                            writer.write(new Text("```json").toString());
+                            writer.newLine();
+                            writer.write(new Text(des.formJsonOfRestful).toString());
+                            writer.newLine();
+                            writer.write(new Text("```").toString());
+                            writer.newLine();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
-                }
-            });
+                });
+            }
             writer.newLine();
             writer.write(new Heading("参数列表", 2).toString());
             if (parameters == null || parameters.isEmpty()) {
@@ -789,6 +815,7 @@ public class SdkProviderDocTool {
                 Url url = new Url();
                 request.setMethod(des.httpMethod);
                 request.setBody(body);
+                request.setDescription(des.md);
                 if(jsonrpc) {
                     // 排除表单title参数
                     List<String> nameList = des.getParameters().stream().map(p -> {
@@ -856,6 +883,7 @@ public class SdkProviderDocTool {
             private List<Header> header;
             private Body body;
             private Url url;
+            private String description;
 
             public Request() {
                 this.header = new ArrayList<>();

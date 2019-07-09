@@ -25,7 +25,7 @@ public class LegderTools implements CallRpc {
      * 获取可用余额和nonce
      * Get the available balance and nonce
      */
-    public Result<AccountBalance> getBalanceAndNonce(int chainId, String address, int assetChainId, int assetId) {
+    public Result<AccountBalance> getBalanceAndNonce(int chainId, int assetChainId, int assetId, String address) {
         Map<String, Object> params = new HashMap(4);
         params.put(Constants.CHAIN_ID, chainId);
         params.put("assetChainId", assetChainId);
@@ -37,12 +37,14 @@ public class LegderTools implements CallRpc {
                     return null;
                 }
                 AccountBalance balanceInfo = new AccountBalance();
-                balanceInfo.setBalance(new BigInteger(map.get("available").toString()));
-                balanceInfo.setTimeLock(new BigInteger(map.get("timeHeightLocked").toString()));
-                balanceInfo.setConsensusLock(new BigInteger(map.get("permanentLocked").toString()));
-                balanceInfo.setFreeze(new BigInteger(map.get("freeze").toString()));
+                balanceInfo.setBalance(map.get("available").toString());
+                balanceInfo.setTimeLock(map.get("timeHeightLocked").toString());
+                balanceInfo.setConsensusLock(map.get("permanentLocked").toString());
+                balanceInfo.setFreeze(map.get("freeze").toString());
                 balanceInfo.setNonce((String) map.get("nonce"));
-                balanceInfo.setTotalBalance(balanceInfo.getBalance().add(balanceInfo.getConsensusLock()).add(balanceInfo.getTimeLock()));
+                balanceInfo.setTotalBalance(new BigInteger(balanceInfo.getBalance())
+                                .add(new BigInteger(balanceInfo.getConsensusLock()))
+                                .add(new BigInteger(balanceInfo.getTimeLock())).toString());
                 balanceInfo.setNonceType((Integer) map.get("nonceType"));
                 return new Result<>(balanceInfo);
             });
