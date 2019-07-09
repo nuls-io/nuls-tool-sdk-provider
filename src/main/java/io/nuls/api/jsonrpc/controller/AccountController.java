@@ -398,7 +398,7 @@ public class AccountController {
             return RpcResult.dataNotFound();
         }
         RpcResult rpcResult = new RpcResult();
-        Result<AccountBalance> balanceResult = legderTools.getBalanceAndNonce(chainId, address, assetChainId, assetId);
+        Result<AccountBalance> balanceResult = legderTools.getBalanceAndNonce(chainId, assetChainId, assetId, address);
         if (balanceResult.isFailed()) {
             return rpcResult.setError(new RpcResultError(balanceResult.getStatus(), balanceResult.getMessage(), null));
         }

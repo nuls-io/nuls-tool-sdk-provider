@@ -55,7 +55,9 @@ import io.nuls.model.txdata.CallContractData;
 import io.nuls.model.txdata.CreateContractData;
 import io.nuls.model.txdata.DeleteContractData;
 import io.nuls.rpctools.ContractTools;
+import io.nuls.rpctools.LegderTools;
 import io.nuls.rpctools.TransactionTools;
+import io.nuls.rpctools.vo.AccountBalance;
 import io.nuls.utils.Log;
 import io.nuls.utils.ResultUtil;
 import io.nuls.v2.model.annotation.Api;
@@ -89,6 +91,8 @@ public class AccountLedgerResource {
     TransactionTools transactionTools;
     @Autowired
     private ContractTools contractTools;
+    @Autowired
+    private LegderTools legderTools;
 
     @POST
     @Path("/transfer")
@@ -151,12 +155,10 @@ public class AccountLedgerResource {
         }
         Integer assetChainId = config.getChainId();
         Integer assetId = config.getAssetsId();
-        GetBalanceReq req = new GetBalanceReq(assetId, assetChainId, address);
-        req.setChainId(config.getChainId());
-        Result<AccountBalanceInfo> result = ledgerProvider.getBalance(req);
-        RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
+        Result<AccountBalance> balanceResult = legderTools.getBalanceAndNonce(config.getChainId(), assetChainId, assetId, address);
+        RpcClientResult clientResult = ResultUtil.getRpcClientResult(balanceResult);
         if (clientResult.isSuccess()) {
-            clientResult.setData(new AccountBalanceDto((AccountBalanceInfo) clientResult.getData()));
+            clientResult.setData(new AccountBalanceDto((AccountBalance) clientResult.getData()));
         }
         return clientResult;
     }
