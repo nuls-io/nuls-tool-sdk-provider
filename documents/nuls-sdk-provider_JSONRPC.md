@@ -15,7 +15,7 @@ Cmd: createAccount
 
 参数列表
 ----
-| 参数名      |  参数类型  | 参数描述 | 是否非空 |
+| 参数名      |  参数类型  | 参数描述 | 是否必填 |
 | -------- |:------:| ---- |:----:|
 | chainId  |  int   | 链ID  |  是   |
 | count    |  int   | 创建数量 |  是   |
@@ -38,7 +38,7 @@ Cmd: updatePassword
 
 参数列表
 ----
-| 参数名         |  参数类型  | 参数描述 | 是否非空 |
+| 参数名         |  参数类型  | 参数描述 | 是否必填 |
 | ----------- |:------:| ---- |:----:|
 | chainId     |  int   | 链ID  |  是   |
 | address     | string | 账户地址 |  是   |
@@ -62,7 +62,7 @@ Cmd: getPriKey
 
 参数列表
 ----
-| 参数名      |  参数类型  | 参数描述 | 是否非空 |
+| 参数名      |  参数类型  | 参数描述 | 是否必填 |
 | -------- |:------:| ---- |:----:|
 | chainId  |  int   | 链ID  |  是   |
 | address  | string | 账户地址 |  是   |
@@ -85,7 +85,7 @@ Cmd: importPriKey
 
 参数列表
 ----
-| 参数名      |  参数类型  | 参数描述   | 是否非空 |
+| 参数名      |  参数类型  | 参数描述   | 是否必填 |
 | -------- |:------:| ------ |:----:|
 | chainId  |  int   | 链ID    |  是   |
 | priKey   | string | 账户明文私钥 |  是   |
@@ -108,7 +108,7 @@ Cmd: importKeystore
 
 参数列表
 ----
-| 参数名          |  参数类型  | 参数描述         | 是否非空 |
+| 参数名          |  参数类型  | 参数描述         | 是否必填 |
 | ------------ |:------:| ------------ |:----:|
 | chainId      |  int   | 链ID          |  是   |
 | keyStoreJson |  map   | keyStoreJson |  是   |
@@ -131,7 +131,7 @@ Cmd: exportKeystore
 
 参数列表
 ----
-| 参数名      |  参数类型  | 参数描述 | 是否非空 |
+| 参数名      |  参数类型  | 参数描述 | 是否必填 |
 | -------- |:------:| ---- |:----:|
 | chainId  |  int   | 链ID  |  是   |
 | address  | string | 账户地址 |  是   |
@@ -154,7 +154,7 @@ Cmd: getAccountBalance
 
 参数列表
 ----
-| 参数名          |  参数类型  | 参数描述   | 是否非空 |
+| 参数名          |  参数类型  | 参数描述   | 是否必填 |
 | ------------ |:------:| ------ |:----:|
 | chainId      |  int   | 链ID    |  是   |
 | assetChainId |  int   | 资产的链ID |  是   |
@@ -184,14 +184,14 @@ Cmd: multiSign
 
 参数列表
 ----
-| 参数名                                                                 |  参数类型   | 参数描述         | 是否非空 |
+| 参数名                                                                 |  参数类型   | 参数描述         | 是否必填 |
 | ------------------------------------------------------------------- |:-------:| ------------ |:----:|
 | chainId                                                             |   int   | 链ID          |  是   |
 | signDtoList                                                         | signdto | 摘要签名表单       |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address             | string  | 地址           |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;priKey              | string  | 明文私钥         |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;encryptedPrivateKey | string  | 加密私钥         |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password            | string  | 密码           |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;priKey              | string  | 明文私钥         |  否   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;encryptedPrivateKey | string  | 加密私钥         |  否   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password            | string  | 密码           |  否   |
 | txHex                                                               | string  | 交易序列化16进制字符串 |  是   |
 
 返回值
@@ -212,7 +212,7 @@ Cmd: priKeySign
 
 参数列表
 ----
-| 参数名        |  参数类型  | 参数描述         | 是否非空 |
+| 参数名        |  参数类型  | 参数描述         | 是否必填 |
 | ---------- |:------:| ------------ |:----:|
 | chainId    |  int   | 链ID          |  是   |
 | txHex      | string | 交易序列化16进制字符串 |  是   |
@@ -237,7 +237,7 @@ Cmd: encryptedPriKeySign
 
 参数列表
 ----
-| 参数名                 |  参数类型  | 参数描述         | 是否非空 |
+| 参数名                 |  参数类型  | 参数描述         | 是否必填 |
 | ------------------- |:------:| ------------ |:----:|
 | chainId             |  int   | 链ID          |  是   |
 | txHex               | string | 交易序列化16进制字符串 |  是   |
@@ -263,7 +263,7 @@ Cmd: createAccountOffline
 
 参数列表
 ----
-| 参数名      |  参数类型  | 参数描述 | 是否非空 |
+| 参数名      |  参数类型  | 参数描述 | 是否必填 |
 | -------- |:------:| ---- |:----:|
 | chainId  |  int   | 链ID  |  是   |
 | count    |  int   | 创建数量 |  是   |
@@ -289,7 +289,7 @@ Cmd: getPriKeyOffline
 
 参数列表
 ----
-| 参数名                 |  参数类型  | 参数描述   | 是否非空 |
+| 参数名                 |  参数类型  | 参数描述   | 是否必填 |
 | ------------------- |:------:| ------ |:----:|
 | chainId             |  int   | 链ID    |  是   |
 | address             | string | 账户地址   |  是   |
@@ -313,7 +313,7 @@ Cmd: resetPasswordOffline
 
 参数列表
 ----
-| 参数名                 |  参数类型  | 参数描述   | 是否非空 |
+| 参数名                 |  参数类型  | 参数描述   | 是否必填 |
 | ------------------- |:------:| ------ |:----:|
 | chainId             |  int   | 链ID    |  是   |
 | address             | string | 账户地址   |  是   |
@@ -338,7 +338,7 @@ Cmd: getHeaderByHeight
 
 参数列表
 ----
-| 参数名     | 参数类型 | 参数描述 | 是否非空 |
+| 参数名     | 参数类型 | 参数描述 | 是否必填 |
 | ------- |:----:| ---- |:----:|
 | chainId | int  | 链ID  |  是   |
 | height  | long | 区块高度 |  是   |
@@ -375,7 +375,7 @@ Cmd: getHeaderByHash
 
 参数列表
 ----
-| 参数名     |  参数类型  | 参数描述   | 是否非空 |
+| 参数名     |  参数类型  | 参数描述   | 是否必填 |
 | ------- |:------:| ------ |:----:|
 | chainId |  int   | 链ID    |  是   |
 | hash    | string | 区块hash |  是   |
@@ -412,7 +412,7 @@ Cmd: getBestBlockHeader
 
 参数列表
 ----
-| 参数名     | 参数类型 | 参数描述 | 是否非空 |
+| 参数名     | 参数类型 | 参数描述 | 是否必填 |
 | ------- |:----:| ---- |:----:|
 | chainId | int  | 链ID  |  是   |
 
@@ -448,7 +448,7 @@ Cmd: getBestBlock
 
 参数列表
 ----
-| 参数名     | 参数类型 | 参数描述 | 是否非空 |
+| 参数名     | 参数类型 | 参数描述 | 是否必填 |
 | ------- |:----:| ---- |:----:|
 | chainId | int  | 链ID  |  是   |
 
@@ -508,7 +508,7 @@ Cmd: getBlockByHeight
 
 参数列表
 ----
-| 参数名     | 参数类型 | 参数描述 | 是否非空 |
+| 参数名     | 参数类型 | 参数描述 | 是否必填 |
 | ------- |:----:| ---- |:----:|
 | chainId | int  | 链ID  |  是   |
 | height  | long | 区块高度 |  是   |
@@ -569,7 +569,7 @@ Cmd: getBlockByHash
 
 参数列表
 ----
-| 参数名     |  参数类型  | 参数描述   | 是否非空 |
+| 参数名     |  参数类型  | 参数描述   | 是否必填 |
 | ------- |:------:| ------ |:----:|
 | chainId |  int   | 链ID    |  是   |
 | hash    | string | 区块hash |  是   |
@@ -630,7 +630,7 @@ Cmd: getTx
 
 参数列表
 ----
-| 参数名     |  参数类型  | 参数描述   | 是否非空 |
+| 参数名     |  参数类型  | 参数描述   | 是否必填 |
 | ------- |:------:| ------ |:----:|
 | chainId |  int   | 链id    |  是   |
 | hash    | string | 交易hash |  是   |
@@ -673,7 +673,7 @@ Cmd: getTxImmediately
 
 参数列表
 ----
-| 参数名     |  参数类型  | 参数描述   | 是否非空 |
+| 参数名     |  参数类型  | 参数描述   | 是否必填 |
 | ------- |:------:| ------ |:----:|
 | chainId |  int   | 链id    |  是   |
 | hash    | string | 交易hash |  是   |
@@ -716,7 +716,7 @@ Cmd: validateTx
 
 参数列表
 ----
-| 参数名     |  参数类型  | 参数描述     | 是否非空 |
+| 参数名     |  参数类型  | 参数描述     | 是否必填 |
 | ------- |:------:| -------- |:----:|
 | chainId |  int   | 链id      |  是   |
 | tx      | string | 交易序列化字符串 |  是   |
@@ -738,7 +738,7 @@ Cmd: broadcastTx
 
 参数列表
 ----
-| 参数名     |  参数类型  | 参数描述     | 是否非空 |
+| 参数名     |  参数类型  | 参数描述     | 是否必填 |
 | ------- |:------:| -------- |:----:|
 | chainId |  int   | 链id      |  是   |
 | tx      | string | 交易序列化字符串 |  是   |
@@ -761,7 +761,7 @@ Cmd: transfer
 
 参数列表
 ----
-| 参数名       |  参数类型  | 参数描述   | 是否非空 |
+| 参数名       |  参数类型  | 参数描述   | 是否必填 |
 | --------- |:------:| ------ |:----:|
 | chainId   |  int   | 链id    |  是   |
 | assetId   |  int   | 资产id   |  是   |
@@ -788,7 +788,7 @@ Cmd: createTransferTxOffline
 
 参数列表
 ----
-| 参数名                                                                                                      |      参数类型       | 参数描述     | 是否非空 |
+| 参数名                                                                                                      |      参数类型       | 参数描述     | 是否必填 |
 | -------------------------------------------------------------------------------------------------------- |:---------------:| -------- |:----:|
 | transferDto                                                                                              |   transferdto   | 转账交易表单   |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inputs                                                   | list&lt;object> | 转账交易输入列表 |  是   |
@@ -823,7 +823,7 @@ Cmd: contractCreate
 
 参数列表
 ----
-| 参数名          |   参数类型   | 参数描述                 | 是否非空 |
+| 参数名          |   参数类型   | 参数描述                 | 是否必填 |
 | ------------ |:--------:| -------------------- |:----:|
 | chainId      |   int    | 链id                  |  是   |
 | sender       |  string  | 交易创建者账户地址            |  是   |
@@ -832,8 +832,8 @@ Cmd: contractCreate
 | gasLimit     |   long   | GAS限制                |  是   |
 | price        |   long   | GAS单价                |  是   |
 | contractCode |  string  | 智能合约代码(字节码的Hex编码字符串) |  是   |
-| args         | object[] | 参数列表                 |  是   |
-| remark       |  string  | 交易备注                 |  是   |
+| args         | object[] | 参数列表                 |  否   |
+| remark       |  string  | 交易备注                 |  否   |
 
 返回值
 ---
@@ -853,7 +853,7 @@ Cmd: contractCall
 
 参数列表
 ----
-| 参数名             |    参数类型    | 参数描述                                     | 是否非空 |
+| 参数名             |    参数类型    | 参数描述                                     | 是否必填 |
 | --------------- |:----------:| ---------------------------------------- |:----:|
 | chainId         |    int     | 链id                                      |  是   |
 | sender          |   string   | 交易创建者账户地址                                |  是   |
@@ -863,9 +863,9 @@ Cmd: contractCall
 | price           |    long    | GAS单价                                    |  是   |
 | contractAddress |   string   | 合约地址                                     |  是   |
 | methodName      |   string   | 合约方法                                     |  是   |
-| methodDesc      |   string   | 合约方法描述，若合约内方法没有重载，则此参数可以为空               |  是   |
-| args            |  object[]  | 参数列表                                     |  是   |
-| remark          |   string   | 交易备注                                     |  是   |
+| methodDesc      |   string   | 合约方法描述，若合约内方法没有重载，则此参数可以为空               |  否   |
+| args            |  object[]  | 参数列表                                     |  否   |
+| remark          |   string   | 交易备注                                     |  否   |
 
 返回值
 ---
@@ -884,13 +884,13 @@ Cmd: contractDelete
 
 参数列表
 ----
-| 参数名             |  参数类型  | 参数描述      | 是否非空 |
+| 参数名             |  参数类型  | 参数描述      | 是否必填 |
 | --------------- |:------:| --------- |:----:|
 | chainId         |  int   | 链id       |  是   |
 | sender          | string | 交易创建者账户地址 |  是   |
 | password        | string | 交易账户密码    |  是   |
 | contractAddress | string | 合约地址      |  是   |
-| remark          | string | 交易备注      |  是   |
+| remark          | string | 交易备注      |  否   |
 
 返回值
 ---
@@ -909,7 +909,7 @@ Cmd: tokentransfer
 
 参数列表
 ----
-| 参数名             |    参数类型    | 参数描述                                     | 是否非空 |
+| 参数名             |    参数类型    | 参数描述                                     | 是否必填 |
 | --------------- |:----------:| ---------------------------------------- |:----:|
 | chainId         |    int     | 链id                                      |  是   |
 | fromAddress     |   string   | 交易创建者账户地址                                |  是   |
@@ -917,7 +917,7 @@ Cmd: tokentransfer
 | toAddress       |   string   | 调用者向合约地址转入的主网资产金额，没有此业务时填BigInteger.ZERO |  是   |
 | contractAddress |   string   | 合约地址                                     |  是   |
 | amount          | biginteger | 合约方法                                     |  是   |
-| remark          |   string   | 交易备注                                     |  是   |
+| remark          |   string   | 交易备注                                     |  否   |
 
 返回值
 ---
@@ -936,14 +936,14 @@ Cmd: transfer2contract
 
 参数列表
 ----
-| 参数名         |    参数类型    | 参数描述                                     | 是否非空 |
+| 参数名         |    参数类型    | 参数描述                                     | 是否必填 |
 | ----------- |:----------:| ---------------------------------------- |:----:|
 | chainId     |    int     | 链id                                      |  是   |
 | fromAddress |   string   | 交易创建者账户地址                                |  是   |
 | password    |   string   | 调用者账户密码                                  |  是   |
 | toAddress   |   string   | 调用者向合约地址转入的主网资产金额，没有此业务时填BigInteger.ZERO |  是   |
 | amount      | biginteger | 合约方法                                     |  是   |
-| remark      |   string   | 交易备注                                     |  是   |
+| remark      |   string   | 交易备注                                     |  否   |
 
 返回值
 ---
@@ -962,7 +962,7 @@ Cmd: getTokenBalance
 
 参数列表
 ----
-| 参数名             |  参数类型  | 参数描述 | 是否非空 |
+| 参数名             |  参数类型  | 参数描述 | 是否必填 |
 | --------------- |:------:| ---- |:----:|
 | chainId         |  int   | 链id  |  是   |
 | contractAddress | string | 合约地址 |  是   |
@@ -991,7 +991,7 @@ Cmd: getContract
 
 参数列表
 ----
-| 参数名             |  参数类型  | 参数描述 | 是否非空 |
+| 参数名             |  参数类型  | 参数描述 | 是否必填 |
 | --------------- |:------:| ---- |:----:|
 | chainId         |  int   | 链ID  |  是   |
 | contractAddress | string | 合约地址 |  是   |
@@ -1036,7 +1036,7 @@ Cmd: getContractTxResult
 
 参数列表
 ----
-| 参数名     |  参数类型  | 参数描述   | 是否非空 |
+| 参数名     |  参数类型  | 参数描述   | 是否必填 |
 | ------- |:------:| ------ |:----:|
 | chainId |  int   | 链ID    |  是   |
 | hash    | string | 交易hash |  是   |
@@ -1094,7 +1094,7 @@ Cmd: getContractConstructor
 
 参数列表
 ----
-| 参数名          |  参数类型  | 参数描述                 | 是否非空 |
+| 参数名          |  参数类型  | 参数描述                 | 是否必填 |
 | ------------ |:------:| -------------------- |:----:|
 | chainId      |  int   | 链ID                  |  是   |
 | contractCode | string | 智能合约代码(字节码的Hex编码字符串) |  是   |
@@ -1127,12 +1127,12 @@ Cmd: getContractMethod
 
 参数列表
 ----
-| 参数名             |  参数类型  | 参数描述 | 是否非空 |
+| 参数名             |  参数类型  | 参数描述 | 是否必填 |
 | --------------- |:------:| ---- |:----:|
 | chainId         |  int   | 链ID  |  是   |
 | contractAddress | string | 合约地址 |  是   |
 | methodName      | string | 方法名称 |  是   |
-| methodDesc      | string | 方法描述 |  是   |
+| methodDesc      | string | 方法描述 |  否   |
 
 返回值
 ---
@@ -1160,12 +1160,12 @@ Cmd: getContractMethodArgsTypes
 
 参数列表
 ----
-| 参数名             |  参数类型  | 参数描述 | 是否非空 |
+| 参数名             |  参数类型  | 参数描述 | 是否必填 |
 | --------------- |:------:| ---- |:----:|
 | chainId         |  int   | 链ID  |  是   |
 | contractAddress | string | 合约地址 |  是   |
 | methodName      | string | 方法名称 |  是   |
-| methodDesc      | string | 方法描述 |  是   |
+| methodDesc      | string | 方法描述 |  否   |
 
 返回值
 ---
@@ -1184,14 +1184,14 @@ Cmd: validateContractCreate
 
 参数列表
 ----
-| 参数名          |   参数类型   | 参数描述                 | 是否非空 |
+| 参数名          |   参数类型   | 参数描述                 | 是否必填 |
 | ------------ |:--------:| -------------------- |:----:|
 | chainId      |   int    | 链id                  |  是   |
 | sender       |  string  | 交易创建者账户地址            |  是   |
 | gasLimit     |   long   | GAS限制                |  是   |
 | price        |   long   | GAS单价                |  是   |
 | contractCode |  string  | 智能合约代码(字节码的Hex编码字符串) |  是   |
-| args         | object[] | 参数列表                 |  是   |
+| args         | object[] | 参数列表                 |  否   |
 
 返回值
 ---
@@ -1212,7 +1212,7 @@ Cmd: validateContractCall
 
 参数列表
 ----
-| 参数名             |    参数类型    | 参数描述                                     | 是否非空 |
+| 参数名             |    参数类型    | 参数描述                                     | 是否必填 |
 | --------------- |:----------:| ---------------------------------------- |:----:|
 | chainId         |    int     | 链id                                      |  是   |
 | sender          |   string   | 交易创建者账户地址                                |  是   |
@@ -1221,8 +1221,8 @@ Cmd: validateContractCall
 | price           |    long    | GAS单价                                    |  是   |
 | contractAddress |   string   | 合约地址                                     |  是   |
 | methodName      |   string   | 合约方法                                     |  是   |
-| methodDesc      |   string   | 合约方法描述，若合约内方法没有重载，则此参数可以为空               |  是   |
-| args            |  object[]  | 参数列表                                     |  是   |
+| methodDesc      |   string   | 合约方法描述，若合约内方法没有重载，则此参数可以为空               |  否   |
+| args            |  object[]  | 参数列表                                     |  否   |
 
 返回值
 ---
@@ -1243,7 +1243,7 @@ Cmd: validateContractDelete
 
 参数列表
 ----
-| 参数名             |  参数类型  | 参数描述      | 是否非空 |
+| 参数名             |  参数类型  | 参数描述      | 是否必填 |
 | --------------- |:------:| --------- |:----:|
 | chainId         |  int   | 链id       |  是   |
 | sender          | string | 交易创建者账户地址 |  是   |
@@ -1268,12 +1268,12 @@ Cmd: imputedContractCreateGas
 
 参数列表
 ----
-| 参数名          |   参数类型   | 参数描述                 | 是否非空 |
+| 参数名          |   参数类型   | 参数描述                 | 是否必填 |
 | ------------ |:--------:| -------------------- |:----:|
 | chainId      |   int    | 链id                  |  是   |
 | sender       |  string  | 交易创建者账户地址            |  是   |
 | contractCode |  string  | 智能合约代码(字节码的Hex编码字符串) |  是   |
-| args         | object[] | 参数列表                 |  是   |
+| args         | object[] | 参数列表                 |  否   |
 
 返回值
 ---
@@ -1292,15 +1292,15 @@ Cmd: imputedContractCallGas
 
 参数列表
 ----
-| 参数名             |    参数类型    | 参数描述                                     | 是否非空 |
+| 参数名             |    参数类型    | 参数描述                                     | 是否必填 |
 | --------------- |:----------:| ---------------------------------------- |:----:|
 | chainId         |    int     | 链id                                      |  是   |
 | sender          |   string   | 交易创建者账户地址                                |  是   |
 | value           | biginteger | 调用者向合约地址转入的主网资产金额，没有此业务时填BigInteger.ZERO |  是   |
 | contractAddress |   string   | 合约地址                                     |  是   |
 | methodName      |   string   | 合约方法                                     |  是   |
-| methodDesc      |   string   | 合约方法描述，若合约内方法没有重载，则此参数可以为空               |  是   |
-| args            |  object[]  | 参数列表                                     |  是   |
+| methodDesc      |   string   | 合约方法描述，若合约内方法没有重载，则此参数可以为空               |  否   |
+| args            |  object[]  | 参数列表                                     |  否   |
 
 返回值
 ---
@@ -1319,13 +1319,13 @@ Cmd: invokeView
 
 参数列表
 ----
-| 参数名             |   参数类型   | 参数描述                       | 是否非空 |
+| 参数名             |   参数类型   | 参数描述                       | 是否必填 |
 | --------------- |:--------:| -------------------------- |:----:|
 | chainId         |   int    | 链id                        |  是   |
 | contractAddress |  string  | 合约地址                       |  是   |
 | methodName      |  string  | 合约方法                       |  是   |
-| methodDesc      |  string  | 合约方法描述，若合约内方法没有重载，则此参数可以为空 |  是   |
-| args            | object[] | 参数列表                       |  是   |
+| methodDesc      |  string  | 合约方法描述，若合约内方法没有重载，则此参数可以为空 |  否   |
+| args            | object[] | 参数列表                       |  否   |
 
 返回值
 ---
@@ -1344,14 +1344,14 @@ Cmd: contractCreateOffline
 
 参数列表
 ----
-| 参数名          |   参数类型   | 参数描述                 | 是否非空 |
+| 参数名          |   参数类型   | 参数描述                 | 是否必填 |
 | ------------ |:--------:| -------------------- |:----:|
 | chainId      |   int    | 链id                  |  是   |
 | sender       |  string  | 交易创建者账户地址            |  是   |
 | alias        |  string  | 合约别名                 |  是   |
 | contractCode |  string  | 智能合约代码(字节码的Hex编码字符串) |  是   |
-| args         | object[] | 参数列表                 |  是   |
-| remark       |  string  | 交易备注                 |  是   |
+| args         | object[] | 参数列表                 |  否   |
+| remark       |  string  | 交易备注                 |  否   |
 
 返回值
 ---
@@ -1372,16 +1372,16 @@ Cmd: contractCallOffline
 
 参数列表
 ----
-| 参数名             |    参数类型    | 参数描述                                     | 是否非空 |
+| 参数名             |    参数类型    | 参数描述                                     | 是否必填 |
 | --------------- |:----------:| ---------------------------------------- |:----:|
 | chainId         |    int     | 链id                                      |  是   |
 | sender          |   string   | 交易创建者账户地址                                |  是   |
 | value           | biginteger | 调用者向合约地址转入的主网资产金额，没有此业务时填BigInteger.ZERO |  是   |
 | contractAddress |   string   | 合约地址                                     |  是   |
 | methodName      |   string   | 合约方法                                     |  是   |
-| methodDesc      |   string   | 合约方法描述，若合约内方法没有重载，则此参数可以为空               |  是   |
-| args            |  object[]  | 参数列表                                     |  是   |
-| remark          |   string   | 交易备注                                     |  是   |
+| methodDesc      |   string   | 合约方法描述，若合约内方法没有重载，则此参数可以为空               |  否   |
+| args            |  object[]  | 参数列表                                     |  否   |
+| remark          |   string   | 交易备注                                     |  否   |
 
 返回值
 ---
@@ -1401,12 +1401,12 @@ Cmd: contractDeleteOffline
 
 参数列表
 ----
-| 参数名             |  参数类型  | 参数描述      | 是否非空 |
+| 参数名             |  参数类型  | 参数描述      | 是否必填 |
 | --------------- |:------:| --------- |:----:|
 | chainId         |  int   | 链id       |  是   |
 | sender          | string | 交易创建者账户地址 |  是   |
 | contractAddress | string | 合约地址      |  是   |
-| remark          | string | 交易备注      |  是   |
+| remark          | string | 交易备注      |  否   |
 
 返回值
 ---
@@ -1426,14 +1426,14 @@ Cmd: tokentransferOffline
 
 参数列表
 ----
-| 参数名             |    参数类型    | 参数描述                                     | 是否非空 |
+| 参数名             |    参数类型    | 参数描述                                     | 是否必填 |
 | --------------- |:----------:| ---------------------------------------- |:----:|
 | chainId         |    int     | 链id                                      |  是   |
 | fromAddress     |   string   | 交易创建者账户地址                                |  是   |
 | toAddress       |   string   | 调用者向合约地址转入的主网资产金额，没有此业务时填BigInteger.ZERO |  是   |
 | contractAddress |   string   | 合约地址                                     |  是   |
 | amount          | biginteger | 合约方法                                     |  是   |
-| remark          |   string   | 交易备注                                     |  是   |
+| remark          |   string   | 交易备注                                     |  否   |
 
 返回值
 ---
@@ -1453,13 +1453,13 @@ Cmd: transfer2contractOffline
 
 参数列表
 ----
-| 参数名         |    参数类型    | 参数描述                                     | 是否非空 |
+| 参数名         |    参数类型    | 参数描述                                     | 是否必填 |
 | ----------- |:----------:| ---------------------------------------- |:----:|
 | chainId     |    int     | 链id                                      |  是   |
 | fromAddress |   string   | 交易创建者账户地址                                |  是   |
 | toAddress   |   string   | 调用者向合约地址转入的主网资产金额，没有此业务时填BigInteger.ZERO |  是   |
 | amount      | biginteger | 合约方法                                     |  是   |
-| remark      |   string   | 交易备注                                     |  是   |
+| remark      |   string   | 交易备注                                     |  否   |
 
 返回值
 ---
@@ -1479,13 +1479,13 @@ Cmd: createAgent
 
 参数列表
 ----
-| 参数名                                                            |      参数类型       | 参数描述         | 是否非空 |
+| 参数名                                                            |      参数类型       | 参数描述         | 是否必填 |
 | -------------------------------------------------------------- |:---------------:| ------------ |:----:|
 | chainId                                                        |       int       | 链ID          |  是   |
 | 创建共识(代理)节点                                                     | createagentform | 创建共识(代理)节点表单 |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;agentAddress   |     string      | 节点地址         |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;packingAddress |     string      | 节点出块地址       |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rewardAddress  |     string      | 奖励地址，默认节点地址  |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rewardAddress  |     string      | 奖励地址，默认节点地址  |  否   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;commissionRate |       int       | 佣金比例         |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deposit        |     string      | 抵押金额         |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password       |     string      | 密码           |  是   |
@@ -1507,7 +1507,7 @@ Cmd: stopAgent
 
 参数列表
 ----
-| 参数名                                                      |     参数类型      | 参数描述     | 是否非空 |
+| 参数名                                                      |     参数类型      | 参数描述     | 是否必填 |
 | -------------------------------------------------------- |:-------------:| -------- |:----:|
 | chainId                                                  |      int      | 链ID      |  是   |
 | 注销共识节点                                                   | stopagentform | 注销共识节点表单 |  是   |
@@ -1531,7 +1531,7 @@ Cmd: depositToAgent
 
 参数列表
 ----
-| 参数名                                                       |    参数类型     | 参数描述     | 是否非空 |
+| 参数名                                                       |    参数类型     | 参数描述     | 是否必填 |
 | --------------------------------------------------------- |:-----------:| -------- |:----:|
 | chainId                                                   |     int     | 链ID      |  是   |
 | 申请参与共识                                                    | depositform | 申请参与共识表单 |  是   |
@@ -1557,7 +1557,7 @@ Cmd: withdraw
 
 参数列表
 ----
-| 参数名                                                      |     参数类型     | 参数描述         | 是否非空 |
+| 参数名                                                      |     参数类型     | 参数描述         | 是否必填 |
 | -------------------------------------------------------- |:------------:| ------------ |:----:|
 | chainId                                                  |     int      | 链ID          |  是   |
 | 退出共识                                                     | withdrawform | 退出共识表单       |  是   |
@@ -1582,7 +1582,7 @@ Cmd: createAgentOffline
 
 参数列表
 ----
-| 参数名                                                                                                     |     参数类型     | 参数描述           | 是否非空 |
+| 参数名                                                                                                     |     参数类型     | 参数描述           | 是否必填 |
 | ------------------------------------------------------------------------------------------------------- |:------------:| -------------- |:----:|
 | chainId                                                                                                 |     int      | 链ID            |  是   |
 | 离线创建共识(代理)节点                                                                                            | consensusdto | 离线创建共识(代理)节点表单 |  是   |
@@ -1616,14 +1616,14 @@ Cmd: stopAgentOffline
 
 参数列表
 ----
-| 参数名                                                                                                                                                     |       参数类型       | 参数描述        | 是否非空 |
+| 参数名                                                                                                                                                     |       参数类型       | 参数描述        | 是否必填 |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------- |:----------------:| ----------- |:----:|
 | chainId                                                                                                                                                 |       int        | 链ID         |  是   |
 | 离线注销共识节点                                                                                                                                                | stopconsensusdto | 离线注销共识节点表单  |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;agentHash                                                                                               |      string      | 创建节点的交易hash |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;agentAddress                                                                                            |      string      | 节点地址        |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deposit                                                                                                 |    biginteger    | 创建节点的保证金    |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price                                                                                                   |    biginteger    | 手续费单价       |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price                                                                                                   |    biginteger    | 手续费单价       |  否   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;depositList                                                                                             | list&lt;object>  | 停止委托列表      |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;depositHash                                             |      string      | 委托共识的交易hash |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;input                                                   |      object      | 交易输入信息      |  是   |
@@ -1651,7 +1651,7 @@ Cmd: depositToAgentOffline
 
 参数列表
 ----
-| 参数名                                                                                                     |    参数类型    | 参数描述       | 是否非空 |
+| 参数名                                                                                                     |    参数类型    | 参数描述       | 是否必填 |
 | ------------------------------------------------------------------------------------------------------- |:----------:| ---------- |:----:|
 | chainId                                                                                                 |    int     | 链ID        |  是   |
 | 离线申请参与共识                                                                                                | depositdto | 离线申请参与共识表单 |  是   |
@@ -1683,13 +1683,13 @@ Cmd: withdrawOffline
 
 参数列表
 ----
-| 参数名                                                                                                     |    参数类型     | 参数描述        | 是否非空 |
+| 参数名                                                                                                     |    参数类型     | 参数描述        | 是否必填 |
 | ------------------------------------------------------------------------------------------------------- |:-----------:| ----------- |:----:|
 | chainId                                                                                                 |     int     | 链ID         |  是   |
 | 离线退出共识                                                                                                  | withdrawdto | 离线退出共识表单    |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address                                                 |   string    | 地址          |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;depositHash                                             |   string    | 委托共识交易的hash |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price                                                   | biginteger  | 手续费单价       |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price                                                   | biginteger  | 手续费单价       |  否   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;input                                                   |   object    | 交易输入信息      |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address |   string    | 账户地址        |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;chainId |     int     | 资产的链id      |  是   |

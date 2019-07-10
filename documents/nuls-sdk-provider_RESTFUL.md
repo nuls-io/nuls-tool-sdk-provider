@@ -23,7 +23,7 @@ Cmd: /api/account
 
 参数列表
 ----
-| 参数名                                                      |       参数类型        | 参数描述     | 是否非空 |
+| 参数名                                                      |       参数类型        | 参数描述     | 是否必填 |
 | -------------------------------------------------------- |:-----------------:| -------- |:----:|
 | 批量创建账户                                                   | accountcreateform | 批量创建账户表单 |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;count    |        int        | 新建账户数量   |  是   |
@@ -54,7 +54,7 @@ Cmd: /api/account/password/{address}
 
 参数列表
 ----
-| 参数名                                                         |           参数类型            | 参数描述     | 是否非空 |
+| 参数名                                                         |           参数类型            | 参数描述     | 是否必填 |
 | ----------------------------------------------------------- |:-------------------------:| -------- |:----:|
 | address                                                     |          string           | 账户地址     |  是   |
 | 账户密码信息                                                      | accountupdatepasswordform | 账户密码信息表单 |  是   |
@@ -85,7 +85,7 @@ Cmd: /api/account/prikey/{address}
 
 参数列表
 ----
-| 参数名                                                      |        参数类型         | 参数描述     | 是否非空 |
+| 参数名                                                      |        参数类型         | 参数描述     | 是否必填 |
 | -------------------------------------------------------- |:-------------------:| -------- |:----:|
 | address                                                  |       string        | 账户地址     |  是   |
 | 账户密码信息                                                   | accountpasswordform | 账户密码信息表单 |  是   |
@@ -117,7 +117,7 @@ Cmd: /api/account/import/pri
 
 参数列表
 ----
-| 参数名                                                       |           参数类型            | 参数描述                           | 是否非空 |
+| 参数名                                                       |           参数类型            | 参数描述                           | 是否必填 |
 | --------------------------------------------------------- |:-------------------------:| ------------------------------ |:----:|
 | 根据私钥导入账户                                                  | accountprikeypasswordform | 根据私钥导入账户表单                     |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;priKey    |          string           | 私钥                             |  是   |
@@ -141,7 +141,7 @@ Cmd: /api/account/import/keystore
 
 参数列表
 ----
-| 参数名                                                      |    参数类型     | 参数描述       | 是否非空 |
+| 参数名                                                      |    参数类型     | 参数描述       | 是否必填 |
 | -------------------------------------------------------- |:-----------:| ---------- |:----:|
 | 根据私钥导入账户                                                 | inputstream | 根据私钥导入账户表单 |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;根据私钥导入账户 | inputstream | 根据私钥导入账户表单 |  是   |
@@ -172,7 +172,7 @@ Cmd: /api/account/import/keystore/path
 
 参数列表
 ----
-| 参数名                                                       |           参数类型            | 参数描述                           | 是否非空 |
+| 参数名                                                       |           参数类型            | 参数描述                           | 是否必填 |
 | --------------------------------------------------------- |:-------------------------:| ------------------------------ |:----:|
 | 根据keystore文件路径导入账户                                        | accountkeystoreimportform | 根据keystore文件路径导入账户表单           |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;path      |          string           | 本地keystore文件路径                 |  是   |
@@ -205,7 +205,7 @@ Cmd: /api/account/import/keystore/string
 
 参数列表
 ----
-| 参数名                                                            |              参数类型               | 参数描述                           | 是否非空 |
+| 参数名                                                            |              参数类型               | 参数描述                           | 是否必填 |
 | -------------------------------------------------------------- |:-------------------------------:| ------------------------------ |:----:|
 | 根据keystore字符串导入账户                                              | accountkeystorestringimportform | 根据keystore字符串导入账户表单            |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;keystoreString |             string              | keystore字符串                    |  是   |
@@ -237,7 +237,7 @@ Cmd: /api/account/export/{address}
 
 参数列表
 ----
-| 参数名                                                      |         参数类型          | 参数描述           | 是否非空 |
+| 参数名                                                      |         参数类型          | 参数描述           | 是否必填 |
 | -------------------------------------------------------- |:---------------------:| -------------- |:----:|
 | address                                                  |        string         | 账户地址           |  是   |
 | keystone导出信息                                             | accountkeystorebackup | keystone导出信息表单 |  是   |
@@ -261,7 +261,7 @@ Cmd: /api/accountledger/balance/{address}
 
 参数列表
 ----
-| 参数名     |  参数类型  | 参数描述 | 是否非空 |
+| 参数名     |  参数类型  | 参数描述 | 是否必填 |
 | ------- |:------:| ---- |:----:|
 | address | string | 账户地址 |  是   |
 
@@ -301,14 +301,14 @@ Cmd: /api/account/multi/sign
 
 参数列表
 ----
-| 参数名                                                                                                                 |      参数类型       | 参数描述        | 是否非空 |
+| 参数名                                                                                                                 |      参数类型       | 参数描述        | 是否必填 |
 | ------------------------------------------------------------------------------------------------------------------- |:---------------:| ----------- |:----:|
 | 多账户摘要签名                                                                                                             |  multisignform  | 多账户摘要签名表单   |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dtoList                                                             | list&lt;object> | keystore集合  |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address             |     string      | 地址          |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;priKey              |     string      | 明文私钥        |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;encryptedPrivateKey |     string      | 加密私钥        |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password            |     string      | 密码          |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;priKey              |     string      | 明文私钥        |  否   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;encryptedPrivateKey |     string      | 加密私钥        |  否   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password            |     string      | 密码          |  否   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;txHex                                                               |     string      | 交易序列化Hex字符串 |  是   |
 
 返回值
@@ -338,7 +338,7 @@ Cmd: /api/account/priKey/sign
 
 参数列表
 ----
-| 参数名                                                     |      参数类型      | 参数描述        | 是否非空 |
+| 参数名                                                     |      参数类型      | 参数描述        | 是否必填 |
 | ------------------------------------------------------- |:--------------:| ----------- |:----:|
 | 明文私钥摘要签名                                                | prikeysignform | 明文私钥摘要签名表单  |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;txHex   |     string     | 交易序列化Hex字符串 |  是   |
@@ -373,7 +373,7 @@ Cmd: /api/account/encryptedPriKey/sign
 
 参数列表
 ----
-| 参数名                                                             |          参数类型           | 参数描述        | 是否非空 |
+| 参数名                                                             |          参数类型           | 参数描述        | 是否必填 |
 | --------------------------------------------------------------- |:-----------------------:| ----------- |:----:|
 | 密文私钥摘要签名                                                        | encryptedprikeysignform | 密文私钥摘要签名表单  |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;txHex           |         string          | 交易序列化Hex字符串 |  是   |
@@ -407,7 +407,7 @@ Cmd: /api/account/offline
 
 参数列表
 ----
-| 参数名                                                      |       参数类型        | 参数描述       | 是否非空 |
+| 参数名                                                      |       参数类型        | 参数描述       | 是否必填 |
 | -------------------------------------------------------- |:-----------------:| ---------- |:----:|
 | 离线批量创建账户                                                 | accountcreateform | 离线批量创建账户表单 |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;count    |        int        | 新建账户数量     |  是   |
@@ -443,7 +443,7 @@ Cmd: /api/account/priKey/offline
 
 参数列表
 ----
-| 参数名                                                             |     参数类型      | 参数描述         | 是否非空 |
+| 参数名                                                             |     参数类型      | 参数描述         | 是否必填 |
 | --------------------------------------------------------------- |:-------------:| ------------ |:----:|
 | 离线获取账户明文私钥                                                      | getprikeyform | 离线获取账户明文私钥表单 |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address         |    string     | 账户地址         |  是   |
@@ -477,7 +477,7 @@ Cmd: /api/account/password/offline/{address}
 
 参数列表
 ----
-| 参数名                                                             |       参数类型        | 参数描述       | 是否非空 |
+| 参数名                                                             |       参数类型        | 参数描述       | 是否必填 |
 | --------------------------------------------------------------- |:-----------------:| ---------- |:----:|
 | 离线修改账户密码                                                        | resetpasswordform | 离线修改账户密码表单 |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address         |      string       | 账户地址       |  是   |
@@ -502,7 +502,7 @@ Cmd: /api/block/header/height/{height}
 
 参数列表
 ----
-| 参数名    | 参数类型 | 参数描述 | 是否非空 |
+| 参数名    | 参数类型 | 参数描述 | 是否必填 |
 | ------ |:----:| ---- |:----:|
 | height | long | 区块高度 |  是   |
 
@@ -538,7 +538,7 @@ Cmd: /api/block/header/hash/{hash}
 
 参数列表
 ----
-| 参数名  |  参数类型  | 参数描述   | 是否非空 |
+| 参数名  |  参数类型  | 参数描述   | 是否必填 |
 | ---- |:------:| ------ |:----:|
 | hash | string | 区块hash |  是   |
 
@@ -666,7 +666,7 @@ Cmd: /api/block/height/{height}
 
 参数列表
 ----
-| 参数名    | 参数类型 | 参数描述 | 是否非空 |
+| 参数名    | 参数类型 | 参数描述 | 是否必填 |
 | ------ |:----:| ---- |:----:|
 | height | long | 区块高度 |  是   |
 
@@ -702,7 +702,7 @@ Cmd: /api/block/hash/{hash}
 
 参数列表
 ----
-| 参数名  |  参数类型  | 参数描述   | 是否非空 |
+| 参数名  |  参数类型  | 参数描述   | 是否必填 |
 | ---- |:------:| ------ |:----:|
 | hash | string | 区块hash |  是   |
 
@@ -738,7 +738,7 @@ Cmd: /api/tx/hash/{hash}
 
 参数列表
 ----
-| 参数名  |  参数类型  | 参数描述   | 是否非空 |
+| 参数名  |  参数类型  | 参数描述   | 是否必填 |
 | ---- |:------:| ------ |:----:|
 | hash | string | 交易hash |  是   |
 
@@ -780,7 +780,7 @@ Cmd: /api/accountledger/tx/{hash}
 
 参数列表
 ----
-| 参数名  |  参数类型  | 参数描述   | 是否非空 |
+| 参数名  |  参数类型  | 参数描述   | 是否必填 |
 | ---- |:------:| ------ |:----:|
 | hash | string | 交易hash |  是   |
 
@@ -829,7 +829,7 @@ Cmd: /api/accountledger/transaction/validate
 
 参数列表
 ----
-| 参数名                                                   |  参数类型  | 参数描述       | 是否非空 |
+| 参数名                                                   |  参数类型  | 参数描述       | 是否必填 |
 | ----------------------------------------------------- |:------:| ---------- |:----:|
 | 验证交易是否正确                                              | txform | 验证交易是否正确表单 |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;txHex | string | 交易序列化字符串   |  是   |
@@ -858,7 +858,7 @@ Cmd: /api/accountledger/transaction/broadcast
 
 参数列表
 ----
-| 参数名                                                   |  参数类型  | 参数描述     | 是否非空 |
+| 参数名                                                   |  参数类型  | 参数描述     | 是否必填 |
 | ----------------------------------------------------- |:------:| -------- |:----:|
 | 广播交易                                                  | txform | 广播交易表单   |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;txHex | string | 交易序列化字符串 |  是   |
@@ -892,7 +892,7 @@ Cmd: /api/accountledger/transfer
 
 参数列表
 ----
-| 参数名                                                       |     参数类型     | 参数描述   | 是否非空 |
+| 参数名                                                       |     参数类型     | 参数描述   | 是否必填 |
 | --------------------------------------------------------- |:------------:| ------ |:----:|
 | 单笔转账                                                      | transferform | 单笔转账表单 |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address   |    string    | 账户地址   |  是   |
@@ -939,7 +939,7 @@ Cmd: /api/accountledger/createTransferTxOffline
 
 参数列表
 ----
-| 参数名                                                                                                      |      参数类型       | 参数描述     | 是否非空 |
+| 参数名                                                                                                      |      参数类型       | 参数描述     | 是否必填 |
 | -------------------------------------------------------------------------------------------------------- |:---------------:| -------- |:----:|
 | transferDto                                                                                              |   transferdto   | 转账交易表单   |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inputs                                                   | list&lt;object> | 转账交易输入列表 |  是   |
@@ -988,17 +988,17 @@ Cmd: /api/contract/create
 
 参数列表
 ----
-| 参数名                                                          |      参数类型      | 参数描述                 | 是否非空 |
+| 参数名                                                          |      参数类型      | 参数描述                 | 是否必填 |
 | ------------------------------------------------------------ |:--------------:| -------------------- |:----:|
 | 发布合约                                                         | contractcreate | 发布合约表单               |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sender       |     string     | 交易创建者                |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gasLimit     |      long      | 最大gas消耗              |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price        |      long      | 执行合约单价               |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password     |     string     | 交易创建者账户密码            |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark       |     string     | 备注                   |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark       |     string     | 备注                   |  否   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractCode |     string     | 智能合约代码(字节码的Hex编码字符串) |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;alias        |     string     | 合约别名                 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args         |    object[]    | 参数列表                 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args         |    object[]    | 参数列表                 |  否   |
 
 返回值
 ---
@@ -1034,19 +1034,19 @@ Cmd: /api/contract/call
 
 参数列表
 ----
-| 参数名                                                             |     参数类型     | 参数描述                       | 是否非空 |
+| 参数名                                                             |     参数类型     | 参数描述                       | 是否必填 |
 | --------------------------------------------------------------- |:------------:| -------------------------- |:----:|
 | 调用合约                                                            | contractcall | 调用合约表单                     |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sender          |    string    | 交易创建者                      |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gasLimit        |     long     | 最大gas消耗                    |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price           |     long     | 执行合约单价                     |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password        |    string    | 交易创建者账户密码                  |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark          |    string    | 备注                         |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark          |    string    | 备注                         |  否   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractAddress |    string    | 智能合约地址                     |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value           |  biginteger  | 调用者向合约地址转入的主网资产金额，没有此业务时填0 |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodName      |    string    | 方法名                        |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodDesc      |    string    | 方法描述，若合约内方法没有重载，则此参数可以为空   |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args            |   object[]   | 参数列表                       |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodDesc      |    string    | 方法描述，若合约内方法没有重载，则此参数可以为空   |  否   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args            |   object[]   | 参数列表                       |  否   |
 
 返回值
 ---
@@ -1075,13 +1075,13 @@ Cmd: /api/contract/delete
 
 参数列表
 ----
-| 参数名                                                             |      参数类型      | 参数描述      | 是否非空 |
+| 参数名                                                             |      参数类型      | 参数描述      | 是否必填 |
 | --------------------------------------------------------------- |:--------------:| --------- |:----:|
 | 删除合约                                                            | contractdelete | 删除合约表单    |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sender          |     string     | 交易创建者     |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractAddress |     string     | 智能合约地址    |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password        |     string     | 交易创建者账户密码 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark          |     string     | 备注        |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark          |     string     | 备注        |  否   |
 
 返回值
 ---
@@ -1112,7 +1112,7 @@ Cmd: /api/contract/tokentransfer
 
 参数列表
 ----
-| 参数名                                                             |         参数类型          | 参数描述         | 是否非空 |
+| 参数名                                                             |         参数类型          | 参数描述         | 是否必填 |
 | --------------------------------------------------------------- |:---------------------:| ------------ |:----:|
 | token转账                                                         | contracttokentransfer | token转账表单    |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fromAddress     |        string         | 转出者账户地址      |  是   |
@@ -1120,7 +1120,7 @@ Cmd: /api/contract/tokentransfer
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;toAddress       |        string         | 转入者账户地址      |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractAddress |        string         | 合约地址         |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount          |      biginteger       | 转出的token资产金额 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark          |        string         | 备注           |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark          |        string         | 备注           |  否   |
 
 返回值
 ---
@@ -1150,14 +1150,14 @@ Cmd: /api/contract/transfer2contract
 
 参数列表
 ----
-| 参数名                                                         |       参数类型       | 参数描述      | 是否非空 |
+| 参数名                                                         |       参数类型       | 参数描述      | 是否必填 |
 | ----------------------------------------------------------- |:----------------:| --------- |:----:|
 | 向合约地址转账                                                     | contracttransfer | 向合约地址转账表单 |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fromAddress |      string      | 转出者账户地址   |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password    |      string      | 转出者账户地址密码 |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;toAddress   |      string      | 转入的合约地址   |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount      |    biginteger    | 转出的主链资产金额 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark      |      string      | 备注        |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark      |      string      | 备注        |  否   |
 
 返回值
 ---
@@ -1176,7 +1176,7 @@ Cmd: /api/contract/balance/token/{contractAddress}/{address}
 
 参数列表
 ----
-| 参数名             |  参数类型  | 参数描述 | 是否非空 |
+| 参数名             |  参数类型  | 参数描述 | 是否必填 |
 | --------------- |:------:| ---- |:----:|
 | contractAddress | string | 合约地址 |  是   |
 | address         | string | 账户地址 |  是   |
@@ -1204,7 +1204,7 @@ Cmd: /api/contract/info/{address}
 
 参数列表
 ----
-| 参数名     |  参数类型  | 参数描述 | 是否非空 |
+| 参数名     |  参数类型  | 参数描述 | 是否必填 |
 | ------- |:------:| ---- |:----:|
 | address | string | 合约地址 |  是   |
 
@@ -1248,7 +1248,7 @@ Cmd: /api/contract/result/{hash}
 
 参数列表
 ----
-| 参数名  |  参数类型  | 参数描述   | 是否非空 |
+| 参数名  |  参数类型  | 参数描述   | 是否必填 |
 | ---- |:------:| ------ |:----:|
 | hash | string | 交易hash |  是   |
 
@@ -1312,7 +1312,7 @@ Cmd: /api/contract/constructor
 
 参数列表
 ----
-| 参数名                                                          |     参数类型     | 参数描述                 | 是否非空 |
+| 参数名                                                          |     参数类型     | 参数描述                 | 是否必填 |
 | ------------------------------------------------------------ |:------------:| -------------------- |:----:|
 | 获取合约代码构造函数                                                   | contractcode | 获取合约代码构造函数表单         |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractCode |    string    | 智能合约代码(字节码的Hex编码字符串) |  是   |
@@ -1354,12 +1354,12 @@ Cmd: /api/contract/method
 
 参数列表
 ----
-| 参数名                                                             |        参数类型        | 参数描述                     | 是否非空 |
+| 参数名                                                             |        参数类型        | 参数描述                     | 是否必填 |
 | --------------------------------------------------------------- |:------------------:| ------------------------ |:----:|
 | 获取已发布合约指定函数的信息                                                  | contractmethodform | 获取已发布合约指定函数的信息表单         |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractAddress |       string       | 智能合约地址                   |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodName      |       string       | 方法名                      |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodDesc      |       string       | 方法描述，若合约内方法没有重载，则此参数可以为空 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodDesc      |       string       | 方法描述，若合约内方法没有重载，则此参数可以为空 |  否   |
 
 返回值
 ---
@@ -1396,12 +1396,12 @@ Cmd: /api/contract/method/argstypes
 
 参数列表
 ----
-| 参数名                                                             |        参数类型        | 参数描述                     | 是否非空 |
+| 参数名                                                             |        参数类型        | 参数描述                     | 是否必填 |
 | --------------------------------------------------------------- |:------------------:| ------------------------ |:----:|
 | 获取已发布合约指定函数的参数类型列表                                              | contractmethodform | 获取已发布合约指定函数的参数类型表单       |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractAddress |       string       | 智能合约地址                   |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodName      |       string       | 方法名                      |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodDesc      |       string       | 方法描述，若合约内方法没有重载，则此参数可以为空 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodDesc      |       string       | 方法描述，若合约内方法没有重载，则此参数可以为空 |  否   |
 
 返回值
 ---
@@ -1431,14 +1431,14 @@ Cmd: /api/contract/validate/create
 
 参数列表
 ----
-| 参数名                                                          |          参数类型          | 参数描述                 | 是否非空 |
+| 参数名                                                          |          参数类型          | 参数描述                 | 是否必填 |
 | ------------------------------------------------------------ |:----------------------:| -------------------- |:----:|
 | 验证发布合约                                                       | contractvalidatecreate | 验证发布合约表单             |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sender       |         string         | 交易创建者                |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gasLimit     |          long          | 最大gas消耗              |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price        |          long          | 执行合约单价               |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractCode |         string         | 智能合约代码(字节码的Hex编码字符串) |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args         |        object[]        | 参数列表                 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args         |        object[]        | 参数列表                 |  否   |
 
 返回值
 ---
@@ -1473,17 +1473,17 @@ Cmd: /api/contract/validate/call
 
 参数列表
 ----
-| 参数名                                                             |         参数类型         | 参数描述                       | 是否非空 |
+| 参数名                                                             |         参数类型         | 参数描述                       | 是否必填 |
 | --------------------------------------------------------------- |:--------------------:| -------------------------- |:----:|
 | 验证调用合约                                                          | contractvalidatecall | 验证调用合约表单                   |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sender          |        string        | 交易创建者                      |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value           |         long         | 调用者向合约地址转入的主网资产金额，没有此业务时填0 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value           |         long         | 调用者向合约地址转入的主网资产金额，没有此业务时填0 |  否   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gasLimit        |         long         | 最大gas消耗                    |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price           |         long         | 执行合约单价                     |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractAddress |        string        | 智能合约地址                     |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodName      |        string        | 方法名称                       |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodDesc      |        string        | 方法描述，若合约内方法没有重载，则此参数可以为空   |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args            |       object[]       | 参数列表                       |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodDesc      |        string        | 方法描述，若合约内方法没有重载，则此参数可以为空   |  否   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args            |       object[]       | 参数列表                       |  否   |
 
 返回值
 ---
@@ -1512,7 +1512,7 @@ Cmd: /api/contract/validate/delete
 
 参数列表
 ----
-| 参数名                                                             |          参数类型          | 参数描述     | 是否非空 |
+| 参数名                                                             |          参数类型          | 参数描述     | 是否必填 |
 | --------------------------------------------------------------- |:----------------------:| -------- |:----:|
 | 验证删除合约                                                          | contractvalidatedelete | 验证删除合约表单 |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sender          |         string         | 交易创建者    |  是   |
@@ -1546,12 +1546,12 @@ Cmd: /api/contract/imputedgas/create
 
 参数列表
 ----
-| 参数名                                                          |           参数类型           | 参数描述                 | 是否非空 |
+| 参数名                                                          |           参数类型           | 参数描述                 | 是否必填 |
 | ------------------------------------------------------------ |:------------------------:| -------------------- |:----:|
 | 估算发布合约交易的GAS                                                 | imputedgascontractcreate | 估算发布合约交易的GAS表单       |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sender       |          string          | 交易创建者                |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractCode |          string          | 智能合约代码(字节码的Hex编码字符串) |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args         |         object[]         | 参数列表                 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args         |         object[]         | 参数列表                 |  否   |
 
 返回值
 ---
@@ -1582,15 +1582,15 @@ Cmd: /api/contract/imputedgas/call
 
 参数列表
 ----
-| 参数名                                                             |          参数类型          | 参数描述                       | 是否非空 |
+| 参数名                                                             |          参数类型          | 参数描述                       | 是否必填 |
 | --------------------------------------------------------------- |:----------------------:| -------------------------- |:----:|
 | 估算调用合约交易的GAS                                                    | imputedgascontractcall | 估算调用合约交易的GAS表单             |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sender          |         string         | 交易创建者                      |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value           |       biginteger       | 调用者向合约地址转入的主网资产金额，没有此业务时填0 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value           |       biginteger       | 调用者向合约地址转入的主网资产金额，没有此业务时填0 |  否   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractAddress |         string         | 智能合约地址                     |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodName      |         string         | 方法名称                       |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodDesc      |         string         | 方法描述，若合约内方法没有重载，则此参数可以为空   |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args            |        object[]        | 参数列表                       |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodDesc      |         string         | 方法描述，若合约内方法没有重载，则此参数可以为空   |  否   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args            |        object[]        | 参数列表                       |  否   |
 
 返回值
 ---
@@ -1619,13 +1619,13 @@ Cmd: /api/contract/view
 
 参数列表
 ----
-| 参数名                                                             |       参数类型       | 参数描述                     | 是否非空 |
+| 参数名                                                             |       参数类型       | 参数描述                     | 是否必填 |
 | --------------------------------------------------------------- |:----------------:| ------------------------ |:----:|
 | 调用合约不上链方法                                                       | contractviewcall | 调用合约不上链方法表单              |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractAddress |      string      | 智能合约地址                   |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodName      |      string      | 方法名称                     |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodDesc      |      string      | 方法描述，若合约内方法没有重载，则此参数可以为空 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args            |     object[]     | 参数列表                     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodDesc      |      string      | 方法描述，若合约内方法没有重载，则此参数可以为空 |  否   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args            |     object[]     | 参数列表                     |  否   |
 
 返回值
 ---
@@ -1655,14 +1655,14 @@ Cmd: /api/contract/create/offline
 
 参数列表
 ----
-| 参数名                                                          |         参数类型          | 参数描述                 | 是否非空 |
+| 参数名                                                          |         参数类型          | 参数描述                 | 是否必填 |
 | ------------------------------------------------------------ |:---------------------:| -------------------- |:----:|
 | 发布合约离线交易                                                     | contractcreateoffline | 发布合约离线交易表单           |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sender       |        string         | 交易创建者                |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;alias        |        string         | 合约别名                 |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractCode |        string         | 智能合约代码(字节码的Hex编码字符串) |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args         |       object[]        | 参数列表                 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark       |        string         | 备注                   |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args         |       object[]        | 参数列表                 |  否   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark       |        string         | 备注                   |  否   |
 
 返回值
 ---
@@ -1696,16 +1696,16 @@ Cmd: /api/contract/call/offline
 
 参数列表
 ----
-| 参数名                                                             |        参数类型         | 参数描述                       | 是否非空 |
+| 参数名                                                             |        参数类型         | 参数描述                       | 是否必填 |
 | --------------------------------------------------------------- |:-------------------:| -------------------------- |:----:|
 | 调用合约离线交易                                                        | contractcalloffline | 调用合约离线交易表单                 |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sender          |       string        | 交易创建者                      |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractAddress |       string        | 智能合约地址                     |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value           |     biginteger      | 调用者向合约地址转入的主网资产金额，没有此业务时填0 |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodName      |       string        | 方法名                        |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodDesc      |       string        | 方法描述，若合约内方法没有重载，则此参数可以为空   |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args            |      object[]       | 参数列表                       |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark          |       string        | 备注                         |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;methodDesc      |       string        | 方法描述，若合约内方法没有重载，则此参数可以为空   |  否   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;args            |      object[]       | 参数列表                       |  否   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark          |       string        | 备注                         |  否   |
 
 返回值
 ---
@@ -1734,12 +1734,12 @@ Cmd: /api/contract/delete/offline
 
 参数列表
 ----
-| 参数名                                                             |         参数类型          | 参数描述       | 是否非空 |
+| 参数名                                                             |         参数类型          | 参数描述       | 是否必填 |
 | --------------------------------------------------------------- |:---------------------:| ---------- |:----:|
 | 删除合约离线交易                                                        | contractdeleteoffline | 删除合约离线交易表单 |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sender          |        string         | 交易创建者      |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractAddress |        string         | 智能合约地址     |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark          |        string         | 备注         |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark          |        string         | 备注         |  否   |
 
 返回值
 ---
@@ -1770,14 +1770,14 @@ Cmd: /api/contract/tokentransfer/offline
 
 参数列表
 ----
-| 参数名                                                             |             参数类型             | 参数描述          | 是否非空 |
+| 参数名                                                             |             参数类型             | 参数描述          | 是否必填 |
 | --------------------------------------------------------------- |:----------------------------:| ------------- |:----:|
 | token转账离线交易                                                     | contracttokentransferoffline | token转账离线交易表单 |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fromAddress     |            string            | 转出者账户地址       |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;toAddress       |            string            | 转入者账户地址       |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;contractAddress |            string            | 合约地址          |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount          |          biginteger          | 转出的token资产金额  |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark          |            string            | 备注            |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark          |            string            | 备注            |  否   |
 
 返回值
 ---
@@ -1807,13 +1807,13 @@ Cmd: /api/contract/transfer2contract/offline
 
 参数列表
 ----
-| 参数名                                                         |          参数类型           | 参数描述          | 是否非空 |
+| 参数名                                                         |          参数类型           | 参数描述          | 是否必填 |
 | ----------------------------------------------------------- |:-----------------------:| ------------- |:----:|
 | 向合约地址转账离线交易                                                 | contracttransferoffline | 向合约地址转账离线交易表单 |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fromAddress |         string          | 账户地址          |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;toAddress   |         string          | 转入的合约地址       |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount      |       biginteger        | 转出的主链资产金额     |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark      |         string          | 备注            |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark      |         string          | 备注            |  否   |
 
 返回值
 ---
@@ -1845,12 +1845,12 @@ Cmd: /api/consensus/agent
 
 参数列表
 ----
-| 参数名                                                            |      参数类型       | 参数描述         | 是否非空 |
+| 参数名                                                            |      参数类型       | 参数描述         | 是否必填 |
 | -------------------------------------------------------------- |:---------------:| ------------ |:----:|
 | 创建共识(代理)节点                                                     | createagentform | 创建共识(代理)节点表单 |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;agentAddress   |     string      | 节点地址         |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;packingAddress |     string      | 节点出块地址       |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rewardAddress  |     string      | 奖励地址，默认节点地址  |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rewardAddress  |     string      | 奖励地址，默认节点地址  |  否   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;commissionRate |       int       | 佣金比例         |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deposit        |     string      | 抵押金额         |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password       |     string      | 密码           |  是   |
@@ -1880,7 +1880,7 @@ Cmd: /api/consensus/agent/stop
 
 参数列表
 ----
-| 参数名                                                      |     参数类型      | 参数描述     | 是否非空 |
+| 参数名                                                      |     参数类型      | 参数描述     | 是否必填 |
 | -------------------------------------------------------- |:-------------:| -------- |:----:|
 | 注销共识节点                                                   | stopagentform | 注销共识节点表单 |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address  |    string     | 共识节点地址   |  是   |
@@ -1913,7 +1913,7 @@ Cmd: /api/consensus/deposit
 
 参数列表
 ----
-| 参数名                                                       |    参数类型     | 参数描述     | 是否非空 |
+| 参数名                                                       |    参数类型     | 参数描述     | 是否必填 |
 | --------------------------------------------------------- |:-----------:| -------- |:----:|
 | 申请参与共识                                                    | depositform | 申请参与共识表单 |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address   |   string    | 参与共识账户地址 |  是   |
@@ -1947,7 +1947,7 @@ Cmd: /api/consensus/withdraw
 
 参数列表
 ----
-| 参数名                                                      |     参数类型     | 参数描述         | 是否非空 |
+| 参数名                                                      |     参数类型     | 参数描述         | 是否必填 |
 | -------------------------------------------------------- |:------------:| ------------ |:----:|
 | 退出共识                                                     | withdrawform | 退出共识表单       |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address  |    string    | 节点地址         |  是   |
@@ -1989,7 +1989,7 @@ Cmd: /api/consensus/agent/offline
 
 参数列表
 ----
-| 参数名                                                                                                     |     参数类型     | 参数描述           | 是否非空 |
+| 参数名                                                                                                     |     参数类型     | 参数描述           | 是否必填 |
 | ------------------------------------------------------------------------------------------------------- |:------------:| -------------- |:----:|
 | 离线创建共识(代理)节点                                                                                            | consensusdto | 离线创建共识(代理)节点表单 |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;agentAddress                                            |    string    | 节点创建地址         |  是   |
@@ -2042,13 +2042,13 @@ Cmd: /api/consensus/agent/stop/offline
 
 参数列表
 ----
-| 参数名                                                                                                                                                     |       参数类型       | 参数描述        | 是否非空 |
+| 参数名                                                                                                                                                     |       参数类型       | 参数描述        | 是否必填 |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------- |:----------------:| ----------- |:----:|
 | 离线注销共识节点                                                                                                                                                | stopconsensusdto | 离线注销共识节点表单  |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;agentHash                                                                                               |      string      | 创建节点的交易hash |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;agentAddress                                                                                            |      string      | 节点地址        |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deposit                                                                                                 |    biginteger    | 创建节点的保证金    |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price                                                                                                   |    biginteger    | 手续费单价       |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price                                                                                                   |    biginteger    | 手续费单价       |  否   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;depositList                                                                                             | list&lt;object>  | 停止委托列表      |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;depositHash                                             |      string      | 委托共识的交易hash |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;input                                                   |      object      | 交易输入信息      |  是   |
@@ -2092,7 +2092,7 @@ Cmd: /api/consensus/deposit/offline
 
 参数列表
 ----
-| 参数名                                                                                                     |    参数类型    | 参数描述       | 是否非空 |
+| 参数名                                                                                                     |    参数类型    | 参数描述       | 是否必填 |
 | ------------------------------------------------------------------------------------------------------- |:----------:| ---------- |:----:|
 | 离线申请参与共识                                                                                                | depositdto | 离线申请参与共识表单 |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address                                                 |   string   | 账户地址       |  是   |
@@ -2139,12 +2139,12 @@ Cmd: /api/consensus/withdraw/offline
 
 参数列表
 ----
-| 参数名                                                                                                     |    参数类型     | 参数描述        | 是否非空 |
+| 参数名                                                                                                     |    参数类型     | 参数描述        | 是否必填 |
 | ------------------------------------------------------------------------------------------------------- |:-----------:| ----------- |:----:|
 | 离线退出共识                                                                                                  | withdrawdto | 离线退出共识表单    |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address                                                 |   string    | 地址          |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;depositHash                                             |   string    | 委托共识交易的hash |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price                                                   | biginteger  | 手续费单价       |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price                                                   | biginteger  | 手续费单价       |  否   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;input                                                   |   object    | 交易输入信息      |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address |   string    | 账户地址        |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;chainId |     int     | 资产的链id      |  是   |

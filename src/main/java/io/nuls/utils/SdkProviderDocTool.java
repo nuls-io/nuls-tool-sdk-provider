@@ -317,7 +317,7 @@ public class SdkProviderDocTool {
                     annotation = method.getAnnotation(ResponseData.class);
                     if (annotation != null) {
                         ResponseData responseData = (ResponseData) annotation;
-                        cmdDes.result = buildResultDes(responseData.responseType(), responseData.description(), responseData.name());
+                        cmdDes.result = buildResultDes(responseData.responseType(), responseData.description(), responseData.name(), true);
                     }
                     if (restful) {
                         restfulCmdDesList.add(cmdDes);
@@ -394,7 +394,7 @@ public class SdkProviderDocTool {
                 res.canNull = parameter.canNull();
                 Class<?> requestType = parameter.requestType().value();
                 if (baseType.contains(requestType)) {
-                    param.addAll(buildResultDes(parameter.requestType(), res.des, res.name));
+                    param.addAll(buildResultDes(parameter.requestType(), res.des, res.name, res.canNull));
                 } else {
                     if(ApiType.RESTFUL.equals(apiType)) {
                         try {
@@ -403,7 +403,7 @@ public class SdkProviderDocTool {
                             System.out.println(String.format("Form named [%s] has no non-args-constructor.", requestType.getSimpleName()));
                         }
                     }
-                    res.list = buildResultDes(parameter.requestType(), res.des, res.name);
+                    res.list = buildResultDes(parameter.requestType(), res.des, res.name, res.canNull);
                     res.type = parameter.requestType().value().getSimpleName().toLowerCase();
                     param.add(res);
                 }
@@ -438,7 +438,7 @@ public class SdkProviderDocTool {
             return o;
         }
 
-        public static List<ResultDes> buildResultDes(TypeDescriptor typeDescriptor, String des, String name) {
+        public static List<ResultDes> buildResultDes(TypeDescriptor typeDescriptor, String des, String name, boolean canNull) {
             ResultDes resultDes = new ResultDes();
             if (typeDescriptor.value() == Void.class) {
                 resultDes.type = "void";
@@ -450,6 +450,7 @@ public class SdkProviderDocTool {
                 resultDes.des = des;
                 resultDes.name = name;
                 resultDes.type = typeDescriptor.value().getSimpleName().toLowerCase();
+                resultDes.canNull = canNull;
                 return List.of(resultDes);
             } else if (typeDescriptor.value() == Map.class) {
                 return mapToResultDes(typeDescriptor);
@@ -458,6 +459,7 @@ public class SdkProviderDocTool {
                     resultDes.type = "list&lt;" + typeDescriptor.collectionElement().getSimpleName() + ">";
                     resultDes.des = des;
                     resultDes.name = name;
+                    resultDes.canNull = canNull;
                     return List.of(resultDes);
                 }
                 if (typeDescriptor.collectionElement() == Map.class) {
@@ -469,6 +471,7 @@ public class SdkProviderDocTool {
                 resultDes.des = des;
                 resultDes.name = name;
                 resultDes.type = "object[]";
+                resultDes.canNull = canNull;
                 return List.of(resultDes);
             } else {
                 Annotation annotation = typeDescriptor.value().getAnnotation(ApiModel.class);
@@ -476,6 +479,7 @@ public class SdkProviderDocTool {
                     resultDes.type = typeDescriptor.value().getSimpleName().toLowerCase();
                     resultDes.name = name;
                     resultDes.des = des;
+                    resultDes.canNull = canNull;
                     return List.of(resultDes);
                 }
                 return classToResultDes(typeDescriptor.value());
@@ -548,11 +552,12 @@ public class SdkProviderDocTool {
                 ResultDes filedDes = new ResultDes();
                 filedDes.des = apiModelProperty.description();
                 filedDes.name = filed.getName();
+                filedDes.canNull = !apiModelProperty.required();
                 if (apiModelProperty.type().value() != Void.class) {
                     if (baseType.contains(apiModelProperty.type().collectionElement())) {
                         filedDes.type = "list&lt;" + apiModelProperty.type().collectionElement().getSimpleName() + ">";
                     } else {
-                        filedDes.list = buildResultDes(apiModelProperty.type(), filedDes.des, filedDes.name);
+                        filedDes.list = buildResultDes(apiModelProperty.type(), filedDes.des, filedDes.name, filedDes.canNull);
                         if (apiModelProperty.type().value() == List.class) {
                             filedDes.type = "list&lt;object>";
                         } else if (apiModelProperty.type().value() == Map.class) {
@@ -778,10 +783,7 @@ public class SdkProviderDocTool {
             }
             Table.Builder tableBuilder = new Table.Builder()
                     .withAlignments(Table.ALIGN_LEFT, Table.ALIGN_CENTER, Table.ALIGN_LEFT, Table.ALIGN_CENTER)
-                    .addRow("参数名", "参数类型", "参数描述", "是否非空");
-//            parameters.forEach(p->{
-//                tableBuilder.addRow(p.parameterName(),p.parameterType().toLowerCase(),p.parameterDes(),!p.canNull() ? "是" : "否");
-//            });
+                    .addRow("参数名", "参数类型", "参数描述", "是否必填");
             buildParam(tableBuilder, parameters, 0, jsonrpc);
             writer.newLine();
             writer.write(tableBuilder.build().toString());
