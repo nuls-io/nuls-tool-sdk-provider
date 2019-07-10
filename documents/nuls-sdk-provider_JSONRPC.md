@@ -27,8 +27,8 @@ Cmd: createAccount
 | --- |:---------------:| -------- |
 | 返回值 | list&lt;string> | 返回账户地址集合 |
 
-1.2 重置账密码
-=========
+1.2 修改账户密码
+==========
 Cmd: updatePassword
 -------------------
 ### CmdType: JSONRPC
@@ -42,7 +42,7 @@ Cmd: updatePassword
 | ----------- |:------:| ---- |:----:|
 | chainId     |  int   | 链ID  |  是   |
 | address     | string | 账户地址 |  是   |
-| oldPassword | string | 账户密码 |  是   |
+| oldPassword | string | 原密码  |  是   |
 | newPassword | string | 新密码  |  是   |
 
 返回值
@@ -108,15 +108,11 @@ Cmd: importKeystore
 
 参数列表
 ----
-| 参数名                                                                 |        参数类型        | 参数描述       | 是否非空 |
-| ------------------------------------------------------------------- |:------------------:| ---------- |:----:|
-| chainId                                                             |        int         | 链ID        |  是   |
-| keyStore                                                            | accountkeystoredto | keyStore   |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address             |       string       | 账户地址       |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;encryptedPrivateKey |       string       | 加密后的私钥     |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pubKey              |       string       | 公钥         |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prikey              |       string       | 私钥         |  是   |
-| password                                                            |       string       | keystore密码 |  是   |
+| 参数名          |  参数类型  | 参数描述         | 是否非空 |
+| ------------ |:------:| ------------ |:----:|
+| chainId      |  int   | 链ID          |  是   |
+| keyStoreJson |  map   | keyStoreJson |  是   |
+| password     | string | keystore密码   |  是   |
 
 返回值
 ---
@@ -167,39 +163,17 @@ Cmd: getAccountBalance
 
 返回值
 ---
-| 字段名       |  字段类型  | 参数描述 |
-| --------- |:------:| ---- |
-| total     | string | 总余额  |
-| freeze    | string | 锁定金额 |
-| available | string | 可用余额 |
+| 字段名           |  字段类型  | 参数描述                      |
+| ------------- |:------:| ------------------------- |
+| total         | string | 总余额                       |
+| freeze        | string | 锁定金额                      |
+| available     | string | 可用余额                      |
+| timeLock      | string | 时间锁定金额                    |
+| consensusLock | string |  共识锁定金额                   |
+| nonce         | string | 账户资产nonce值                |
+| nonceType     |  int   | 1：已确认的nonce值,0：未确认的nonce值 |
 
-1.8 离线 - 批量创建账户
-===============
-Cmd: createAccountOffline
--------------------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
-
-参数列表
-----
-| 参数名      |  参数类型  | 参数描述 | 是否非空 |
-| -------- |:------:| ---- |:----:|
-| chainId  |  int   | 链ID  |  是   |
-| count    |  int   | 创建数量 |  是   |
-| password | string | 密码   |  是   |
-
-返回值
----
-| 字段名                 |  字段类型  | 参数描述   |
-| ------------------- |:------:| ------ |
-| address             | string | 账户地址   |
-| pubKey              | string | 公钥     |
-| prikey              | string | 明文私钥   |
-| encryptedPrivateKey | string | 加密后的私钥 |
-
-1.9 多账户摘要签名
+1.8 多账户摘要签名
 ===========
 Cmd: multiSign
 --------------
@@ -227,8 +201,8 @@ Cmd: multiSign
 | hash  | string | 交易hash        |
 | txHex | string | 签名后的交易16进制字符串 |
 
-1.10 明文私钥摘要签名
-=============
+1.9 明文私钥摘要签名
+============
 Cmd: priKeySign
 ---------------
 ### CmdType: JSONRPC
@@ -252,7 +226,7 @@ Cmd: priKeySign
 | hash  | string | 交易hash        |
 | txHex | string | 签名后的交易16进制字符串 |
 
-1.11 密文私钥摘要签名
+1.10 密文私钥摘要签名
 =============
 Cmd: encryptedPriKeySign
 ------------------------
@@ -277,6 +251,32 @@ Cmd: encryptedPriKeySign
 | ----- |:------:| ------------- |
 | hash  | string | 交易hash        |
 | txHex | string | 签名后的交易16进制字符串 |
+
+1.11 离线 - 批量创建账户
+================
+Cmd: createAccountOffline
+-------------------------
+### CmdType: JSONRPC
+### HttpMethod: POST
+### ContentType: application/json;charset=UTF-8
+
+
+参数列表
+----
+| 参数名      |  参数类型  | 参数描述 | 是否非空 |
+| -------- |:------:| ---- |:----:|
+| chainId  |  int   | 链ID  |  是   |
+| count    |  int   | 创建数量 |  是   |
+| password | string | 密码   |  是   |
+
+返回值
+---
+| 字段名                 |  字段类型  | 参数描述   |
+| ------------------- |:------:| ------ |
+| address             | string | 账户地址   |
+| pubKey              | string | 公钥     |
+| prikey              | string | 明文私钥   |
+| encryptedPrivateKey | string | 加密后的私钥 |
 
 1.12 离线获取账户明文私钥
 ===============
@@ -315,6 +315,7 @@ Cmd: resetPasswordOffline
 ----
 | 参数名                 |  参数类型  | 参数描述   | 是否非空 |
 | ------------------- |:------:| ------ |:----:|
+| chainId             |  int   | 链ID    |  是   |
 | address             | string | 账户地址   |  是   |
 | encryptedPrivateKey | string | 账户密文私钥 |  是   |
 | oldPassword         | string | 原密码    |  是   |

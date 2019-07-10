@@ -267,13 +267,128 @@ Cmd: /api/accountledger/balance/{address}
 
 返回值
 ---
-| 字段名       |  字段类型  | 参数描述 |
-| --------- |:------:| ---- |
-| total     | string | 总余额  |
-| freeze    | string | 锁定金额 |
-| available | string | 可用余额 |
+| 字段名           |  字段类型  | 参数描述                      |
+| ------------- |:------:| ------------------------- |
+| total         | string | 总余额                       |
+| freeze        | string | 锁定金额                      |
+| available     | string | 可用余额                      |
+| timeLock      | string | 时间锁定金额                    |
+| consensusLock | string |  共识锁定金额                   |
+| nonce         | string | 账户资产nonce值                |
+| nonceType     |  int   | 1：已确认的nonce值,0：未确认的nonce值 |
 
-1.10 离线 - 批量创建账户
+1.10 多账户摘要签名
+============
+Cmd: /api/account/multi/sign
+----------------------------
+### CmdType: RESTFUL
+### HttpMethod: POST
+### ContentType: application/json;charset=UTF-8
+
+
+### Form json data: 
+```json
+{
+  "dtoList" : [ {
+    "address" : null,
+    "priKey" : null,
+    "encryptedPrivateKey" : null,
+    "password" : null
+  } ],
+  "txHex" : null
+}
+```
+
+参数列表
+----
+| 参数名                                                                                                                 |      参数类型       | 参数描述        | 是否非空 |
+| ------------------------------------------------------------------------------------------------------------------- |:---------------:| ----------- |:----:|
+| 多账户摘要签名                                                                                                             |  multisignform  | 多账户摘要签名表单   |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dtoList                                                             | list&lt;object> | keystore集合  |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address             |     string      | 地址          |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;priKey              |     string      | 明文私钥        |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;encryptedPrivateKey |     string      | 加密私钥        |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password            |     string      | 密码          |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;txHex                                                               |     string      | 交易序列化Hex字符串 |  是   |
+
+返回值
+---
+| 字段名   |  字段类型  | 参数描述          |
+| ----- |:------:| ------------- |
+| hash  | string | 交易hash        |
+| txHex | string | 签名后的交易16进制字符串 |
+
+1.11 明文私钥摘要签名
+=============
+Cmd: /api/account/priKey/sign
+-----------------------------
+### CmdType: RESTFUL
+### HttpMethod: POST
+### ContentType: application/json;charset=UTF-8
+
+
+### Form json data: 
+```json
+{
+  "txHex" : null,
+  "address" : null,
+  "priKey" : null
+}
+```
+
+参数列表
+----
+| 参数名                                                     |      参数类型      | 参数描述        | 是否非空 |
+| ------------------------------------------------------- |:--------------:| ----------- |:----:|
+| 明文私钥摘要签名                                                | prikeysignform | 明文私钥摘要签名表单  |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;txHex   |     string     | 交易序列化Hex字符串 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address |     string     | 账户地址        |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;priKey  |     string     | 账户明文私钥      |  是   |
+
+返回值
+---
+| 字段名   |  字段类型  | 参数描述          |
+| ----- |:------:| ------------- |
+| hash  | string | 交易hash        |
+| txHex | string | 签名后的交易16进制字符串 |
+
+1.12 密文私钥摘要签名
+=============
+Cmd: /api/account/encryptedPriKey/sign
+--------------------------------------
+### CmdType: RESTFUL
+### HttpMethod: POST
+### ContentType: application/json;charset=UTF-8
+
+
+### Form json data: 
+```json
+{
+  "txHex" : null,
+  "address" : null,
+  "encryptedPriKey" : null,
+  "password" : null
+}
+```
+
+参数列表
+----
+| 参数名                                                             |          参数类型           | 参数描述        | 是否非空 |
+| --------------------------------------------------------------- |:-----------------------:| ----------- |:----:|
+| 密文私钥摘要签名                                                        | encryptedprikeysignform | 密文私钥摘要签名表单  |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;txHex           |         string          | 交易序列化Hex字符串 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address         |         string          | 账户地址        |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;encryptedPriKey |         string          | 账户密文私钥      |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password        |         string          | 账户密码        |  是   |
+
+返回值
+---
+| 字段名   |  字段类型  | 参数描述          |
+| ----- |:------:| ------------- |
+| hash  | string | 交易hash        |
+| txHex | string | 签名后的交易16进制字符串 |
+
+1.13 离线 - 批量创建账户
 ================
 Cmd: /api/account/offline
 -------------------------
@@ -308,92 +423,6 @@ Cmd: /api/account/offline
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prikey              |     string      | 明文私钥         |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;encryptedPrivateKey |     string      | 加密后的私钥       |
 
-1.11 多账户摘要签名
-============
-Cmd: /api/account/multi/sign
-----------------------------
-### CmdType: RESTFUL
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
-
-### Form json data: 
-```json
-{
-  "address" : null,
-  "priKey" : null,
-  "encryptedPrivateKey" : null,
-  "password" : null
-}
-```
-
-参数列表
-----
-| 参数名                                                                 |  参数类型   | 参数描述         | 是否非空 |
-| ------------------------------------------------------------------- |:-------:| ------------ |:----:|
-| signDtoList                                                         | signdto | 摘要签名表单       |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address             | string  | 地址           |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;priKey              | string  | 明文私钥         |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;encryptedPrivateKey | string  | 加密私钥         |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password            | string  | 密码           |  是   |
-| txHex                                                               | string  | 交易序列化16进制字符串 |  是   |
-
-返回值
----
-| 字段名   |  字段类型  | 参数描述          |
-| ----- |:------:| ------------- |
-| hash  | string | 交易hash        |
-| txHex | string | 签名后的交易16进制字符串 |
-
-1.12 明文私钥摘要签名
-=============
-Cmd: /api/account/priKey/sign
------------------------------
-### CmdType: RESTFUL
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
-
-参数列表
-----
-| 参数名        |  参数类型  | 参数描述         | 是否非空 |
-| ---------- |:------:| ------------ |:----:|
-| txHex      | string | 交易序列化16进制字符串 |  是   |
-| address    | string | 账户地址         |  是   |
-| privateKey | string | 账户明文私钥       |  是   |
-
-返回值
----
-| 字段名   |  字段类型  | 参数描述          |
-| ----- |:------:| ------------- |
-| hash  | string | 交易hash        |
-| txHex | string | 签名后的交易16进制字符串 |
-
-1.13 密文私钥摘要签名
-=============
-Cmd: /api/account/encryptedPriKey/sign
---------------------------------------
-### CmdType: RESTFUL
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
-
-参数列表
-----
-| 参数名                 |  参数类型  | 参数描述         | 是否非空 |
-| ------------------- |:------:| ------------ |:----:|
-| txHex               | string | 交易序列化16进制字符串 |  是   |
-| address             | string | 账户地址         |  是   |
-| encryptedPrivateKey | string | 账户密文私钥       |  是   |
-| password            | string | 密码           |  是   |
-
-返回值
----
-| 字段名   |  字段类型  | 参数描述          |
-| ----- |:------:| ------------- |
-| hash  | string | 交易hash        |
-| txHex | string | 签名后的交易16进制字符串 |
-
 1.14 离线获取账户明文私钥
 ===============
 Cmd: /api/account/priKey/offline
@@ -403,13 +432,23 @@ Cmd: /api/account/priKey/offline
 ### ContentType: application/json;charset=UTF-8
 
 
+### Form json data: 
+```json
+{
+  "address" : null,
+  "encryptedPriKey" : null,
+  "password" : null
+}
+```
+
 参数列表
 ----
-| 参数名                 |  参数类型  | 参数描述   | 是否非空 |
-| ------------------- |:------:| ------ |:----:|
-| address             | string | 账户地址   |  是   |
-| encryptedPrivateKey | string | 账户密文私钥 |  是   |
-| password            | string | 密码     |  是   |
+| 参数名                                                             |     参数类型      | 参数描述         | 是否非空 |
+| --------------------------------------------------------------- |:-------------:| ------------ |:----:|
+| 离线获取账户明文私钥                                                      | getprikeyform | 离线获取账户明文私钥表单 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address         |    string     | 账户地址         |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;encryptedPriKey |    string     | 账户密文私钥       |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password        |    string     | 账户密码         |  是   |
 
 返回值
 ---
@@ -426,14 +465,25 @@ Cmd: /api/account/password/offline/{address}
 ### ContentType: application/json;charset=UTF-8
 
 
+### Form json data: 
+```json
+{
+  "address" : null,
+  "encryptedPriKey" : null,
+  "oldPassword" : null,
+  "newPassword" : null
+}
+```
+
 参数列表
 ----
-| 参数名                 |  参数类型  | 参数描述   | 是否非空 |
-| ------------------- |:------:| ------ |:----:|
-| address             | string | 账户地址   |  是   |
-| encryptedPrivateKey | string | 账户密文私钥 |  是   |
-| oldPassword         | string | 原密码    |  是   |
-| newPassword         | string | 新密码    |  是   |
+| 参数名                                                             |       参数类型        | 参数描述       | 是否非空 |
+| --------------------------------------------------------------- |:-----------------:| ---------- |:----:|
+| 离线修改账户密码                                                        | resetpasswordform | 离线修改账户密码表单 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address         |      string       | 账户地址       |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;encryptedPriKey |      string       | 账户密文私钥     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;oldPassword     |      string       | 账户原密码      |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;newPassword     |      string       | 账户新密码      |  是   |
 
 返回值
 ---

@@ -10,7 +10,7 @@ public class EncryptedPriKeySignForm {
     private String txHex;
     @ApiModelProperty(description = "账户地址")
     private String address;
-    @ApiModelProperty(description = "账户明文私钥")
+    @ApiModelProperty(description = "账户密文私钥")
     private String encryptedPriKey;
     @ApiModelProperty(description = "账户密码")
     private String password;
