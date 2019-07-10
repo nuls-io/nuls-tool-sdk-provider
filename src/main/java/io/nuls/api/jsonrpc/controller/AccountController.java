@@ -311,7 +311,7 @@ public class AccountController {
     }
 
     @RpcMethod("exportKeystore")
-    @ApiOperation(description = "根据keystore导入账户", order = 108)
+    @ApiOperation(description = "根据keystore导入账户", order = 106)
     @Parameters(value = {
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
             @Parameter(parameterName = "address", requestType = @TypeDescriptor(value = String.class), parameterDes = "账户地址"),
@@ -358,7 +358,7 @@ public class AccountController {
     }
 
     @RpcMethod("getAccountBalance")
-    @ApiOperation(description = "获取账户余额", order = 109)
+    @ApiOperation(description = "获取账户余额", order = 107)
     @Parameters(value = {
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
             @Parameter(parameterName = "assetChainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "资产的链ID"),
@@ -405,45 +405,9 @@ public class AccountController {
         return rpcResult.setResult(balanceResult.getData());
     }
 
-    @RpcMethod("createAccountOffline")
-    @ApiOperation(description = "离线 - 批量创建账户", order = 110)
-    @Parameters(value = {
-            @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
-            @Parameter(parameterName = "count", requestType = @TypeDescriptor(value = int.class), parameterDes = "创建数量"),
-            @Parameter(parameterName = "password", requestType = @TypeDescriptor(value = String.class), parameterDes = "密码")
-    })
-    @ResponseData(name = "返回值", description = "返回账户信息集合", responseType = @TypeDescriptor(value = List.class, collectionElement = AccountDto.class))
-    public RpcResult createAccountOffline(List<Object> params) {
-        VerifyUtils.verifyParams(params, 3);
-        int chainId, count;
-        String password;
-        try {
-            chainId = (int) params.get(0);
-        } catch (Exception e) {
-            return RpcResult.paramError("[chainId] is inValid");
-        }
-        try {
-            count = (int) params.get(1);
-        } catch (Exception e) {
-            return RpcResult.paramError("[count] is inValid");
-        }
-        try {
-            password = (String) params.get(2);
-        } catch (Exception e) {
-            return RpcResult.paramError("[password] is inValid");
-        }
-        if (!FormatValidUtils.validPassword(password)) {
-            return RpcResult.paramError("[password] is inValid");
-        }
-        if (!Context.isChainExist(chainId)) {
-            return RpcResult.paramError(String.format("chainId [%s] is invalid", chainId));
-        }
-        io.nuls.core.basic.Result<List<AccountDto>> result = NulsSDKTool.createOffLineAccount(count, password);
-        return ResultUtil.getJsonRpcResult(result);
-    }
 
     @RpcMethod("multiSign")
-    @ApiOperation(description = "多账户摘要签名", order = 111)
+    @ApiOperation(description = "多账户摘要签名", order = 108)
     @Parameters({
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
             @Parameter(parameterName = "signDtoList", parameterDes = "摘要签名表单", requestType = @TypeDescriptor(value = SignDto.class)),
@@ -483,7 +447,7 @@ public class AccountController {
     }
 
     @RpcMethod("priKeySign")
-    @ApiOperation(description = "明文私钥摘要签名", order = 112)
+    @ApiOperation(description = "明文私钥摘要签名", order = 109)
     @Parameters({
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
             @Parameter(parameterName = "txHex", parameterType = "String", parameterDes = "交易序列化16进制字符串"),
@@ -535,7 +499,7 @@ public class AccountController {
     }
 
     @RpcMethod("encryptedPriKeySign")
-    @ApiOperation(description = "密文私钥摘要签名", order = 113)
+    @ApiOperation(description = "密文私钥摘要签名", order = 110)
     @Parameters({
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
             @Parameter(parameterName = "txHex", parameterType = "String", parameterDes = "交易序列化16进制字符串"),
@@ -588,8 +552,45 @@ public class AccountController {
         return ResultUtil.getJsonRpcResult(result);
     }
 
+    @RpcMethod("createAccountOffline")
+    @ApiOperation(description = "离线 - 批量创建账户", order = 151)
+    @Parameters(value = {
+            @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
+            @Parameter(parameterName = "count", requestType = @TypeDescriptor(value = int.class), parameterDes = "创建数量"),
+            @Parameter(parameterName = "password", requestType = @TypeDescriptor(value = String.class), parameterDes = "密码")
+    })
+    @ResponseData(name = "返回值", description = "返回账户信息集合", responseType = @TypeDescriptor(value = List.class, collectionElement = AccountDto.class))
+    public RpcResult createAccountOffline(List<Object> params) {
+        VerifyUtils.verifyParams(params, 3);
+        int chainId, count;
+        String password;
+        try {
+            chainId = (int) params.get(0);
+        } catch (Exception e) {
+            return RpcResult.paramError("[chainId] is inValid");
+        }
+        try {
+            count = (int) params.get(1);
+        } catch (Exception e) {
+            return RpcResult.paramError("[count] is inValid");
+        }
+        try {
+            password = (String) params.get(2);
+        } catch (Exception e) {
+            return RpcResult.paramError("[password] is inValid");
+        }
+        if (!FormatValidUtils.validPassword(password)) {
+            return RpcResult.paramError("[password] is inValid");
+        }
+        if (!Context.isChainExist(chainId)) {
+            return RpcResult.paramError(String.format("chainId [%s] is invalid", chainId));
+        }
+        io.nuls.core.basic.Result<List<AccountDto>> result = NulsSDKTool.createOffLineAccount(count, password);
+        return ResultUtil.getJsonRpcResult(result);
+    }
+
     @RpcMethod("getPriKeyOffline")
-    @ApiOperation(description = "离线获取账户明文私钥", order = 114)
+    @ApiOperation(description = "离线获取账户明文私钥", order = 152)
     @Parameters({
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
             @Parameter(parameterName = "address", parameterType = "String", parameterDes = "账户地址"),
@@ -627,7 +628,7 @@ public class AccountController {
     }
 
     @RpcMethod("resetPasswordOffline")
-    @ApiOperation(description = "离线修改账户密码", order = 115)
+    @ApiOperation(description = "离线修改账户密码", order = 153)
     @Parameters({
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
             @Parameter(parameterName = "address", parameterType = "String", parameterDes = "账户地址"),

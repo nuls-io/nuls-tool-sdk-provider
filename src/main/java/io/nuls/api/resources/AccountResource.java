@@ -288,24 +288,6 @@ public class AccountResource {
         return clientResult;
     }
 
-    @POST
-    @Path("/offline")
-    @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "离线 - 批量创建账户", order = 110)
-    @Parameters({
-            @Parameter(parameterName = "离线批量创建账户", parameterDes = "离线批量创建账户表单", requestType = @TypeDescriptor(value = AccountCreateForm.class))
-    })
-    @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
-            @Key(name = "list", valueType = List.class, valueElement = AccountDto.class, description = "账户keystore列表")
-    }))
-    public RpcClientResult createOffline(AccountCreateForm form) {
-        if (form == null) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
-        }
-        io.nuls.core.basic.Result<List<AccountDto>> result = NulsSDKTool.createOffLineAccount(form.getCount(), form.getPassword());
-        return ResultUtil.getRpcClientResult(result);
-    }
-
     private Result<AccountKeyStoreDto> getAccountKeyStoreDto(InputStream in) {
         StringBuilder ks = new StringBuilder();
         InputStreamReader inputStreamReader = null;
@@ -343,10 +325,9 @@ public class AccountResource {
 
     @POST
     @Path("/multi/sign")
-    @ApiOperation(description = "多账户摘要签名", order = 111)
+    @ApiOperation(description = "多账户摘要签名", order = 110)
     @Parameters({
-            @Parameter(parameterName = "signDtoList", parameterDes = "摘要签名表单", requestType = @TypeDescriptor(value = SignDto.class)),
-            @Parameter(parameterName = "txHex", parameterType = "String", parameterDes = "交易序列化16进制字符串")
+            @Parameter(parameterName = "多账户摘要签名", parameterDes = "多账户摘要签名表单", requestType = @TypeDescriptor(value = MultiSignForm.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "hash", description = "交易hash"),
@@ -360,11 +341,9 @@ public class AccountResource {
 
     @POST
     @Path("/priKey/sign")
-    @ApiOperation(description = "明文私钥摘要签名", order = 112)
+    @ApiOperation(description = "明文私钥摘要签名", order = 111)
     @Parameters({
-            @Parameter(parameterName = "txHex", parameterType = "String", parameterDes = "交易序列化16进制字符串"),
-            @Parameter(parameterName = "address", parameterType = "String", parameterDes = "账户地址"),
-            @Parameter(parameterName = "privateKey", parameterType = "String", parameterDes = "账户明文私钥")
+            @Parameter(parameterName = "明文私钥摘要签名", parameterDes = "明文私钥摘要签名表单", requestType = @TypeDescriptor(value = PriKeySignForm.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "hash", description = "交易hash"),
@@ -377,12 +356,9 @@ public class AccountResource {
 
     @POST
     @Path("/encryptedPriKey/sign")
-    @ApiOperation(description = "密文私钥摘要签名", order = 113)
+    @ApiOperation(description = "密文私钥摘要签名", order = 112)
     @Parameters({
-            @Parameter(parameterName = "txHex", parameterType = "String", parameterDes = "交易序列化16进制字符串"),
-            @Parameter(parameterName = "address", parameterType = "String", parameterDes = "账户地址"),
-            @Parameter(parameterName = "encryptedPrivateKey", parameterType = "String", parameterDes = "账户密文私钥"),
-            @Parameter(parameterName = "password", parameterType = "String", parameterDes = "密码")
+            @Parameter(parameterName = "密文私钥摘要签名", parameterDes = "密文私钥摘要签名表单", requestType = @TypeDescriptor(value = EncryptedPriKeySignForm.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "hash", description = "交易hash"),
@@ -393,13 +369,31 @@ public class AccountResource {
         return ResultUtil.getRpcClientResult(result);
     }
 
+
+    @POST
+    @Path("/offline")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "离线 - 批量创建账户", order = 151)
+    @Parameters({
+            @Parameter(parameterName = "离线批量创建账户", parameterDes = "离线批量创建账户表单", requestType = @TypeDescriptor(value = AccountCreateForm.class))
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "list", valueType = List.class, valueElement = AccountDto.class, description = "账户keystore列表")
+    }))
+    public RpcClientResult createOffline(AccountCreateForm form) {
+        if (form == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
+        }
+        io.nuls.core.basic.Result<List<AccountDto>> result = NulsSDKTool.createOffLineAccount(form.getCount(), form.getPassword());
+        return ResultUtil.getRpcClientResult(result);
+    }
+
+
     @POST
     @Path("/priKey/offline")
-    @ApiOperation(description = "离线获取账户明文私钥", order = 114)
+    @ApiOperation(description = "离线获取账户明文私钥", order = 152)
     @Parameters({
-            @Parameter(parameterName = "address", parameterType = "String", parameterDes = "账户地址"),
-            @Parameter(parameterName = "encryptedPrivateKey", parameterType = "String", parameterDes = "账户密文私钥"),
-            @Parameter(parameterName = "password", parameterType = "String", parameterDes = "密码")
+            @Parameter(parameterName = "离线获取账户明文私钥", parameterDes = "离线获取账户明文私钥表单", requestType = @TypeDescriptor(value = GetPriKeyForm.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "value", description = "明文私钥")
@@ -411,12 +405,9 @@ public class AccountResource {
 
     @PUT
     @Path("/password/offline/{address}")
-    @ApiOperation(description = "离线修改账户密码", order = 115)
+    @ApiOperation(description = "离线修改账户密码", order = 153)
     @Parameters({
-            @Parameter(parameterName = "address", parameterType = "String", parameterDes = "账户地址"),
-            @Parameter(parameterName = "encryptedPrivateKey", parameterType = "String", parameterDes = "账户密文私钥"),
-            @Parameter(parameterName = "oldPassword", parameterType = "String", parameterDes = "原密码"),
-            @Parameter(parameterName = "newPassword", parameterType = "String", parameterDes = "新密码")
+            @Parameter(parameterName = "离线修改账户密码", parameterDes = "离线修改账户密码表单", requestType = @TypeDescriptor(value = ResetPasswordForm.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "value", description = "重置密码后的加密私钥")
