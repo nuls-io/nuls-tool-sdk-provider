@@ -325,6 +325,7 @@ public class AccountResource {
 
     @POST
     @Path("/multi/sign")
+    @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(description = "多账户摘要签名", order = 110)
     @Parameters({
             @Parameter(parameterName = "多账户摘要签名", parameterDes = "多账户摘要签名表单", requestType = @TypeDescriptor(value = MultiSignForm.class))
@@ -341,6 +342,7 @@ public class AccountResource {
 
     @POST
     @Path("/priKey/sign")
+    @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(description = "明文私钥摘要签名", order = 111)
     @Parameters({
             @Parameter(parameterName = "明文私钥摘要签名", parameterDes = "明文私钥摘要签名表单", requestType = @TypeDescriptor(value = PriKeySignForm.class))
@@ -356,6 +358,7 @@ public class AccountResource {
 
     @POST
     @Path("/encryptedPriKey/sign")
+    @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(description = "密文私钥摘要签名", order = 112)
     @Parameters({
             @Parameter(parameterName = "密文私钥摘要签名", parameterDes = "密文私钥摘要签名表单", requestType = @TypeDescriptor(value = EncryptedPriKeySignForm.class))
@@ -391,6 +394,7 @@ public class AccountResource {
 
     @POST
     @Path("/priKey/offline")
+    @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(description = "离线获取账户明文私钥", order = 152)
     @Parameters({
             @Parameter(parameterName = "离线获取账户明文私钥", parameterDes = "离线获取账户明文私钥表单", requestType = @TypeDescriptor(value = GetPriKeyForm.class))
@@ -405,6 +409,7 @@ public class AccountResource {
 
     @PUT
     @Path("/password/offline/{address}")
+    @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(description = "离线修改账户密码", order = 153)
     @Parameters({
             @Parameter(parameterName = "离线修改账户密码", parameterDes = "离线修改账户密码表单", requestType = @TypeDescriptor(value = ResetPasswordForm.class))
