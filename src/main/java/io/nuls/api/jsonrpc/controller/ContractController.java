@@ -166,7 +166,7 @@ public class ContractController {
             String password = (String) params.get(i++);
             Object valueObj = params.get(i++);
             if(valueObj == null) {
-                return RpcResult.paramError("value is empty");
+                valueObj = "0";
             }
             BigInteger value = new BigInteger(valueObj.toString());
             if (value.compareTo(BigInteger.ZERO) < 0) {
@@ -461,14 +461,14 @@ public class ContractController {
             return RpcResult.paramError("[contractAddress] is invalid");
         }
 
+        if (!Context.isChainExist(chainId)) {
+            return RpcResult.paramError(String.format("chainId [%s] is invalid", chainId));
+        }
 
         if (!AddressTool.validAddress(chainId, contractAddress)) {
             return RpcResult.paramError("[contractAddress] is invalid");
         }
 
-        if (!Context.isChainExist(chainId)) {
-            return RpcResult.paramError(String.format("chainId [%s] is invalid", chainId));
-        }
         RpcResult rpcResult = new RpcResult();
         Result<Map> contractInfoDtoResult = contractTools.getContractInfo(chainId, contractAddress);
         if (contractInfoDtoResult.isFailed()) {
@@ -503,14 +503,12 @@ public class ContractController {
         if (!Context.isChainExist(chainId)) {
             return RpcResult.paramError(String.format("chainId [%s] is invalid", chainId));
         }
-        RpcResult rpcResult = new RpcResult();
         Result<Map> contractResult = contractTools.getContractResult(chainId, hash);
         if (contractResult.isFailed()) {
-            return rpcResult.setError(new RpcResultError(contractResult.getStatus(), contractResult.getMessage(), null));
+            return ResultUtil.getJsonRpcResult(contractResult);
         }
         Map map = contractResult.getData();
-        rpcResult.setResult(map.get("data"));
-        return rpcResult;
+        return RpcResult.success(map.get("data"));
     }
 
 
@@ -541,7 +539,7 @@ public class ContractController {
         RpcResult rpcResult = new RpcResult();
         Result<Map> mapResult = contractTools.getContractConstructor(chainId, contractCode);
         if (mapResult.isFailed()) {
-            return rpcResult.setError(new RpcResultError(mapResult.getStatus(), mapResult.getMessage(), null));
+            return ResultUtil.getJsonRpcResult(mapResult);
         }
         Map resultData = mapResult.getData();
         if (resultData == null) {
@@ -586,11 +584,11 @@ public class ContractController {
             methodDesc = (String) params.get(3);
         }
 
-        if (!AddressTool.validAddress(chainId, contractAddress)) {
-            return RpcResult.paramError("[contractAddress] is invalid");
-        }
         if (!Context.isChainExist(chainId)) {
             return RpcResult.paramError(String.format("chainId [%s] is invalid", chainId));
+        }
+        if (!AddressTool.validAddress(chainId, contractAddress)) {
+            return RpcResult.paramError("[contractAddress] is invalid");
         }
         if (StringUtils.isBlank(methodName)) {
             return RpcResult.paramError("[methodName] is invalid");
@@ -598,7 +596,7 @@ public class ContractController {
         RpcResult rpcResult = new RpcResult();
         Result<Map> contractInfoDtoResult = contractTools.getContractInfo(chainId, contractAddress);
         if (contractInfoDtoResult.isFailed()) {
-            return rpcResult.setError(new RpcResultError(contractInfoDtoResult.getStatus(), contractInfoDtoResult.getMessage(), null));
+            return ResultUtil.getJsonRpcResult(contractInfoDtoResult);
         }
         Map contractInfo = contractInfoDtoResult.getData();
         try {
@@ -688,7 +686,6 @@ public class ContractController {
         if (!Context.isChainExist(chainId)) {
             return RpcResult.paramError(String.format("chainId [%s] is invalid", chainId));
         }
-        RpcResult rpcResult = new RpcResult();
         Result<Map> mapResult = contractTools.validateContractCreate(chainId,
                 params.get(1),
                 params.get(2),
@@ -696,8 +693,7 @@ public class ContractController {
                 params.get(4),
                 params.get(5)
         );
-        rpcResult.setResult(mapResult.getData());
-        return rpcResult;
+        return ResultUtil.getJsonRpcResult(mapResult);
     }
 
 
@@ -730,7 +726,6 @@ public class ContractController {
         if (!Context.isChainExist(chainId)) {
             return RpcResult.paramError(String.format("chainId [%s] is invalid", chainId));
         }
-        RpcResult rpcResult = new RpcResult();
         Result<Map> mapResult = contractTools.validateContractCall(chainId,
                 params.get(1),
                 params.get(2),
@@ -741,8 +736,7 @@ public class ContractController {
                 params.get(7),
                 params.get(8)
         );
-        rpcResult.setResult(mapResult.getData());
-        return rpcResult;
+        return ResultUtil.getJsonRpcResult(mapResult);
     }
 
     @RpcMethod("validateContractDelete")
@@ -768,13 +762,11 @@ public class ContractController {
         if (!Context.isChainExist(chainId)) {
             return RpcResult.paramError(String.format("chainId [%s] is invalid", chainId));
         }
-        RpcResult rpcResult = new RpcResult();
         Result<Map> mapResult = contractTools.validateContractDelete(chainId,
                 params.get(1),
                 params.get(2)
         );
-        rpcResult.setResult(mapResult.getData());
-        return rpcResult;
+        return ResultUtil.getJsonRpcResult(mapResult);
     }
 
     @RpcMethod("imputedContractCreateGas")
@@ -799,14 +791,12 @@ public class ContractController {
         if (!Context.isChainExist(chainId)) {
             return RpcResult.paramError(String.format("chainId [%s] is invalid", chainId));
         }
-        RpcResult rpcResult = new RpcResult();
         Result<Map> mapResult = contractTools.imputedContractCreateGas(chainId,
                 params.get(1),
                 params.get(2),
                 params.get(3)
         );
-        rpcResult.setResult(mapResult.getData());
-        return rpcResult;
+        return ResultUtil.getJsonRpcResult(mapResult);
     }
 
     @RpcMethod("imputedContractCallGas")
@@ -834,7 +824,6 @@ public class ContractController {
         if (!Context.isChainExist(chainId)) {
             return RpcResult.paramError(String.format("chainId [%s] is invalid", chainId));
         }
-        RpcResult rpcResult = new RpcResult();
         Result<Map> mapResult = contractTools.imputedContractCallGas(chainId,
                 params.get(1),
                 params.get(2),
@@ -843,8 +832,7 @@ public class ContractController {
                 params.get(5),
                 params.get(6)
         );
-        rpcResult.setResult(mapResult.getData());
-        return rpcResult;
+        return ResultUtil.getJsonRpcResult(mapResult);
     }
 
     @RpcMethod("invokeView")
@@ -870,15 +858,13 @@ public class ContractController {
         if (!Context.isChainExist(chainId)) {
             return RpcResult.paramError(String.format("chainId [%s] is invalid", chainId));
         }
-        RpcResult rpcResult = new RpcResult();
         Result<Map> mapResult = contractTools.invokeView(chainId,
                 params.get(1),
                 params.get(2),
                 params.get(3),
                 params.get(4)
         );
-        rpcResult.setResult(mapResult.getData());
-        return rpcResult;
+        return ResultUtil.getJsonRpcResult(mapResult);
     }
 
 
@@ -898,6 +884,7 @@ public class ContractController {
         @Key(name = "contractAddress", description = "生成的合约地址")
     }))
     public RpcResult contractCreateOffline(List<Object> params) {
+        VerifyUtils.verifyParams(params, 6);
         try {
             int i = 0;
             Integer chainId = (Integer) params.get(i++);
@@ -953,13 +940,14 @@ public class ContractController {
         @Key(name = "txHex", description = "交易序列化字符串")
     }))
     public RpcResult contractCallOffline(List<Object> params) {
+        VerifyUtils.verifyParams(params, 8);
         try {
             int i = 0;
             Integer chainId = (Integer) params.get(i++);
             String sender = (String) params.get(i++);
             Object valueObj = params.get(i++);
             if(valueObj == null) {
-                return RpcResult.paramError("value is empty");
+                valueObj = "0";
             }
             BigInteger value = new BigInteger(valueObj.toString());
             if (value.compareTo(BigInteger.ZERO) < 0) {
@@ -1014,6 +1002,7 @@ public class ContractController {
         @Key(name = "txHex", description = "交易序列化字符串")
     }))
     public RpcResult contractDeleteOffline(List<Object> params) {
+        VerifyUtils.verifyParams(params, 4);
         try {
             int i = 0;
             Integer chainId = (Integer) params.get(i++);
@@ -1056,6 +1045,7 @@ public class ContractController {
         @Key(name = "txHex", description = "交易序列化字符串")
     }))
     public RpcResult tokentransferOffline(List<Object> params) {
+        VerifyUtils.verifyParams(params, 6);
         try {
             int i = 0;
             Integer chainId = (Integer) params.get(i++);
@@ -1113,7 +1103,7 @@ public class ContractController {
         @Key(name = "txHex", description = "交易序列化字符串")
     }))
     public RpcResult transfer2contractOffline(List<Object> params) {
-        VerifyUtils.verifyParams(params, 6);
+        VerifyUtils.verifyParams(params, 5);
         try {
             int i = 0;
             Integer chainId = (Integer) params.get(i++);
