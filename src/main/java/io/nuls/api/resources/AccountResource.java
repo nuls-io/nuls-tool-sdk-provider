@@ -29,10 +29,12 @@ import io.nuls.base.api.provider.Result;
 import io.nuls.base.api.provider.ServiceManager;
 import io.nuls.base.api.provider.account.AccountService;
 import io.nuls.base.api.provider.account.facade.*;
+import io.nuls.base.basic.AddressTool;
 import io.nuls.core.constant.CommonCodeConstanst;
 import io.nuls.core.core.annotation.Autowired;
 import io.nuls.core.core.annotation.Component;
 import io.nuls.core.crypto.HexUtil;
+import io.nuls.core.model.FormatValidUtils;
 import io.nuls.core.parse.JSONUtils;
 import io.nuls.core.rpc.model.*;
 import io.nuls.model.ErrorData;
@@ -84,6 +86,13 @@ public class AccountResource {
         if (form == null) {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
         }
+        if (form.getCount() <= 0) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "[count] is invalid"));
+        }
+        if (!FormatValidUtils.validPassword(form.getPassword())) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "[password] is invalid"));
+        }
+
         CreateAccountReq req = new CreateAccountReq(form.getCount(), form.getPassword());
         req.setChainId(config.getChainId());
         Result<String> result = accountService.createAccount(req);
@@ -109,8 +118,14 @@ public class AccountResource {
         if (form == null) {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
         }
-        if (address == null) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "address is empty"));
+        if (!AddressTool.validAddress(config.getChainId(), address)) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "[address] is invalid"));
+        }
+        if (!FormatValidUtils.validPassword(form.getPassword())) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "[password] is invalid"));
+        }
+        if (!FormatValidUtils.validPassword(form.getNewPassword())) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "[newPassword] is invalid"));
         }
         UpdatePasswordReq req = new UpdatePasswordReq(address, form.getPassword(), form.getNewPassword());
         req.setChainId(config.getChainId());
@@ -163,6 +178,9 @@ public class AccountResource {
     public RpcClientResult importPriKey(AccountPriKeyPasswordForm form) {
         if (form == null) {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
+        }
+        if (!FormatValidUtils.validPassword(form.getPassword())) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "[password] is invalid"));
         }
         ImportAccountByPrivateKeyReq req = new ImportAccountByPrivateKeyReq(form.getPassword(), form.getPriKey(), form.getOverwrite());
         req.setChainId(config.getChainId());

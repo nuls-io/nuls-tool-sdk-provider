@@ -52,7 +52,11 @@ public class ResultUtil {
                 obj = null;
             }
         } while (false);
-        return RpcClientResult.getSuccess(obj);
+        if (obj != null) {
+            return RpcClientResult.getSuccess(obj);
+        } else {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.DATA_NOT_FOUND.getCode(), CommonCodeConstanst.DATA_NOT_FOUND.getMsg()));
+        }
     }
 
     public static RpcClientResult getRpcClientResult(io.nuls.core.basic.Result result) {
