@@ -128,6 +128,7 @@ public class SdkProviderDocTool {
         String cmdName;
         String cmdType;
         String des;
+        String detailDesc;
         String httpMethod;
         String md;
         List<ResultDes> parameters;
@@ -163,6 +164,14 @@ public class SdkProviderDocTool {
 
         public void setDes(String des) {
             this.des = des;
+        }
+
+        public String getDetailDesc() {
+            return detailDesc;
+        }
+
+        public void setDetailDesc(String detailDesc) {
+            this.detailDesc = detailDesc;
         }
 
         public String getHttpMethod() {
@@ -271,6 +280,11 @@ public class SdkProviderDocTool {
                     }
                     ApiOperation cmdAnnotation = (ApiOperation) annotation;
                     CmdDes cmdDes = new CmdDes();
+                    String detailDesc = cmdAnnotation.detailDesc();
+                    if(StringUtils.isBlank(detailDesc)) {
+                        detailDesc = cmdAnnotation.description();
+                    }
+                    cmdDes.detailDesc = detailDesc;
                     cmdDes.order = cmdAnnotation.order();
                     cmdDes.cmdType = apiType.name();
                     if (restful) {
@@ -342,7 +356,6 @@ public class SdkProviderDocTool {
             });
             System.out.println("生成RESTFUL文档成功：" + createMarketDownDoc(restfulCmdDesList, ApiType.RESTFUL, "./readme.md"));
             System.out.println("生成JSONRPC文档成功：" + createMarketDownDoc(jsonrpcCmdDesList, ApiType.JSONRPC, "./readme.md"));
-//            System.exit(0);
         }
 
         public static void genJSON() throws IOException {
@@ -358,7 +371,6 @@ public class SdkProviderDocTool {
             });
             System.out.println("生成RESTFUL文档成功：" + createJSONConfig(restfulCmdDesList, ApiType.RESTFUL, "./readme.md"));
             System.out.println("生成JSONRPC文档成功：" + createJSONConfig(jsonrpcCmdDesList, ApiType.JSONRPC, "./readme.md"));
-//            System.exit(0);
         }
 
         public static void genPostmanJSON() throws IOException {
@@ -373,7 +385,6 @@ public class SdkProviderDocTool {
             });
             System.out.println("生成Postman-RESTFUL导入文件成功：" + createPostmanJSONConfig(restfulCmdDesList, ApiType.RESTFUL, "./readme.md"));
             System.out.println("生成Postman-JSONRPC导入文件成功：" + createPostmanJSONConfig(jsonrpcCmdDesList, ApiType.JSONRPC, "./readme.md"));
-//            System.exit(0);
         }
 
         public static List<ResultDes> buildParam(ApiType apiType, Method method) {
@@ -697,18 +708,18 @@ public class SdkProviderDocTool {
                     order = String.valueOf(i.getAndIncrement());
                     order = order.substring(0, 1) + "." + Integer.parseInt(order.substring(1)) + " ";
                 }
+                boolean jsonrpc = ApiType.JSONRPC.name().equals(cmd.cmdType);
                 writer.write(new Heading(order + cmd.des, 1).toString());
                 writer.newLine();
                 writer.write(new Heading("Cmd: " + cmd.cmdName.replaceAll("_", "\\\\_"), 2).toString());
                 writer.newLine();
-                writer.write(new Heading("CmdType: " + cmd.cmdType, 3).toString());
+                writer.write(new Text("_**详细描述: " + cmd.detailDesc + "**_").toString());
                 writer.newLine();
-                writer.write(new Heading("HttpMethod: " + cmd.httpMethod, 3).toString());
-                writer.newLine();
-                writer.write(new Heading("ContentType: application/json;charset=UTF-8", 3).toString());
-                writer.newLine();
-                writer.newLine();
-                buildParam(writer, cmd.parameters, ApiType.JSONRPC.name().equals(cmd.cmdType));
+                if(!jsonrpc) {
+                    writer.write(new Heading("HttpMethod: " + cmd.httpMethod, 3).toString());
+                    writer.newLine();
+                }
+                buildParam(writer, cmd.parameters, jsonrpc);
                 buildResult(writer, cmd.result);
                 writer.newLine();
                 writer.newLine();

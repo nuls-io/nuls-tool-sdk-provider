@@ -1,17 +1,53 @@
 # NULS2.0 SDK-Provider
 
-**SDK模块，与核心模块连接，依赖离线SDK包，以HTTP接口作为服务，提供了JSON-RPC和RESTFUL的请求方式，
+**SDK模块，与核心模块连接，依赖离线SDK包，以HTTP接口作为服务，提供了`JSON-RPC`和`RESTFUL`的请求方式，
 以此模块作为访问底层钱包数据的桥梁，用于在线和离线的交易组装、查询等功能**
 
 
+- **`JSON-RPC`访问方式**
+
+     添加请求头 Content-Type: application/json;charset=UTF-8
+     
+     HttpMethod: POST
+     
+     请求数据格式: 
+     
+     ```json
+     {
+       "jsonrpc":"2.0",
+       "method":"methodCMD", //接口名称
+       "params":[],          //所有接口的参数，都以数组方式传递，且参数顺序不能变，若参数是非必填，也必须填入null占位
+       "id":1234
+     }
+     ```
+
+- **`RESTFUL`访问方式**
+
+     添加请求头 Content-Type: application/json;charset=UTF-8
+     
+     其余请参考 [RESTFUL 接口文档](https://github.com/nuls-io/nuls-sdk-provider/blob/master/documents/nuls-sdk-provider_RESTFUL.md)
+
+
+## 接口文档
+
+我们提供了两种请求方式`JSON-RPC`和`RESTFUL`的文档
+
+[JSON-RPC 接口文档](https://github.com/nuls-io/nuls-sdk-provider/blob/master/documents/nuls-sdk-provider_JSONRPC.md)
+
+[RESTFUL 接口文档](https://github.com/nuls-io/nuls-sdk-provider/blob/master/documents/nuls-sdk-provider_RESTFUL.md)
+
+## 接口调试
+
+我们提供了`Postman`接口调式工具的导入文件(`JSON-RPC`和`RESTFUL`)，导入后，即可调试接口
+
+[JSON-PRC 接口调试-POSTMAN导入文件](https://github.com/nuls-io/nuls-sdk-provider/blob/master/documents/nuls-sdk-provider_Postman_JSONRPC.json)
+
+[RESTFUL 接口调试-POSTMAN导入文件](https://github.com/nuls-io/nuls-sdk-provider/blob/master/documents/nuls-sdk-provider_Postman_RESTFUL.json)
 1.1 批量创建账户
 ==========
 Cmd: createAccount
 ------------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 批量创建账户**_
 
 参数列表
 ----
@@ -31,10 +67,7 @@ Cmd: createAccount
 ==========
 Cmd: updatePassword
 -------------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 修改账户密码**_
 
 参数列表
 ----
@@ -55,10 +88,7 @@ Cmd: updatePassword
 ==============================
 Cmd: getPriKey
 --------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 账户备份，导出账户私钥，只能导出本地创建或导入的账户**_
 
 参数列表
 ----
@@ -78,10 +108,7 @@ Cmd: getPriKey
 ============
 Cmd: importPriKey
 -----------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 根据私钥导入账户**_
 
 参数列表
 ----
@@ -101,10 +128,7 @@ Cmd: importPriKey
 ==================
 Cmd: importKeystore
 -------------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 根据keystore导入账户**_
 
 参数列表
 ----
@@ -124,10 +148,7 @@ Cmd: importKeystore
 ==================
 Cmd: exportKeystore
 -------------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 根据keystore导入账户**_
 
 参数列表
 ----
@@ -147,10 +168,7 @@ Cmd: exportKeystore
 ==========
 Cmd: getAccountBalance
 ----------------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 获取账户余额**_
 
 参数列表
 ----
@@ -177,10 +195,7 @@ Cmd: getAccountBalance
 ===========
 Cmd: multiSign
 --------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 多账户摘要签名**_
 
 参数列表
 ----
@@ -205,10 +220,7 @@ Cmd: multiSign
 ============
 Cmd: priKeySign
 ---------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 明文私钥摘要签名**_
 
 参数列表
 ----
@@ -230,10 +242,7 @@ Cmd: priKeySign
 =============
 Cmd: encryptedPriKeySign
 ------------------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 密文私钥摘要签名**_
 
 参数列表
 ----
@@ -256,10 +265,7 @@ Cmd: encryptedPriKeySign
 ================
 Cmd: createAccountOffline
 -------------------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 离线 - 批量创建账户**_
 
 参数列表
 ----
@@ -282,10 +288,7 @@ Cmd: createAccountOffline
 ===============
 Cmd: getPriKeyOffline
 ---------------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 离线获取账户明文私钥**_
 
 参数列表
 ----
@@ -306,10 +309,7 @@ Cmd: getPriKeyOffline
 =============
 Cmd: resetPasswordOffline
 -------------------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 离线修改账户密码**_
 
 参数列表
 ----
@@ -331,10 +331,7 @@ Cmd: resetPasswordOffline
 ===============
 Cmd: getHeaderByHeight
 ----------------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 根据区块高度查询区块头**_
 
 参数列表
 ----
@@ -368,10 +365,7 @@ Cmd: getHeaderByHeight
 =================
 Cmd: getHeaderByHash
 --------------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 根据区块hash查询区块头**_
 
 参数列表
 ----
@@ -405,10 +399,7 @@ Cmd: getHeaderByHash
 =============
 Cmd: getBestBlockHeader
 -----------------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 查询最新区块头信息**_
 
 参数列表
 ----
@@ -441,10 +432,7 @@ Cmd: getBestBlockHeader
 ========================================
 Cmd: getBestBlock
 -----------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 查询最新区块，包含区块打包的所有交易信息，此接口返回数据量较多，谨慎调用**_
 
 参数列表
 ----
@@ -501,10 +489,7 @@ Cmd: getBestBlock
 ============================================
 Cmd: getBlockByHeight
 ---------------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 根据区块高度查询区块，包含区块打包的所有交易信息，此接口返回数据量较多，谨慎调用**_
 
 参数列表
 ----
@@ -562,10 +547,7 @@ Cmd: getBlockByHeight
 ==============================================
 Cmd: getBlockByHash
 -------------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 根据区块hash查询区块，包含区块打包的所有交易信息，此接口返回数据量较多，谨慎调用**_
 
 参数列表
 ----
@@ -623,10 +605,7 @@ Cmd: getBlockByHash
 ======================
 Cmd: getTx
 ----------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 根据hash获取交易，只查已确认交易**_
 
 参数列表
 ----
@@ -666,10 +645,7 @@ Cmd: getTx
 =============================
 Cmd: getTxImmediately
 ---------------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 根据hash获取交易，先查未确认，查不到再查已确认**_
 
 参数列表
 ----
@@ -709,10 +685,7 @@ Cmd: getTxImmediately
 ========
 Cmd: validateTx
 ---------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 验证交易**_
 
 参数列表
 ----
@@ -731,10 +704,7 @@ Cmd: validateTx
 ========
 Cmd: broadcastTx
 ----------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 广播交易**_
 
 参数列表
 ----
@@ -754,10 +724,7 @@ Cmd: broadcastTx
 ========
 Cmd: transfer
 -------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 单笔转账**_
 
 参数列表
 ----
@@ -781,29 +748,26 @@ Cmd: transfer
 ============
 Cmd: createTransferTxOffline
 ----------------------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 离线组装转账交易**_
 
 参数列表
 ----
-| 参数名                                                                                                      |      参数类型       | 参数描述     | 是否必填 |
-| -------------------------------------------------------------------------------------------------------- |:---------------:| -------- |:----:|
-| transferDto                                                                                              |   transferdto   | 转账交易表单   |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inputs                                                   | list&lt;object> | 转账交易输入列表 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address  |     string      | 账户地址     |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;chainId  |       int       | 资产的链id   |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetId  |       int       | 资产id     |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount   |   biginteger    | 资产金额     |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nonce    |     string      | 资产nonce值 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;outputs                                                  | list&lt;object> | 转账交易输出列表 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address  |     string      | 账户地址     |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;chainId  |       int       | 资产的链id   |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetId  |       int       | 资产id     |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount   |   biginteger    | 资产金额     |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lockTime |      long       | 锁定时间     |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark                                                   |     string      | 交易备注     |  是   |
+| 参数名                                                                                                          |      参数类型       | 参数描述     | 是否必填 |
+| ------------------------------------------------------------------------------------------------------------ |:---------------:| -------- |:----:|
+| transferDto                                                                                                  |   transferdto   | 转账交易表单   |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inputs                                                       | list&lt;object> | 转账交易输入列表 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address      |     string      | 账户地址     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetChainId |       int       | 资产的链id   |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetId      |       int       | 资产id     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount       |   biginteger    | 资产金额     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nonce        |     string      | 资产nonce值 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;outputs                                                      | list&lt;object> | 转账交易输出列表 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address      |     string      | 账户地址     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetChainId |       int       | 资产的链id   |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetId      |       int       | 资产id     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount       |   biginteger    | 资产金额     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lockTime     |      long       | 锁定时间     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark                                                       |     string      | 交易备注     |  是   |
 
 返回值
 ---
@@ -816,10 +780,7 @@ Cmd: createTransferTxOffline
 ========
 Cmd: contractCreate
 -------------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 发布合约**_
 
 参数列表
 ----
@@ -846,10 +807,7 @@ Cmd: contractCreate
 ========
 Cmd: contractCall
 -----------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 调用合约**_
 
 参数列表
 ----
@@ -877,10 +835,7 @@ Cmd: contractCall
 ========
 Cmd: contractDelete
 -------------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 删除合约**_
 
 参数列表
 ----
@@ -902,10 +857,7 @@ Cmd: contractDelete
 ===========
 Cmd: tokentransfer
 ------------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: token转账**_
 
 参数列表
 ----
@@ -929,10 +881,7 @@ Cmd: tokentransfer
 ===========================
 Cmd: transfer2contract
 ----------------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 从账户地址向合约地址转账(主链资产)的合约交易**_
 
 参数列表
 ----
@@ -955,10 +904,7 @@ Cmd: transfer2contract
 ====================
 Cmd: getTokenBalance
 --------------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 获取账户地址的指定token余额**_
 
 参数列表
 ----
@@ -984,10 +930,7 @@ Cmd: getTokenBalance
 ==============
 Cmd: getContract
 ----------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 获取智能合约详细信息**_
 
 参数列表
 ----
@@ -1029,10 +972,7 @@ Cmd: getContract
 ==============
 Cmd: getContractTxResult
 ------------------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 获取智能合约执行结果**_
 
 参数列表
 ----
@@ -1087,10 +1027,7 @@ Cmd: getContractTxResult
 ==============
 Cmd: getContractConstructor
 ---------------------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 获取合约代码构造函数**_
 
 参数列表
 ----
@@ -1120,10 +1057,7 @@ Cmd: getContractConstructor
 =============
 Cmd: getContractMethod
 ----------------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 获取合约方法信息**_
 
 参数列表
 ----
@@ -1153,10 +1087,7 @@ Cmd: getContractMethod
 ===============
 Cmd: getContractMethodArgsTypes
 -------------------------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 获取合约方法参数类型**_
 
 参数列表
 ----
@@ -1177,10 +1108,7 @@ Cmd: getContractMethodArgsTypes
 ===========
 Cmd: validateContractCreate
 ---------------------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 验证发布合约**_
 
 参数列表
 ----
@@ -1205,10 +1133,7 @@ Cmd: validateContractCreate
 ===========
 Cmd: validateContractCall
 -------------------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 验证调用合约**_
 
 参数列表
 ----
@@ -1236,10 +1161,7 @@ Cmd: validateContractCall
 ===========
 Cmd: validateContractDelete
 ---------------------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 验证删除合约**_
 
 参数列表
 ----
@@ -1261,10 +1183,7 @@ Cmd: validateContractDelete
 =================
 Cmd: imputedContractCreateGas
 -----------------------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 估算发布合约交易的GAS**_
 
 参数列表
 ----
@@ -1285,10 +1204,7 @@ Cmd: imputedContractCreateGas
 =================
 Cmd: imputedContractCallGas
 ---------------------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 估算调用合约交易的GAS**_
 
 参数列表
 ----
@@ -1312,10 +1228,7 @@ Cmd: imputedContractCallGas
 ==============
 Cmd: invokeView
 ---------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 调用合约不上链方法**_
 
 参数列表
 ----
@@ -1337,10 +1250,7 @@ Cmd: invokeView
 ================
 Cmd: contractCreateOffline
 --------------------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 离线 - 发布合约交易**_
 
 参数列表
 ----
@@ -1365,10 +1275,7 @@ Cmd: contractCreateOffline
 ==============
 Cmd: contractCallOffline
 ------------------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 离线 - 调用合约**_
 
 参数列表
 ----
@@ -1394,10 +1301,7 @@ Cmd: contractCallOffline
 ==============
 Cmd: contractDeleteOffline
 --------------------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 离线 - 删除合约**_
 
 参数列表
 ----
@@ -1419,10 +1323,7 @@ Cmd: contractDeleteOffline
 =================
 Cmd: tokentransferOffline
 -------------------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 离线 - token转账**_
 
 参数列表
 ----
@@ -1446,10 +1347,7 @@ Cmd: tokentransferOffline
 =================================
 Cmd: transfer2contractOffline
 -----------------------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 离线 - 从账户地址向合约地址转账(主链资产)的合约交易**_
 
 参数列表
 ----
@@ -1472,10 +1370,7 @@ Cmd: transfer2contractOffline
 =============================================
 Cmd: createAgent
 ----------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: Create an agent for consensus! 创建共识(代理)节点**_
 
 参数列表
 ----
@@ -1500,10 +1395,7 @@ Cmd: createAgent
 ==========
 Cmd: stopAgent
 --------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 注销共识节点**_
 
 参数列表
 ----
@@ -1524,10 +1416,7 @@ Cmd: stopAgent
 ==================================
 Cmd: depositToAgent
 -------------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: deposit nuls to a bank! 申请参与共识**_
 
 参数列表
 ----
@@ -1550,10 +1439,7 @@ Cmd: depositToAgent
 ========
 Cmd: withdraw
 -------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 退出共识**_
 
 参数列表
 ----
@@ -1575,28 +1461,25 @@ Cmd: withdraw
 =====================
 Cmd: createAgentOffline
 -----------------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 离线组装 - 创建共识(代理)节点**_
 
 参数列表
 ----
-| 参数名                                                                                                     |     参数类型     | 参数描述           | 是否必填 |
-| ------------------------------------------------------------------------------------------------------- |:------------:| -------------- |:----:|
-| chainId                                                                                                 |     int      | 链ID            |  是   |
-| 离线创建共识(代理)节点                                                                                            | consensusdto | 离线创建共识(代理)节点表单 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;agentAddress                                            |    string    | 节点创建地址         |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;packingAddress                                          |    string    | 节点出块地址         |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rewardAddress                                           |    string    | 获取共识奖励地址       |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;commissionRate                                          |     int      | 节点佣金比例         |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deposit                                                 |  biginteger  | 创建节点保证金        |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;input                                                   |    object    | 交易输入信息         |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address |    string    | 账户地址           |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;chainId |     int      | 资产的链id         |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetId |     int      | 资产id           |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount  |  biginteger  | 资产金额           |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nonce   |    string    | 资产nonce值       |  是   |
+| 参数名                                                                                                          |     参数类型     | 参数描述           | 是否必填 |
+| ------------------------------------------------------------------------------------------------------------ |:------------:| -------------- |:----:|
+| chainId                                                                                                      |     int      | 链ID            |  是   |
+| 离线创建共识(代理)节点                                                                                                 | consensusdto | 离线创建共识(代理)节点表单 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;agentAddress                                                 |    string    | 节点创建地址         |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;packingAddress                                               |    string    | 节点出块地址         |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rewardAddress                                                |    string    | 获取共识奖励地址       |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;commissionRate                                               |     int      | 节点佣金比例         |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deposit                                                      |  biginteger  | 创建节点保证金        |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;input                                                        |    object    | 交易输入信息         |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address      |    string    | 账户地址           |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetChainId |     int      | 资产的链id         |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetId      |     int      | 资产id           |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount       |  biginteger  | 资产金额           |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nonce        |    string    | 资产nonce值       |  是   |
 
 返回值
 ---
@@ -1609,29 +1492,26 @@ Cmd: createAgentOffline
 =================
 Cmd: stopAgentOffline
 ---------------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 离线组装 - 注销共识节点**_
 
 参数列表
 ----
-| 参数名                                                                                                                                                     |       参数类型       | 参数描述        | 是否必填 |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------- |:----------------:| ----------- |:----:|
-| chainId                                                                                                                                                 |       int        | 链ID         |  是   |
-| 离线注销共识节点                                                                                                                                                | stopconsensusdto | 离线注销共识节点表单  |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;agentHash                                                                                               |      string      | 创建节点的交易hash |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;agentAddress                                                                                            |      string      | 节点地址        |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deposit                                                                                                 |    biginteger    | 创建节点的保证金    |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price                                                                                                   |    biginteger    | 手续费单价       |  否   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;depositList                                                                                             | list&lt;object>  | 停止委托列表      |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;depositHash                                             |      string      | 委托共识的交易hash |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;input                                                   |      object      | 交易输入信息      |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address |      string      | 账户地址        |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;chainId |       int        | 资产的链id      |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetId |       int        | 资产id        |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount  |    biginteger    | 资产金额        |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nonce   |      string      | 资产nonce值    |  是   |
+| 参数名                                                                                                                                                          |       参数类型       | 参数描述        | 是否必填 |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------ |:----------------:| ----------- |:----:|
+| chainId                                                                                                                                                      |       int        | 链ID         |  是   |
+| 离线注销共识节点                                                                                                                                                     | stopconsensusdto | 离线注销共识节点表单  |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;agentHash                                                                                                    |      string      | 创建节点的交易hash |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;agentAddress                                                                                                 |      string      | 节点地址        |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deposit                                                                                                      |    biginteger    | 创建节点的保证金    |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price                                                                                                        |    biginteger    | 手续费单价       |  否   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;depositList                                                                                                  | list&lt;object>  | 停止委托列表      |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;depositHash                                                  |      string      | 委托共识的交易hash |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;input                                                        |      object      | 交易输入信息      |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address      |      string      | 账户地址        |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetChainId |       int        | 资产的链id      |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetId      |       int        | 资产id        |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount       |    biginteger    | 资产金额        |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nonce        |      string      | 资产nonce值    |  是   |
 
 返回值
 ---
@@ -1644,26 +1524,23 @@ Cmd: stopAgentOffline
 =================
 Cmd: depositToAgentOffline
 --------------------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 离线组装 - 申请参与共识**_
 
 参数列表
 ----
-| 参数名                                                                                                     |    参数类型    | 参数描述       | 是否必填 |
-| ------------------------------------------------------------------------------------------------------- |:----------:| ---------- |:----:|
-| chainId                                                                                                 |    int     | 链ID        |  是   |
-| 离线申请参与共识                                                                                                | depositdto | 离线申请参与共识表单 |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address                                                 |   string   | 账户地址       |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deposit                                                 | biginteger | 委托金额       |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;agentHash                                               |   string   | 共识节点hash   |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;input                                                   |   object   | 交易输入信息     |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address |   string   | 账户地址       |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;chainId |    int     | 资产的链id     |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetId |    int     | 资产id       |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount  | biginteger | 资产金额       |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nonce   |   string   | 资产nonce值   |  是   |
+| 参数名                                                                                                          |    参数类型    | 参数描述       | 是否必填 |
+| ------------------------------------------------------------------------------------------------------------ |:----------:| ---------- |:----:|
+| chainId                                                                                                      |    int     | 链ID        |  是   |
+| 离线申请参与共识                                                                                                     | depositdto | 离线申请参与共识表单 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address                                                      |   string   | 账户地址       |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deposit                                                      | biginteger | 委托金额       |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;agentHash                                                    |   string   | 共识节点hash   |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;input                                                        |   object   | 交易输入信息     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address      |   string   | 账户地址       |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetChainId |    int     | 资产的链id     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetId      |    int     | 资产id       |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount       | biginteger | 资产金额       |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nonce        |   string   | 资产nonce值   |  是   |
 
 返回值
 ---
@@ -1676,26 +1553,23 @@ Cmd: depositToAgentOffline
 ===============
 Cmd: withdrawOffline
 --------------------
-### CmdType: JSONRPC
-### HttpMethod: POST
-### ContentType: application/json;charset=UTF-8
-
+_**详细描述: 离线组装 - 退出共识**_
 
 参数列表
 ----
-| 参数名                                                                                                     |    参数类型     | 参数描述        | 是否必填 |
-| ------------------------------------------------------------------------------------------------------- |:-----------:| ----------- |:----:|
-| chainId                                                                                                 |     int     | 链ID         |  是   |
-| 离线退出共识                                                                                                  | withdrawdto | 离线退出共识表单    |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address                                                 |   string    | 地址          |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;depositHash                                             |   string    | 委托共识交易的hash |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price                                                   | biginteger  | 手续费单价       |  否   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;input                                                   |   object    | 交易输入信息      |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address |   string    | 账户地址        |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;chainId |     int     | 资产的链id      |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetId |     int     | 资产id        |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount  | biginteger  | 资产金额        |  是   |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nonce   |   string    | 资产nonce值    |  是   |
+| 参数名                                                                                                          |    参数类型     | 参数描述        | 是否必填 |
+| ------------------------------------------------------------------------------------------------------------ |:-----------:| ----------- |:----:|
+| chainId                                                                                                      |     int     | 链ID         |  是   |
+| 离线退出共识                                                                                                       | withdrawdto | 离线退出共识表单    |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address                                                      |   string    | 地址          |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;depositHash                                                  |   string    | 委托共识交易的hash |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price                                                        | biginteger  | 手续费单价       |  否   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;input                                                        |   object    | 交易输入信息      |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address      |   string    | 账户地址        |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetChainId |     int     | 资产的链id      |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetId      |     int     | 资产id        |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount       | biginteger  | 资产金额        |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nonce        |   string    | 资产nonce值    |  是   |
 
 返回值
 ---
