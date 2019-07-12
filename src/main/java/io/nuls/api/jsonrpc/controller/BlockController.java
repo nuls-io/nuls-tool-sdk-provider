@@ -35,10 +35,7 @@ import io.nuls.core.core.annotation.Autowired;
 import io.nuls.core.core.annotation.Controller;
 import io.nuls.core.core.annotation.RpcMethod;
 import io.nuls.core.exception.NulsException;
-import io.nuls.core.rpc.model.Parameter;
-import io.nuls.core.rpc.model.Parameters;
-import io.nuls.core.rpc.model.ResponseData;
-import io.nuls.core.rpc.model.TypeDescriptor;
+import io.nuls.core.rpc.model.*;
 import io.nuls.model.dto.block.BlockDto;
 import io.nuls.model.dto.block.BlockHeaderDto;
 import io.nuls.model.jsonrpc.RpcResult;
@@ -52,6 +49,7 @@ import io.nuls.v2.model.annotation.ApiType;
 import io.nuls.v2.util.ValidateUtil;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Niels
@@ -65,6 +63,27 @@ public class BlockController {
     private Config config;
     @Autowired
     BlockTools blockTools;
+
+    @RpcMethod("info")
+    @ApiOperation(description = "获取本链相关信息", order = 001)
+    @ResponseData(name = "返回值", description = "返回账户地址", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "chainId", description = "本链的ID"),
+            @Key(name = "assetId", description = "本链默认主资产的ID"),
+            @Key(name = "inflationAmount", description = "本链默认主资的初始数量"),
+            @Key(name = "agentChainId", description = "本链共识资产的链ID"),
+            @Key(name = "agentAssetId", description = "本链共识资产的ID")
+    }))
+    public RpcResult getInfo(List<Object> params) {
+        Result<Map> result = blockTools.getInfo(config.getChainId());
+        if (result.isSuccess()) {
+            Map map = result.getData();
+            map.put("chainId", config.getChainId());
+            map.put("assetId", config.getAssetsId());
+            map.remove("awardAssetId");
+            map.remove("seedNodes");
+        }
+        return ResultUtil.getJsonRpcResult(result);
+    }
 
     @RpcMethod("getHeaderByHeight")
     @ApiOperation(description = "根据区块高度查询区块头", order = 201)
@@ -177,7 +196,7 @@ public class BlockController {
 
 
     @RpcMethod("getBestBlock")
-    @ApiOperation(description = "查询最新区块，包含区块打包的所有交易信息，此接口返回数据量较多，谨慎调用", order = 204)
+    @ApiOperation(description = "查询最新区块", order = 204, detailDesc = "包含区块打包的所有交易信息，此接口返回数据量较多，谨慎调用")
     @Parameters({
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID")
     })
@@ -210,7 +229,7 @@ public class BlockController {
 
 
     @RpcMethod("getBlockByHeight")
-    @ApiOperation(description = "根据区块高度查询区块，包含区块打包的所有交易信息，此接口返回数据量较多，谨慎调用", order = 205)
+    @ApiOperation(description = "根据区块高度查询区块", order = 205, detailDesc = "包含区块打包的所有交易信息，此接口返回数据量较多，谨慎调用")
     @Parameters({
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
             @Parameter(parameterName = "height", requestType = @TypeDescriptor(value = long.class), parameterDes = "区块高度")
@@ -252,7 +271,7 @@ public class BlockController {
     }
 
     @RpcMethod("getBlockByHash")
-    @ApiOperation(description = "根据区块hash查询区块，包含区块打包的所有交易信息，此接口返回数据量较多，谨慎调用", order = 206)
+    @ApiOperation(description = "根据区块hash查询区块", order = 206, detailDesc = "包含区块打包的所有交易信息，此接口返回数据量较多，谨慎调用")
     @Parameters({
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
             @Parameter(parameterName = "hash", parameterDes = "区块hash")

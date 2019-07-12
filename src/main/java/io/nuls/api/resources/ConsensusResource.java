@@ -27,15 +27,14 @@ import io.nuls.api.config.Config;
 import io.nuls.base.api.provider.Result;
 import io.nuls.base.api.provider.ServiceManager;
 import io.nuls.base.api.provider.consensus.ConsensusProvider;
-import io.nuls.base.api.provider.consensus.facade.CreateAgentReq;
-import io.nuls.base.api.provider.consensus.facade.DepositToAgentReq;
-import io.nuls.base.api.provider.consensus.facade.StopAgentReq;
-import io.nuls.base.api.provider.consensus.facade.WithdrawReq;
+import io.nuls.base.api.provider.consensus.facade.*;
 import io.nuls.base.api.provider.transaction.TransferService;
 import io.nuls.base.api.provider.transaction.facade.TransferReq;
 import io.nuls.core.constant.CommonCodeConstanst;
 import io.nuls.core.core.annotation.Autowired;
 import io.nuls.core.core.annotation.Component;
+import io.nuls.core.core.annotation.RpcMethod;
+import io.nuls.core.model.StringUtils;
 import io.nuls.core.rpc.model.*;
 import io.nuls.model.ErrorData;
 import io.nuls.model.RpcClientResult;
@@ -52,12 +51,12 @@ import io.nuls.v2.model.dto.DepositDto;
 import io.nuls.v2.model.dto.StopConsensusDto;
 import io.nuls.v2.model.dto.WithDrawDto;
 import io.nuls.v2.util.NulsSDKTool;
+import io.nuls.v2.util.ValidateUtil;
 
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.math.BigInteger;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -77,7 +76,7 @@ public class ConsensusResource {
     @POST
     @Path("/agent")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "Create an agent for consensus! 创建共识(代理)节点", order = 501)
+    @ApiOperation(description = "创建共识(代理)节点", order = 501)
     @Parameters({
             @Parameter(parameterName = "创建共识(代理)节点", parameterDes = "创建共识(代理)节点表单", requestType = @TypeDescriptor(value = CreateAgentForm.class))
     })
@@ -98,7 +97,7 @@ public class ConsensusResource {
         req.setChainId(config.getChainId());
         Result<String> result = consensusProvider.createAgent(req);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
-        if(clientResult.isSuccess()) {
+        if (clientResult.isSuccess()) {
             return clientResult.resultMap().map("value", clientResult.getData()).mapToData();
         }
         return clientResult;
@@ -124,7 +123,7 @@ public class ConsensusResource {
         req.setChainId(config.getChainId());
         Result<String> result = consensusProvider.stopAgent(req);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
-        if(clientResult.isSuccess()) {
+        if (clientResult.isSuccess()) {
             return clientResult.resultMap().map("value", clientResult.getData()).mapToData();
         }
         return clientResult;
@@ -133,7 +132,7 @@ public class ConsensusResource {
     @POST
     @Path("/deposit")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "deposit nuls to a bank! 申请参与共识", order = 503)
+    @ApiOperation(description = "申请参与共识", order = 503)
     @Parameters({
             @Parameter(parameterName = "申请参与共识", parameterDes = "申请参与共识表单", requestType = @TypeDescriptor(value = DepositForm.class))
     })
@@ -152,12 +151,11 @@ public class ConsensusResource {
         req.setChainId(config.getChainId());
         Result<String> result = consensusProvider.depositToAgent(req);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
-        if(clientResult.isSuccess()) {
+        if (clientResult.isSuccess()) {
             return clientResult.resultMap().map("value", clientResult.getData()).mapToData();
         }
         return clientResult;
     }
-
 
     @POST
     @Path("/withdraw")
@@ -180,19 +178,18 @@ public class ConsensusResource {
         req.setChainId(config.getChainId());
         Result<String> result = consensusProvider.withdraw(req);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
-        if(clientResult.isSuccess()) {
+        if (clientResult.isSuccess()) {
             return clientResult.resultMap().map("value", clientResult.getData()).mapToData();
         }
         return clientResult;
     }
 
-
     @POST
     @Path("/agent/offline")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "离线组装 - 创建共识(代理)节点", order = 550)
+    @ApiOperation(description = "离线组装 - 创建共识节点交易", order = 550)
     @Parameters({
-            @Parameter(parameterName = "离线创建共识(代理)节点", parameterDes = "离线创建共识(代理)节点表单", requestType = @TypeDescriptor(value = ConsensusDto.class))
+            @Parameter(parameterName = "离线创建共识节点", parameterDes = "离线创建共识节点表单", requestType = @TypeDescriptor(value = ConsensusDto.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "hash", description = "交易hash"),
@@ -210,7 +207,8 @@ public class ConsensusResource {
     @POST
     @Path("/agent/stop/offline")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "离线组装 - 注销共识节点", order = 551)
+    @ApiOperation(description = "离线组装 - 注销共识节点交易", order = 551, detailDesc = "组装交易的StopDepositDto信息，可通过查询节点的委托共识列表获取，" +
+            "input的nonce值可为空")
     @Parameters({
             @Parameter(parameterName = "离线注销共识节点", parameterDes = "离线注销共识节点表单", requestType = @TypeDescriptor(value = StopConsensusDto.class))
     })
@@ -226,11 +224,10 @@ public class ConsensusResource {
         return ResultUtil.getRpcClientResult(result);
     }
 
-
     @POST
     @Path("/deposit/offline")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "离线组装 - 申请参与共识", order = 552)
+    @ApiOperation(description = "离线组装 - 申请参与共识交易", order = 552)
     @Parameters({
             @Parameter(parameterName = "离线申请参与共识", parameterDes = "离线申请参与共识表单", requestType = @TypeDescriptor(value = DepositDto.class))
     })
@@ -246,11 +243,10 @@ public class ConsensusResource {
         return ResultUtil.getRpcClientResult(result);
     }
 
-
     @POST
     @Path("/withdraw/offline")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "离线组装 - 退出共识", order = 553)
+    @ApiOperation(description = "离线组装 - 退出共识交易", order = 553, detailDesc = "接口的input数据，则是委托共识交易的output数据，nonce值可为空")
     @Parameters({
             @Parameter(parameterName = "离线退出共识", parameterDes = "离线退出共识表单", requestType = @TypeDescriptor(value = WithDrawDto.class))
     })
@@ -266,4 +262,25 @@ public class ConsensusResource {
         return ResultUtil.getRpcClientResult(result);
     }
 
+    @GET
+    @Path("/list/deposit/{agentHash}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "查询节点的委托共识列表", order = 554)
+    @Parameters({
+            @Parameter(parameterName = "agentHash", parameterDes = "创建共识节点的交易hash")
+    })
+    @ResponseData(name = "返回值", description = "返回委托共识集合", responseType = @TypeDescriptor(value = List.class, collectionElement = DepositInfo.class))
+    public RpcClientResult getDepositList(@PathParam("agentHash") String agentHash) {
+        if (!ValidateUtil.validHash(agentHash)) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "agentHash is invalid"));
+        }
+        GetDepositListReq req = new GetDepositListReq();
+        req.setChainId(config.getChainId());
+        req.setPageNumber(1);
+        req.setPageSize(300);
+        req.setAgentHash(agentHash);
+
+        Result<String> result = consensusProvider.getDepositList(req);
+        return ResultUtil.getRpcClientResult(result);
+    }
 }

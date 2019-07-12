@@ -41,8 +41,6 @@ import io.nuls.core.exception.NulsException;
 import io.nuls.core.model.StringUtils;
 import io.nuls.core.parse.JSONUtils;
 import io.nuls.core.rpc.model.*;
-import io.nuls.model.ErrorData;
-import io.nuls.model.RpcClientResult;
 import io.nuls.model.dto.TransactionDto;
 import io.nuls.model.jsonrpc.RpcErrorCode;
 import io.nuls.model.jsonrpc.RpcResult;
@@ -64,7 +62,6 @@ import io.nuls.v2.util.CommonValidator;
 import io.nuls.v2.util.NulsSDKTool;
 import io.nuls.v2.util.ValidateUtil;
 
-import javax.ws.rs.PathParam;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -73,7 +70,6 @@ import java.util.Map;
 
 import static io.nuls.core.constant.TxType.*;
 import static io.nuls.utils.Utils.extractTxTypeFromTx;
-import static io.nuls.v2.util.ContractUtil.getSuccess;
 
 /**
  * @author: PierreLuo

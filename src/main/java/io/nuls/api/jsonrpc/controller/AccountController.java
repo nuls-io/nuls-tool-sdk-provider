@@ -35,8 +35,6 @@ import io.nuls.core.model.StringUtils;
 import io.nuls.core.parse.JSONUtils;
 import io.nuls.core.rpc.model.*;
 import io.nuls.model.dto.AccountBalanceDto;
-import io.nuls.model.dto.AccountKeyStoreDto;
-import io.nuls.model.form.AccountPasswordForm;
 import io.nuls.model.jsonrpc.RpcResult;
 import io.nuls.model.jsonrpc.RpcResultError;
 import io.nuls.rpctools.AccountTools;
@@ -70,7 +68,7 @@ public class AccountController {
     AccountService accountService = ServiceManager.get(AccountService.class);
 
     @RpcMethod("createAccount")
-    @ApiOperation(description = "批量创建账户", order = 101)
+    @ApiOperation(description = "批量创建账户", order = 101, detailDesc = "创建的账户存在于本地钱包内")
     @Parameters(value = {
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
             @Parameter(parameterName = "count", requestType = @TypeDescriptor(value = int.class), parameterDes = "创建数量"),
@@ -169,7 +167,7 @@ public class AccountController {
     }
 
     @RpcMethod("getPriKey")
-    @ApiOperation(description = "账户备份，导出账户私钥，只能导出本地创建或导入的账户", order = 103)
+    @ApiOperation(description = "导出账户私钥", order = 103, detailDesc = "只能导出本地钱包创建或导入的账户")
     @Parameters({
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
             @Parameter(parameterName = "address", parameterDes = "账户地址"),
@@ -216,7 +214,7 @@ public class AccountController {
     }
 
     @RpcMethod("importPriKey")
-    @ApiOperation(description = "根据私钥导入账户", order = 104)
+    @ApiOperation(description = "根据私钥导入账户", order = 104, detailDesc = "导入私钥时，需要输入密码给私钥加密")
     @Parameters(value = {
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
             @Parameter(parameterName = "priKey", requestType = @TypeDescriptor(value = String.class), parameterDes = "账户明文私钥"),
@@ -311,7 +309,7 @@ public class AccountController {
     }
 
     @RpcMethod("exportKeystore")
-    @ApiOperation(description = "根据keystore导入账户", order = 106)
+    @ApiOperation(description = "账户备份，导出账户keystore信息", order = 106)
     @Parameters(value = {
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
             @Parameter(parameterName = "address", requestType = @TypeDescriptor(value = String.class), parameterDes = "账户地址"),
@@ -358,7 +356,7 @@ public class AccountController {
     }
 
     @RpcMethod("getAccountBalance")
-    @ApiOperation(description = "获取账户余额", order = 107)
+    @ApiOperation(description = "查询账户余额", order = 107, detailDesc = "根据资产链ID和资产ID，查询本链账户对应资产的余额与nonce值")
     @Parameters(value = {
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
             @Parameter(parameterName = "assetChainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "资产的链ID"),
@@ -405,9 +403,8 @@ public class AccountController {
         return rpcResult.setResult(balanceResult.getData());
     }
 
-
     @RpcMethod("multiSign")
-    @ApiOperation(description = "多账户摘要签名", order = 108)
+    @ApiOperation(description = "多账户摘要签名", order = 108, detailDesc = "用于签名离线组装的多账户转账交易,调用接口时，参数可以传地址和私钥，或者传地址和加密私钥和加密密码")
     @Parameters({
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
             @Parameter(parameterName = "signDtoList", parameterDes = "摘要签名表单", requestType = @TypeDescriptor(value = SignDto.class)),
@@ -553,7 +550,7 @@ public class AccountController {
     }
 
     @RpcMethod("createAccountOffline")
-    @ApiOperation(description = "离线 - 批量创建账户", order = 151)
+    @ApiOperation(description = "离线 - 批量创建账户", order = 151, detailDesc = "创建的账户不会保存到钱包中,接口直接返回账户的keystore信息")
     @Parameters(value = {
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
             @Parameter(parameterName = "count", requestType = @TypeDescriptor(value = int.class), parameterDes = "创建数量"),

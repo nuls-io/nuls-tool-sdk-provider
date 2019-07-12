@@ -75,7 +75,7 @@ public class AccountResource {
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "批量创建账户", order = 101)
+    @ApiOperation(description = "批量创建账户", order = 101, detailDesc = "创建的账户存在于本地钱包内")
     @Parameters({
             @Parameter(parameterName = "批量创建账户", parameterDes = "批量创建账户表单", requestType = @TypeDescriptor(value = AccountCreateForm.class))
     })
@@ -106,7 +106,7 @@ public class AccountResource {
     @PUT
     @Path("/password/{address}")
     @Produces({MediaType.APPLICATION_JSON})
-    @ApiOperation(description = "[修改密码] 根据原密码修改账户密码", order = 102)
+    @ApiOperation(description = "修改账户密码", order = 102)
     @Parameters({
             @Parameter(parameterName = "address", parameterDes = "账户地址"),
             @Parameter(parameterName = "账户密码信息", parameterDes = "账户密码信息表单", requestType = @TypeDescriptor(value = AccountUpdatePasswordForm.class))
@@ -140,7 +140,7 @@ public class AccountResource {
     @POST
     @Path("/prikey/{address}")
     @Produces({MediaType.APPLICATION_JSON})
-    @ApiOperation(description = "账户备份，导出账户私钥，只能导出本地创建或导入的账户", order = 103)
+    @ApiOperation(description = "导出账户私钥", order = 103, detailDesc = "只能导出本地钱包创建或导入的账户")
     @Parameters({
             @Parameter(parameterName = "address", parameterDes = "账户地址"),
             @Parameter(parameterName = "账户密码信息", parameterDes = "账户密码信息表单", requestType = @TypeDescriptor(value = AccountPasswordForm.class))
@@ -168,7 +168,7 @@ public class AccountResource {
     @POST
     @Path("/import/pri")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "根据私钥导入账户", order = 104)
+    @ApiOperation(description = "根据私钥导入账户", order = 104, detailDesc = "导入私钥时，需要输入密码给私钥加密")
     @Parameters({
             @Parameter(parameterName = "根据私钥导入账户", parameterDes = "根据私钥导入账户表单", requestType = @TypeDescriptor(value = AccountPriKeyPasswordForm.class))
     })
@@ -196,7 +196,7 @@ public class AccountResource {
     @Path("/import/keystore")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @ApiOperation(description = "根据AccountKeyStore导入账户", order = 105)
+    @ApiOperation(description = "根据keyStore导入账户", order = 105)
     @Parameters({
             @Parameter(parameterName = "根据私钥导入账户", parameterDes = "根据私钥导入账户表单", requestType = @TypeDescriptor(value = InputStream.class))
     })
@@ -344,7 +344,7 @@ public class AccountResource {
     @POST
     @Path("/multi/sign")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "多账户摘要签名", order = 110)
+    @ApiOperation(description = "多账户摘要签名", order = 110, detailDesc = "用于签名离线组装的多账户转账交易，调用接口时，参数可以传地址和私钥，或者传地址和加密私钥和加密密码")
     @Parameters({
             @Parameter(parameterName = "多账户摘要签名", parameterDes = "多账户摘要签名表单", requestType = @TypeDescriptor(value = MultiSignForm.class))
     })
@@ -394,7 +394,7 @@ public class AccountResource {
     @POST
     @Path("/offline")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "离线 - 批量创建账户", order = 151)
+    @ApiOperation(description = "离线 - 批量创建账户", order = 151, detailDesc = "创建的账户不会保存到钱包中,接口直接返回账户的keystore信息")
     @Parameters({
             @Parameter(parameterName = "离线批量创建账户", parameterDes = "离线批量创建账户表单", requestType = @TypeDescriptor(value = AccountCreateForm.class))
     })
@@ -408,7 +408,6 @@ public class AccountResource {
         io.nuls.core.basic.Result<List<AccountDto>> result = NulsSDKTool.createOffLineAccount(form.getCount(), form.getPassword());
         return ResultUtil.getRpcClientResult(result);
     }
-
 
     @POST
     @Path("/priKey/offline")

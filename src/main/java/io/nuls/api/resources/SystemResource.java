@@ -26,13 +26,22 @@
 package io.nuls.api.resources;
 
 
+import io.nuls.api.config.Config;
+import io.nuls.base.api.provider.Result;
 import io.nuls.core.core.annotation.Autowired;
 import io.nuls.core.core.annotation.Component;
+import io.nuls.core.rpc.model.Key;
+import io.nuls.core.rpc.model.ResponseData;
+import io.nuls.core.rpc.model.TypeDescriptor;
 import io.nuls.model.RpcClientResult;
+import io.nuls.rpctools.BlockTools;
+import io.nuls.utils.ResultUtil;
+import io.nuls.v2.model.annotation.ApiOperation;
 
-import javax.ws.rs.*;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -42,9 +51,39 @@ import java.util.Map;
 @Component
 public class SystemResource {
 
+    @Autowired
+    private Config config;
+    @Autowired
+    BlockTools blockTools;
+
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public RpcClientResult desc() {
         return RpcClientResult.getSuccess("支持两种方式，restful - http://{ip}:{port}/api & jsonrpc - http://{ip}:{port}/jsonrpc");
     }
+
+    @GET
+    @Path("/info")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "获取本链相关信息", order = 001)
+    @ResponseData(name = "返回值", description = "返回账户地址", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "chainId", description = "本链的ID"),
+            @Key(name = "assetId", description = "本链默认主资产的ID"),
+            @Key(name = "inflationAmount", description = "本链默认主资的初始数量"),
+            @Key(name = "agentChainId", description = "本链共识资产的链ID"),
+            @Key(name = "agentAssetId", description = "本链共识资产的ID")
+    }))
+    public RpcClientResult info() {
+        Result<Map> result = blockTools.getInfo(config.getChainId());
+        if (result.isSuccess()) {
+            Map map = result.getData();
+            map.put("chainId", config.getChainId());
+            map.put("assetId", config.getAssetsId());
+            map.remove("awardAssetId");
+            map.remove("seedNodes");
+        }
+        return ResultUtil.getRpcClientResult(result);
+    }
+
+
 }

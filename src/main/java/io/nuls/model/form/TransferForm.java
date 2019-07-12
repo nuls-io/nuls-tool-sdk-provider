@@ -48,7 +48,7 @@ public class TransferForm {
     @ApiModelProperty(description = "金额", required = true)
     private BigInteger amount;
 
-    @ApiModelProperty(description = "备注", required = true)
+    @ApiModelProperty(description = "备注", required = false)
     private String remark;
 
     public String getAddress() {

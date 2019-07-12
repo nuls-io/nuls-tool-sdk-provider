@@ -357,7 +357,8 @@ public class ConsensusController {
     }
 
     @RpcMethod("stopAgentOffline")
-    @ApiOperation(description = "离线组装 - 注销共识节点", order = 551)
+    @ApiOperation(description = "离线组装 - 注销共识节点", order = 551, detailDesc = "组装交易的StopDepositDto信息，可通过查询节点的委托共识列表获取，" +
+            "input的nonce值可为空")
     @Parameters({
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
             @Parameter(parameterName = "离线注销共识节点", parameterDes = "离线注销共识节点表单", requestType = @TypeDescriptor(value = StopConsensusDto.class))
@@ -563,6 +564,12 @@ public class ConsensusController {
     }
 
     @RpcMethod("getDepositList")
+    @ApiOperation(description = "查询节点的委托共识列表", order = 554)
+    @Parameters({
+            @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
+            @Parameter(parameterName = "agentHash", parameterDes = "创建共识节点的交易hash")
+    })
+    @ResponseData(name = "返回值", description = "返回委托共识集合", responseType = @TypeDescriptor(value = List.class, collectionElement = DepositInfo.class))
     public RpcResult getDepositList(List<Object> params) {
         int chainId;
         String agentHash;

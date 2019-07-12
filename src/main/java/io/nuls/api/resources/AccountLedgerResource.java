@@ -47,6 +47,7 @@ import io.nuls.model.ErrorData;
 import io.nuls.model.RpcClientResult;
 import io.nuls.model.dto.AccountBalanceDto;
 import io.nuls.model.dto.TransactionDto;
+import io.nuls.model.form.BalanceForm;
 import io.nuls.model.form.TransferForm;
 import io.nuls.model.form.TxForm;
 import io.nuls.model.jsonrpc.RpcErrorCode;
@@ -95,27 +96,27 @@ public class AccountLedgerResource {
     private LegderTools legderTools;
 
     @POST
-    @Path("/transfer")
+    @Path("/balance/{address}")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "单笔转账", order = 304)
+    @ApiOperation(description = "查询账户余额", order = 109, detailDesc = "根据资产链ID和资产ID，查询本链账户对应资产的余额与nonce值")
     @Parameters({
-            @Parameter(parameterName = "单笔转账", parameterDes = "单笔转账表单", requestType = @TypeDescriptor(value = TransferForm.class))
+            @Parameter(parameterName = "balanceDto", parameterDes = "账户余额表单", requestType = @TypeDescriptor(value = BalanceForm.class))
     })
-    @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
-            @Key(name = "value", description = "交易hash")
-    }))
-    public RpcClientResult transfer(TransferForm form) {
-        if (form == null) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
+    @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = AccountBalanceDto.class))
+    public RpcClientResult getBalance(@PathParam("address") String address, BalanceForm form) {
+        if (!AddressTool.validAddress(config.getChainId(), address)) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "address is invalid"));
         }
-        TransferReq.TransferReqBuilder builder =
-                new TransferReq.TransferReqBuilder(config.getChainId(), config.getAssetsId())
-                        .addForm(form.getAddress(), form.getPassword(), form.getAmount())
-                        .addTo(form.getToAddress(), form.getAmount());
-        Result<String> result = transferService.transfer(builder.build());
-        RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
+        if(form.getAssetChainId() < 1 || form.getAssetChainId() > 65535) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "assetChainId is invalid"));
+        }
+        if(form.getAssetId() < 1 || form.getAssetId() > 65535) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "assetId is invalid"));
+        }
+        Result<AccountBalance> balanceResult = legderTools.getBalanceAndNonce(config.getChainId(), form.getAssetChainId(), form.getAssetId(), address);
+        RpcClientResult clientResult = ResultUtil.getRpcClientResult(balanceResult);
         if (clientResult.isSuccess()) {
-            return clientResult.resultMap().map("value", clientResult.getData()).mapToData();
+            clientResult.setData(new AccountBalanceDto((AccountBalance) clientResult.getData()));
         }
         return clientResult;
     }
@@ -123,7 +124,8 @@ public class AccountLedgerResource {
     @POST
     @Path("/createTransferTxOffline")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "离线组装转账交易", order = 350)
+    @ApiOperation(description = "离线组装转账交易", order = 350, detailDesc = "根据inputs和outputs离线组装转账交易，用于单账户或多账户的转账交易。" +
+            "交易手续费为inputs里本链主资产金额总和，减去outputs里本链主资产总和")
     @Parameters({
             @Parameter(parameterName = "transferDto", parameterDes = "转账交易表单", requestType = @TypeDescriptor(value = TransferDto.class))
     })
@@ -141,32 +143,12 @@ public class AccountLedgerResource {
         }
     }
 
-    @GET
-    @Path("/balance/{address}")
-    @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "查询账户余额", order = 109)
-    @Parameters({
-            @Parameter(parameterName = "address", requestType = @TypeDescriptor(value = String.class), parameterDes = "账户地址")
-    })
-    @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = AccountBalanceDto.class))
-    public RpcClientResult getBalance(@PathParam("address") String address) {
-        if (address == null) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "address is empty"));
-        }
-        Integer assetChainId = config.getChainId();
-        Integer assetId = config.getAssetsId();
-        Result<AccountBalance> balanceResult = legderTools.getBalanceAndNonce(config.getChainId(), assetChainId, assetId, address);
-        RpcClientResult clientResult = ResultUtil.getRpcClientResult(balanceResult);
-        if (clientResult.isSuccess()) {
-            clientResult.setData(new AccountBalanceDto((AccountBalance) clientResult.getData()));
-        }
-        return clientResult;
-    }
+
 
     @GET
     @Path("/tx/{hash}")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "根据hash获取交易，先查未确认，查不到再查已确认", order = 301)
+    @ApiOperation(description = "根据hash获取交易详情", order = 301)
     @Parameters({
             @Parameter(parameterName = "hash", requestType = @TypeDescriptor(value = String.class), parameterDes = "交易hash")
     })
@@ -183,12 +165,12 @@ public class AccountLedgerResource {
     @POST
     @Path("/transaction/validate")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "验证交易是否正确", order = 302)
+    @ApiOperation(description = "验证交易", order = 302, detailDesc = "验证离线组装的交易,验证成功返回交易hash值,失败返回错误提示信息")
     @Parameters({
-        @Parameter(parameterName = "验证交易是否正确", parameterDes = "验证交易是否正确表单", requestType = @TypeDescriptor(value = TxForm.class))
+            @Parameter(parameterName = "验证交易是否正确", parameterDes = "验证交易是否正确表单", requestType = @TypeDescriptor(value = TxForm.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
-        @Key(name = "value", description = "交易hash")
+            @Key(name = "value", description = "交易hash")
     }))
     public RpcClientResult validate(TxForm form) {
         if (form == null || StringUtils.isBlank(form.getTxHex())) {
@@ -198,17 +180,16 @@ public class AccountLedgerResource {
         return ResultUtil.getRpcClientResult(result);
     }
 
-
     @POST
     @Path("/transaction/broadcast")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "广播交易", order = 303)
+    @ApiOperation(description = "广播交易", order = 303, detailDesc = "广播离线组装的交易,成功返回true,失败返回错误提示信息")
     @Parameters({
-        @Parameter(parameterName = "广播交易", parameterDes = "广播交易表单", requestType = @TypeDescriptor(value = TxForm.class))
+            @Parameter(parameterName = "广播交易", parameterDes = "广播交易表单", requestType = @TypeDescriptor(value = TxForm.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
-        @Key(name = "value", valueType = boolean.class, description = "是否成功"),
-        @Key(name = "hash", description = "交易hash")
+            @Key(name = "value", valueType = boolean.class, description = "是否成功"),
+            @Key(name = "hash", description = "交易hash")
     }))
     public RpcClientResult broadcast(TxForm form) {
         if (form == null || StringUtils.isBlank(form.getTxHex())) {
@@ -258,11 +239,12 @@ public class AccountLedgerResource {
                 default:
                     break;
             }
-            Map contractMap = (Map) result.getData();
-            if (contractMap != null && Boolean.FALSE.equals(contractMap.get("success"))) {
-                return RpcClientResult.getFailed((String) contractMap.get("msg"));
+            if (result != null) {
+                Map contractMap = (Map) result.getData();
+                if (contractMap != null && Boolean.FALSE.equals(contractMap.get("success"))) {
+                    return RpcClientResult.getFailed((String) contractMap.get("msg"));
+                }
             }
-
             result = transactionTools.newTx(config.getChainId(), txHex);
             return ResultUtil.getRpcClientResult(result);
         } catch (Exception e) {
@@ -270,4 +252,32 @@ public class AccountLedgerResource {
             return RpcClientResult.getFailed(e.getMessage());
         }
     }
+
+
+    @POST
+    @Path("/transfer")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "单笔转账", order = 304,detailDesc = "发起单账户单资产的转账交易")
+    @Parameters({
+            @Parameter(parameterName = "单笔转账", parameterDes = "单笔转账表单", requestType = @TypeDescriptor(value = TransferForm.class))
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "value", description = "交易hash")
+    }))
+    public RpcClientResult transfer(TransferForm form) {
+        if (form == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
+        }
+        TransferReq.TransferReqBuilder builder =
+                new TransferReq.TransferReqBuilder(config.getChainId(), config.getAssetsId())
+                        .addForm(form.getAddress(), form.getPassword(), form.getAmount())
+                        .addTo(form.getToAddress(), form.getAmount());
+        Result<String> result = transferService.transfer(builder.build());
+        RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
+        if (clientResult.isSuccess()) {
+            return clientResult.resultMap().map("value", clientResult.getData()).mapToData();
+        }
+        return clientResult;
+    }
+
 }
