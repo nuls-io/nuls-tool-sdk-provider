@@ -25,7 +25,7 @@ package io.nuls.api.resources;
 
 import io.nuls.api.config.Config;
 import io.nuls.api.config.Context;
-import io.nuls.api.resources.manager.BeanCopierManager;
+import io.nuls.api.manager.BeanCopierManager;
 import io.nuls.base.api.provider.Result;
 import io.nuls.base.api.provider.ServiceManager;
 import io.nuls.base.api.provider.block.BlockService;

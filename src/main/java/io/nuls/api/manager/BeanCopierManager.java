@@ -21,14 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package io.nuls.api.resources.manager;
+package io.nuls.api.manager;
 
 import net.sf.cglib.beans.BeanCopier;
-import net.sf.cglib.core.Converter;
-import org.checkerframework.checker.units.qual.K;
 
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
 
 /**
  * @author: PierreLuo

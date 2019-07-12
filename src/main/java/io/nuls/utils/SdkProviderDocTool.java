@@ -706,6 +706,9 @@ public class SdkProviderDocTool {
                         }
                     }
                     order = String.valueOf(i.getAndIncrement());
+                    if(cmd.order < 100) {
+                        order = "0".repeat(3 - order.length()) + order;
+                    }
                     order = order.substring(0, 1) + "." + Integer.parseInt(order.substring(1)) + " ";
                 }
                 boolean jsonrpc = ApiType.JSONRPC.name().equals(cmd.cmdType);

@@ -21,6 +21,7 @@
 package io.nuls.api.jsonrpc.controller;
 
 import io.nuls.api.config.Context;
+import io.nuls.api.manager.BeanCopierManager;
 import io.nuls.base.api.provider.Result;
 import io.nuls.base.api.provider.ServiceManager;
 import io.nuls.base.api.provider.consensus.ConsensusProvider;
@@ -32,6 +33,8 @@ import io.nuls.core.model.FormatValidUtils;
 import io.nuls.core.model.StringUtils;
 import io.nuls.core.parse.JSONUtils;
 import io.nuls.core.rpc.model.*;
+import io.nuls.model.RpcClientResult;
+import io.nuls.model.dto.DepositInfoDto;
 import io.nuls.model.form.consensus.CreateAgentForm;
 import io.nuls.model.form.consensus.DepositForm;
 import io.nuls.model.form.consensus.StopAgentForm;
@@ -50,6 +53,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Niels
@@ -61,10 +65,10 @@ public class ConsensusController {
     ConsensusProvider consensusProvider = ServiceManager.get(ConsensusProvider.class);
 
     @RpcMethod("createAgent")
-    @ApiOperation(description = "Create an agent for consensus! 创建共识(代理)节点", order = 501)
+    @ApiOperation(description = "创建共识节点", order = 501)
     @Parameters({
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
-            @Parameter(parameterName = "创建共识(代理)节点", parameterDes = "创建共识(代理)节点表单", requestType = @TypeDescriptor(value = CreateAgentForm.class))
+            @Parameter(parameterName = "创建共识节点", parameterDes = "创建共识节点表单", requestType = @TypeDescriptor(value = CreateAgentForm.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "value", description = "交易hash")
@@ -171,7 +175,7 @@ public class ConsensusController {
     }
 
     @RpcMethod("depositToAgent")
-    @ApiOperation(description = "deposit nuls to a bank! 申请参与共识", order = 503)
+    @ApiOperation(description = "申请参与共识", order = 503)
     @Parameters({
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
             @Parameter(parameterName = "申请参与共识", parameterDes = "申请参与共识表单", requestType = @TypeDescriptor(value = DepositForm.class))
@@ -275,11 +279,57 @@ public class ConsensusController {
         return rpcResult;
     }
 
-    @RpcMethod("createAgentOffline")
-    @ApiOperation(description = "离线组装 - 创建共识(代理)节点", order = 550)
+    @RpcMethod("getDepositList")
+    @ApiOperation(description = "查询节点的委托共识列表", order = 505)
     @Parameters({
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
-            @Parameter(parameterName = "离线创建共识(代理)节点", parameterDes = "离线创建共识(代理)节点表单", requestType = @TypeDescriptor(value = ConsensusDto.class))
+            @Parameter(parameterName = "agentHash", parameterDes = "创建共识节点的交易hash")
+    })
+    @ResponseData(name = "返回值", description = "返回委托共识集合", responseType = @TypeDescriptor(value = List.class, collectionElement = DepositInfoDto.class))
+    public RpcResult getDepositList(List<Object> params) {
+        int chainId;
+        String agentHash;
+        try {
+            chainId = (int) params.get(0);
+        } catch (Exception e) {
+            return RpcResult.paramError("[chainId] is inValid");
+        }
+        try {
+            agentHash = (String) params.get(1);
+        } catch (Exception e) {
+            return RpcResult.paramError("[agentHash] is inValid");
+        }
+        if (!ValidateUtil.validHash(agentHash)) {
+            return RpcResult.paramError("[agentHash] is inValid");
+        }
+
+        GetDepositListReq req = new GetDepositListReq();
+        req.setChainId(chainId);
+        req.setPageNumber(1);
+        req.setPageSize(300);
+        req.setAgentHash(agentHash);
+
+        Result<DepositInfo> result = consensusProvider.getDepositList(req);
+        RpcResult rpcResult = ResultUtil.getJsonRpcResult(result);
+        if(result.isSuccess()) {
+            List<DepositInfo> list = result.getList();
+            if(list != null && !list.isEmpty()) {
+                List<DepositInfoDto> dtoList = list.stream().map(info -> {
+                    DepositInfoDto dto = new DepositInfoDto();
+                    BeanCopierManager.beanCopier(info, dto);
+                    return dto;
+                }).collect(Collectors.toList());
+                rpcResult.setResult(dtoList);
+            }
+        }
+        return rpcResult;
+    }
+
+    @RpcMethod("createAgentOffline")
+    @ApiOperation(description = "离线组装 - 创建共识节点", order = 550)
+    @Parameters({
+            @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
+            @Parameter(parameterName = "离线创建共识节点", parameterDes = "离线创建共识节点表单", requestType = @TypeDescriptor(value = ConsensusDto.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "hash", description = "交易hash"),
@@ -563,38 +613,4 @@ public class ConsensusController {
         return ResultUtil.getJsonRpcResult(result);
     }
 
-    @RpcMethod("getDepositList")
-    @ApiOperation(description = "查询节点的委托共识列表", order = 554)
-    @Parameters({
-            @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
-            @Parameter(parameterName = "agentHash", parameterDes = "创建共识节点的交易hash")
-    })
-    @ResponseData(name = "返回值", description = "返回委托共识集合", responseType = @TypeDescriptor(value = List.class, collectionElement = DepositInfo.class))
-    public RpcResult getDepositList(List<Object> params) {
-        int chainId;
-        String agentHash;
-        try {
-            chainId = (int) params.get(0);
-        } catch (Exception e) {
-            return RpcResult.paramError("[chainId] is inValid");
-        }
-        try {
-            agentHash = (String) params.get(1);
-        } catch (Exception e) {
-            return RpcResult.paramError("[agentHash] is inValid");
-        }
-        if (!ValidateUtil.validHash(agentHash)) {
-            return RpcResult.paramError("[agentHash] is inValid");
-        }
-
-        GetDepositListReq req = new GetDepositListReq();
-        req.setChainId(chainId);
-        req.setPageNumber(1);
-        req.setPageSize(300);
-        req.setAgentHash(agentHash);
-
-        Result<String> result = consensusProvider.getDepositList(req);
-        RpcResult rpcResult = ResultUtil.getJsonRpcResult(result);
-        return rpcResult;
-    }
 }

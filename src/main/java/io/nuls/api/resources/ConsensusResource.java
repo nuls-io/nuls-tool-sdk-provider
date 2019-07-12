@@ -24,6 +24,7 @@
 package io.nuls.api.resources;
 
 import io.nuls.api.config.Config;
+import io.nuls.api.manager.BeanCopierManager;
 import io.nuls.base.api.provider.Result;
 import io.nuls.base.api.provider.ServiceManager;
 import io.nuls.base.api.provider.consensus.ConsensusProvider;
@@ -38,6 +39,7 @@ import io.nuls.core.model.StringUtils;
 import io.nuls.core.rpc.model.*;
 import io.nuls.model.ErrorData;
 import io.nuls.model.RpcClientResult;
+import io.nuls.model.dto.DepositInfoDto;
 import io.nuls.v2.model.annotation.Api;
 import io.nuls.v2.model.annotation.ApiOperation;
 import io.nuls.model.form.TransferForm;
@@ -58,6 +60,7 @@ import javax.ws.rs.core.MediaType;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author: PierreLuo
@@ -76,9 +79,9 @@ public class ConsensusResource {
     @POST
     @Path("/agent")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "创建共识(代理)节点", order = 501)
+    @ApiOperation(description = "创建共识节点", order = 501)
     @Parameters({
-            @Parameter(parameterName = "创建共识(代理)节点", parameterDes = "创建共识(代理)节点表单", requestType = @TypeDescriptor(value = CreateAgentForm.class))
+            @Parameter(parameterName = "创建共识节点", parameterDes = "创建共识节点表单", requestType = @TypeDescriptor(value = CreateAgentForm.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "value", description = "交易hash")
@@ -184,6 +187,40 @@ public class ConsensusResource {
         return clientResult;
     }
 
+    @GET
+    @Path("/list/deposit/{agentHash}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "查询节点的委托共识列表", order = 505)
+    @Parameters({
+            @Parameter(parameterName = "agentHash", parameterDes = "创建共识节点的交易hash")
+    })
+    @ResponseData(name = "返回值", description = "返回委托共识集合", responseType = @TypeDescriptor(value = List.class, collectionElement = DepositInfoDto.class))
+    public RpcClientResult getDepositList(@PathParam("agentHash") String agentHash) {
+        if (!ValidateUtil.validHash(agentHash)) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "agentHash is invalid"));
+        }
+        GetDepositListReq req = new GetDepositListReq();
+        req.setChainId(config.getChainId());
+        req.setPageNumber(1);
+        req.setPageSize(300);
+        req.setAgentHash(agentHash);
+
+        Result<DepositInfo> result = consensusProvider.getDepositList(req);
+        RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
+        if(result.isSuccess()) {
+            List<DepositInfo> list = result.getList();
+            if(list != null && !list.isEmpty()) {
+                List<DepositInfoDto> dtoList = list.stream().map(info -> {
+                    DepositInfoDto dto = new DepositInfoDto();
+                    BeanCopierManager.beanCopier(info, dto);
+                    return dto;
+                }).collect(Collectors.toList());
+                clientResult.setData(dtoList);
+            }
+        }
+        return clientResult;
+    }
+
     @POST
     @Path("/agent/offline")
     @Produces(MediaType.APPLICATION_JSON)
@@ -259,28 +296,6 @@ public class ConsensusResource {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
         }
         io.nuls.core.basic.Result result = NulsSDKTool.createWithdrawDepositTxOffline(form);
-        return ResultUtil.getRpcClientResult(result);
-    }
-
-    @GET
-    @Path("/list/deposit/{agentHash}")
-    @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "查询节点的委托共识列表", order = 554)
-    @Parameters({
-            @Parameter(parameterName = "agentHash", parameterDes = "创建共识节点的交易hash")
-    })
-    @ResponseData(name = "返回值", description = "返回委托共识集合", responseType = @TypeDescriptor(value = List.class, collectionElement = DepositInfo.class))
-    public RpcClientResult getDepositList(@PathParam("agentHash") String agentHash) {
-        if (!ValidateUtil.validHash(agentHash)) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "agentHash is invalid"));
-        }
-        GetDepositListReq req = new GetDepositListReq();
-        req.setChainId(config.getChainId());
-        req.setPageNumber(1);
-        req.setPageSize(300);
-        req.setAgentHash(agentHash);
-
-        Result<String> result = consensusProvider.getDepositList(req);
         return ResultUtil.getRpcClientResult(result);
     }
 }

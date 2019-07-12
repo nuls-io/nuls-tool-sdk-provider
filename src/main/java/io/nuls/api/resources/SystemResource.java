@@ -36,6 +36,7 @@ import io.nuls.core.rpc.model.TypeDescriptor;
 import io.nuls.model.RpcClientResult;
 import io.nuls.rpctools.BlockTools;
 import io.nuls.utils.ResultUtil;
+import io.nuls.v2.model.annotation.Api;
 import io.nuls.v2.model.annotation.ApiOperation;
 
 import javax.ws.rs.GET;
@@ -49,6 +50,7 @@ import java.util.Map;
  */
 @Path("/")
 @Component
+@Api
 public class SystemResource {
 
     @Autowired
@@ -63,7 +65,7 @@ public class SystemResource {
     }
 
     @GET
-    @Path("/info")
+    @Path("api/info")
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(description = "获取本链相关信息", order = 001)
     @ResponseData(name = "返回值", description = "返回账户地址", responseType = @TypeDescriptor(value = Map.class, mapKeys = {

@@ -34,7 +34,7 @@ import io.nuls.model.form.Base;
 /**
  * @author Niels
  */
-@ApiModel(description = "创建共识(代理)节点表单数据")
+@ApiModel(description = "创建共识节点表单数据")
 public class CreateAgentForm extends Base {
 
     @ApiModelProperty(description = "节点地址", required = true)

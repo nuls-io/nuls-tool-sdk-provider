@@ -79,4 +79,9 @@ public class JsonRpcTest {
         BeanUtils.setProperty(obj, "input", obj1);
         System.out.println(JSONUtils.obj2PrettyJson(obj));
     }
+
+    @Test
+    public void test3() {
+        System.out.println("0".repeat(2));
+    }
 }
