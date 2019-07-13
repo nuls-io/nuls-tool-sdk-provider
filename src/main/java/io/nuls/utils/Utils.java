@@ -16,6 +16,9 @@ import io.nuls.core.exception.NulsRuntimeException;
 import io.nuls.core.model.ObjectUtils;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -65,6 +68,54 @@ public class Utils {
         String txTypeHexString = txString.substring(0, 4);
         NulsByteBuffer byteBuffer = new NulsByteBuffer(RPCUtil.decode(txTypeHexString));
         return byteBuffer.readUint16();
+    }
+
+    public static int getDepth(Class cls) {
+        return getDepth(cls, 1);
+    }
+
+    private static int getDepth(Class cls, int depth) {
+        if(depth > 3) {
+            throw new RuntimeException("exceed depth");
+        }
+        if (SdkProviderDocTool.baseType.contains(cls)) {
+            return depth;
+        }
+        Field[] fields = cls.getDeclaredFields();
+        int max = depth;
+        try{
+            for (Field field : fields) {
+                // 每次循环初始化最初的层级
+                int initial = depth;
+                if (SdkProviderDocTool.baseType.contains(field.getType())) {
+                    continue;
+                }
+                Type genericType = field.getGenericType();
+                if(genericType instanceof ParameterizedType) {
+                    initial++;
+                    ParameterizedType pType = (ParameterizedType) genericType;
+                    Type[] typeArguments = pType.getActualTypeArguments();
+                    for (int i = 0; i < typeArguments.length; i++) {
+                        Class<?> aClass = Class.forName(typeArguments[i].getTypeName());
+                        if (SdkProviderDocTool.baseType.contains(aClass)) {
+                            continue;
+                        }
+                        int i1 = getDepth(aClass, initial);
+                        max = Math.max(i1, max);
+                    }
+                } else {
+                    Class<?> aClass = Class.forName(genericType.getTypeName());
+                    if(aClass == field.getType()) {
+                        initial++;
+                        int i1 = getDepth(aClass, initial);
+                        max = Math.max(i1, max);
+                    }
+                }
+            }
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        return max;
     }
 
 }
