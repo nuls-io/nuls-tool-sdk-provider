@@ -32,8 +32,8 @@ public abstract class NulsModuleBootstrap extends RpcModule {
 
     public static void main(String[] args) {
         if (args == null || args.length == 0) {
-            //args = new String[]{"ws://" + HostInfo.getLocalIP() + ":7771"};
-            args = new String[]{"ws://192.168.1.192:7771"};
+            args = new String[]{"ws://" + HostInfo.getLocalIP() + ":7771"};
+            //args = new String[]{"ws://192.168.1.40:7771"};
         }
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
         configurationLoader.load();
