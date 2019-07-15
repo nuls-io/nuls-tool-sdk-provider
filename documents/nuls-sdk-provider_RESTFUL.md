@@ -1075,7 +1075,15 @@ _**详细描述: 发布合约**_
 | txHash          | string | 发布合约的交易hash |
 | contractAddress | string | 生成的合约地址     |
 ### Example response data: 
-略
+```json
+{
+  "success" : true,
+  "data" : {
+    "txHash" : "0e770f75b0daca9b5ad2132cbc81d12b622cb3827778088ed32f2485bcda651d",
+    "contractAddress" : "tNULSeBaN77MT2aLDi45CYP6mbSbnEgBa7Mdpo"
+  }
+}
+```
 
 4.2 调用合约
 ========
@@ -1122,7 +1130,14 @@ _**详细描述: 调用合约**_
 | ------ |:------:| ----------- |
 | txHash | string | 调用合约的交易hash |
 ### Example response data: 
-略
+```json
+{
+  "success" : true,
+  "data" : {
+    "txHash" : "f0a5fc5d20c39355e35f1fe8011b1a28e7c65d8566ae8d76b297a22d1110851d"
+  }
+}
+```
 
 4.3 删除合约
 ========
@@ -1362,7 +1377,43 @@ _**详细描述: 获取智能合约执行结果**_
 | contractTxList                                                                                        | list&lt;string> | 合约生成交易的序列化字符串列表                             |
 | remark                                                                                                |     string      | 备注                                          |
 ### Example response data: 
-略
+```json
+{
+  "success" : true,
+  "data" : {
+    "flag" : true,
+    "data" : {
+      "success" : true,
+      "errorMessage" : null,
+      "contractAddress" : "tNULSeBaN77MT2aLDi45CYP6mbSbnEgBa7Mdpo",
+      "result" : "true",
+      "gasLimit" : 20000,
+      "gasUsed" : 9232,
+      "price" : 25,
+      "totalFee" : "600000",
+      "txSizeFee" : "100000",
+      "actualContractFee" : "230800",
+      "refundFee" : "269200",
+      "value" : "0",
+      "stackTrace" : null,
+      "transfers" : [ ],
+      "events" : [ "{\"contractAddress\":\"tNULSeBaN77MT2aLDi45CYP6mbSbnEgBa7Mdpo\",\"blockNumber\":39,\"event\":\"TransferEvent\",\"payload\":{\"from\":\"tNULSeBaMvEtDfvZuukDf2mVyfGo3DdiN8KLRG\",\"to\":\"tNULSeBaMnrs6JKrCy6TQdzYJZkMZJDng7QAsD\",\"value\":\"990\"}}" ],
+      "tokenTransfers" : [ {
+        "contractAddress" : "tNULSeBaN77MT2aLDi45CYP6mbSbnEgBa7Mdpo",
+        "from" : "tNULSeBaMvEtDfvZuukDf2mVyfGo3DdiN8KLRG",
+        "to" : "tNULSeBaMnrs6JKrCy6TQdzYJZkMZJDng7QAsD",
+        "value" : "990",
+        "name" : "io",
+        "symbol" : "IO",
+        "decimals" : 1
+      } ],
+      "invokeRegisterCmds" : [ ],
+      "contractTxList" : [ ],
+      "remark" : "call"
+    }
+  }
+}
+```
 
 4.9 获取合约代码构造函数
 ==============

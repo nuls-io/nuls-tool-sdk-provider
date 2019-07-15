@@ -1,1 +1,5 @@
-{}
+{
+  "/api/contract/create": {"success":true,"data":{"txHash":"0e770f75b0daca9b5ad2132cbc81d12b622cb3827778088ed32f2485bcda651d","contractAddress":"tNULSeBaN77MT2aLDi45CYP6mbSbnEgBa7Mdpo"}},
+  "/api/contract/call": {"success":true,"data":{"txHash":"f0a5fc5d20c39355e35f1fe8011b1a28e7c65d8566ae8d76b297a22d1110851d"}},
+  "/api/contract/result/{hash}": {"success":true,"data":{"flag":true,"data":{"success":true,"errorMessage":null,"contractAddress":"tNULSeBaN77MT2aLDi45CYP6mbSbnEgBa7Mdpo","result":"true","gasLimit":20000,"gasUsed":9232,"price":25,"totalFee":"600000","txSizeFee":"100000","actualContractFee":"230800","refundFee":"269200","value":"0","stackTrace":null,"transfers":[],"events":["{\"contractAddress\":\"tNULSeBaN77MT2aLDi45CYP6mbSbnEgBa7Mdpo\",\"blockNumber\":39,\"event\":\"TransferEvent\",\"payload\":{\"from\":\"tNULSeBaMvEtDfvZuukDf2mVyfGo3DdiN8KLRG\",\"to\":\"tNULSeBaMnrs6JKrCy6TQdzYJZkMZJDng7QAsD\",\"value\":\"990\"}}"],"tokenTransfers":[{"contractAddress":"tNULSeBaN77MT2aLDi45CYP6mbSbnEgBa7Mdpo","from":"tNULSeBaMvEtDfvZuukDf2mVyfGo3DdiN8KLRG","to":"tNULSeBaMnrs6JKrCy6TQdzYJZkMZJDng7QAsD","value":"990","name":"io","symbol":"IO","decimals":1}],"invokeRegisterCmds":[],"contractTxList":[],"remark":"call"}}}
+}
