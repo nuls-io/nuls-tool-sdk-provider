@@ -62,18 +62,18 @@ public class TransactionResource {
     TransactionTools transactionTools;
 
     @GET
-    @Path("/hash/{hash}")
+    @Path("/tx/{hash}")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "根据hash获取交易，只查已确认交易", order = 301)
+    @ApiOperation(description = "根据hash获取交易", order = 301)
     @Parameters({
-        @Parameter(parameterName = "hash", parameterDes = "交易hash")
+            @Parameter(parameterName = "hash", requestType = @TypeDescriptor(value = String.class), parameterDes = "交易hash")
     })
     @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = TransactionDto.class))
     public RpcClientResult getTx(@PathParam("hash") String hash) {
-        if (hash == null || !ValidateUtil.validHash(hash)) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "hash is invalid"));
+        if (hash == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "hash is empty"));
         }
-        Result<TransactionDto> result = transactionTools.getConfirmedTx(config.getChainId(), hash);
+        Result<TransactionDto> result = transactionTools.getTx(config.getChainId(), hash);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
         return clientResult;
     }

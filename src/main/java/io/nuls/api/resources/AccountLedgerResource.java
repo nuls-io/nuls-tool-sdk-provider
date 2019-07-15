@@ -64,11 +64,14 @@ import io.nuls.utils.ResultUtil;
 import io.nuls.v2.model.annotation.Api;
 import io.nuls.v2.model.annotation.ApiOperation;
 import io.nuls.v2.model.dto.TransferDto;
+import io.nuls.v2.model.dto.TransferTxFeeDto;
 import io.nuls.v2.util.CommonValidator;
 import io.nuls.v2.util.NulsSDKTool;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.math.BigInteger;
+import java.util.HashMap;
 import java.util.Map;
 
 import static io.nuls.core.constant.TxType.*;
@@ -107,10 +110,10 @@ public class AccountLedgerResource {
         if (!AddressTool.validAddress(config.getChainId(), address)) {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "address is invalid"));
         }
-        if(form.getAssetChainId() < 1 || form.getAssetChainId() > 65535) {
+        if (form.getAssetChainId() < 1 || form.getAssetChainId() > 65535) {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "assetChainId is invalid"));
         }
-        if(form.getAssetId() < 1 || form.getAssetId() > 65535) {
+        if (form.getAssetId() < 1 || form.getAssetId() > 65535) {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "assetId is invalid"));
         }
         Result<AccountBalance> balanceResult = legderTools.getBalanceAndNonce(config.getChainId(), form.getAssetChainId(), form.getAssetId(), address);
@@ -118,47 +121,6 @@ public class AccountLedgerResource {
         if (clientResult.isSuccess()) {
             clientResult.setData(new AccountBalanceDto((AccountBalance) clientResult.getData()));
         }
-        return clientResult;
-    }
-
-    @POST
-    @Path("/createTransferTxOffline")
-    @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "离线组装转账交易", order = 350, detailDesc = "根据inputs和outputs离线组装转账交易，用于单账户或多账户的转账交易。" +
-            "交易手续费为inputs里本链主资产金额总和，减去outputs里本链主资产总和")
-    @Parameters({
-            @Parameter(parameterName = "transferDto", parameterDes = "转账交易表单", requestType = @TypeDescriptor(value = TransferDto.class))
-    })
-    @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
-            @Key(name = "hash", description = "交易hash"),
-            @Key(name = "txHex", description = "交易序列化16进制字符串")
-    }))
-    public RpcClientResult createTransferTxOffline(TransferDto transferDto) {
-        try {
-            CommonValidator.checkTransferDto(transferDto);
-            io.nuls.core.basic.Result result = NulsSDKTool.createTransferTxOffline(transferDto);
-            return ResultUtil.getRpcClientResult(result);
-        } catch (NulsException e) {
-            return RpcClientResult.getFailed(new ErrorData(e.getErrorCode().getCode(), e.getMessage()));
-        }
-    }
-
-
-
-    @GET
-    @Path("/tx/{hash}")
-    @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "根据hash获取交易详情", order = 301)
-    @Parameters({
-            @Parameter(parameterName = "hash", requestType = @TypeDescriptor(value = String.class), parameterDes = "交易hash")
-    })
-    @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = TransactionDto.class))
-    public RpcClientResult getTx(@PathParam("hash") String hash) {
-        if (hash == null) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "hash is empty"));
-        }
-        Result<TransactionDto> result = transactionTools.getTx(config.getChainId(), hash);
-        RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
         return clientResult;
     }
 
@@ -253,11 +215,10 @@ public class AccountLedgerResource {
         }
     }
 
-
     @POST
     @Path("/transfer")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "单笔转账", order = 304,detailDesc = "发起单账户单资产的转账交易")
+    @ApiOperation(description = "单笔转账", order = 304, detailDesc = "发起单账户单资产的转账交易")
     @Parameters({
             @Parameter(parameterName = "单笔转账", parameterDes = "单笔转账表单", requestType = @TypeDescriptor(value = TransferForm.class))
     })
@@ -280,4 +241,43 @@ public class AccountLedgerResource {
         return clientResult;
     }
 
+    @POST
+    @Path("/createTransferTxOffline")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "离线组装转账交易", order = 350, detailDesc = "根据inputs和outputs离线组装转账交易，用于单账户或多账户的转账交易。" +
+            "交易手续费为inputs里本链主资产金额总和，减去outputs里本链主资产总和")
+    @Parameters({
+            @Parameter(parameterName = "transferDto", parameterDes = "转账交易表单", requestType = @TypeDescriptor(value = TransferDto.class))
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "hash", description = "交易hash"),
+            @Key(name = "txHex", description = "交易序列化16进制字符串")
+    }))
+    public RpcClientResult createTransferTxOffline(TransferDto transferDto) {
+        try {
+            CommonValidator.checkTransferDto(transferDto);
+            io.nuls.core.basic.Result result = NulsSDKTool.createTransferTxOffline(transferDto);
+            return ResultUtil.getRpcClientResult(result);
+        } catch (NulsException e) {
+            return RpcClientResult.getFailed(new ErrorData(e.getErrorCode().getCode(), e.getMessage()));
+        }
+    }
+
+    @POST
+    @Path("/calcTransferTxFee")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "计算离线创建转账交易所需手续费", order = 351)
+    @Parameters({
+            @Parameter(parameterName = "TransferTxFeeDto", parameterDes = "转账交易手续费", requestType = @TypeDescriptor(value = TransferTxFeeDto.class))
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "value", description = "交易手续费"),
+    }))
+    public RpcClientResult calcTransferTxFee(TransferTxFeeDto dto) {
+        BigInteger fee = NulsSDKTool.calcTransferTxFee(dto);
+        Map map = new HashMap();
+        map.put("value", fee);
+        RpcClientResult result = RpcClientResult.getSuccess(map);
+        return result;
+    }
 }

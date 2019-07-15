@@ -58,6 +58,7 @@ import io.nuls.v2.model.annotation.ApiType;
 import io.nuls.v2.model.dto.CoinFromDto;
 import io.nuls.v2.model.dto.CoinToDto;
 import io.nuls.v2.model.dto.TransferDto;
+import io.nuls.v2.model.dto.TransferTxFeeDto;
 import io.nuls.v2.util.CommonValidator;
 import io.nuls.v2.util.NulsSDKTool;
 import io.nuls.v2.util.ValidateUtil;
@@ -87,7 +88,7 @@ public class TransactionController {
     TransferService transferService = ServiceManager.get(TransferService.class);
 
     @RpcMethod("getTx")
-    @ApiOperation(description = "根据hash获取交易，只查已确认交易", order = 301)
+    @ApiOperation(description = "根据hash获取交易", order = 301)
     @Parameters({
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链id"),
             @Parameter(parameterName = "hash", parameterDes = "交易hash")
@@ -113,43 +114,12 @@ public class TransactionController {
         if (StringUtils.isBlank(txHash) || !ValidateUtil.validHash(txHash)) {
             return RpcResult.paramError("[txHash] is inValid");
         }
-        Result<TransactionDto> result = transactionTools.getConfirmedTx(chainId, txHash);
-        return ResultUtil.getJsonRpcResult(result);
-    }
-
-    @RpcMethod("getTxImmediately")
-    @ApiOperation(description = "根据hash获取交易，先查未确认，查不到再查已确认", order = 302)
-    @Parameters({
-            @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链id"),
-            @Parameter(parameterName = "hash", requestType = @TypeDescriptor(value = String.class), parameterDes = "交易hash")
-    })
-    @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = TransactionDto.class))
-    public RpcResult getTxImmediately(List<Object> params) {
-        VerifyUtils.verifyParams(params, 2);
-        int chainId;
-        String txHash;
-        try {
-            chainId = (int) params.get(0);
-        } catch (Exception e) {
-            return RpcResult.paramError("[chainId] is inValid");
-        }
-        try {
-            txHash = (String) params.get(1);
-        } catch (Exception e) {
-            return RpcResult.paramError("[txHash] is inValid");
-        }
-        if (!Context.isChainExist(chainId)) {
-            return RpcResult.dataNotFound();
-        }
-        if (StringUtils.isBlank(txHash) || !ValidateUtil.validHash(txHash)) {
-            return RpcResult.paramError("[txHash] is inValid");
-        }
         Result<TransactionDto> result = transactionTools.getTx(chainId, txHash);
         return ResultUtil.getJsonRpcResult(result);
     }
 
     @RpcMethod("validateTx")
-    @ApiOperation(description = "验证交易", order = 303)
+    @ApiOperation(description = "验证交易", order = 302, detailDesc = "验证离线组装的交易,验证成功返回交易hash值,失败返回错误提示信息")
     @Parameters({
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链id"),
             @Parameter(parameterName = "tx", parameterDes = "交易序列化字符串"),
@@ -186,10 +156,10 @@ public class TransactionController {
     }
 
     @RpcMethod("broadcastTx")
-    @ApiOperation(description = "广播交易", order = 304)
+    @ApiOperation(description = "广播交易", order = 303, detailDesc = "广播离线组装的交易,成功返回true,失败返回错误提示信息")
     @Parameters({
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链id"),
-            @Parameter(parameterName = "tx", parameterDes = "交易序列化字符串"),
+            @Parameter(parameterName = "tx", parameterDes = "交易序列化16进制字符串"),
     })
     @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "value", valueType = boolean.class, description = "是否成功"),
@@ -275,7 +245,7 @@ public class TransactionController {
     }
 
     @RpcMethod("transfer")
-    @ApiOperation(description = "单笔转账", order = 305)
+    @ApiOperation(description = "单笔转账", order = 304, detailDesc = "发起单账户单资产的转账交易")
     @Parameters({
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链id"),
             @Parameter(parameterName = "assetId", requestType = @TypeDescriptor(value = int.class), parameterDes = "资产id"),
@@ -351,7 +321,8 @@ public class TransactionController {
     }
 
     @RpcMethod("createTransferTxOffline")
-    @ApiOperation(description = "离线组装转账交易", order = 350)
+    @ApiOperation(description = "离线组装转账交易", order = 350, detailDesc = "根据inputs和outputs离线组装转账交易，用于单账户或多账户的转账交易。" +
+            "交易手续费为inputs里本链主资产金额总和，减去outputs里本链主资产总和")
     @Parameters({
             @Parameter(parameterName = "transferDto", parameterDes = "转账交易表单", requestType = @TypeDescriptor(value = TransferDto.class))
     })
@@ -408,5 +379,58 @@ public class TransactionController {
         } catch (NulsException e) {
             return RpcResult.failed(e.getErrorCode(), e.format());
         }
+    }
+
+    @RpcMethod("calcTransferTxFee")
+    @ApiOperation(description = "计算离线创建转账交易所需手续费", order = 351)
+    @Parameters({
+            @Parameter(parameterName = "TransferTxFeeDto", parameterDes = "转账交易手续费", requestType = @TypeDescriptor(value = TransferTxFeeDto.class))
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "value", description = "交易手续费"),
+    }))
+    public RpcResult calcTransferTxFee(List<Object> params) {
+        int addressCount, fromLength, toLength;
+        String remark, price;
+        try {
+            addressCount = (int) params.get(0);
+        } catch (Exception e) {
+            return RpcResult.paramError("[addressCount] is inValid");
+        }
+        try {
+            fromLength = (int) params.get(1);
+        } catch (Exception e) {
+            return RpcResult.paramError("[fromLength] is inValid");
+        }
+        try {
+            toLength = (int) params.get(2);
+        } catch (Exception e) {
+            return RpcResult.paramError("[toLength] is inValid");
+        }
+        try {
+            remark = (String) params.get(3);
+        } catch (Exception e) {
+            return RpcResult.paramError("[remark] is inValid");
+        }
+        try {
+            price = (String) params.get(4);
+        } catch (Exception e) {
+            return RpcResult.paramError("[price] is inValid");
+        }
+        if (!ValidateUtil.validateBigInteger(price)) {
+            return RpcResult.paramError("[price] is inValid");
+        }
+
+        TransferTxFeeDto dto = new TransferTxFeeDto();
+        dto.setAddressCount(addressCount);
+        dto.setFromLength(fromLength);
+        dto.setToLength(toLength);
+        dto.setRemark(remark);
+        dto.setPrice(new BigInteger(price));
+        BigInteger fee = NulsSDKTool.calcTransferTxFee(dto);
+        Map map = new HashMap();
+        map.put("value", fee);
+
+        return RpcResult.success(map);
     }
 }

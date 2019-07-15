@@ -33,7 +33,6 @@ import io.nuls.core.model.FormatValidUtils;
 import io.nuls.core.model.StringUtils;
 import io.nuls.core.parse.JSONUtils;
 import io.nuls.core.rpc.model.*;
-import io.nuls.model.RpcClientResult;
 import io.nuls.model.dto.DepositInfoDto;
 import io.nuls.model.form.consensus.CreateAgentForm;
 import io.nuls.model.form.consensus.DepositForm;
@@ -175,10 +174,10 @@ public class ConsensusController {
     }
 
     @RpcMethod("depositToAgent")
-    @ApiOperation(description = "申请参与共识", order = 503)
+    @ApiOperation(description = "委托参与共识", order = 503)
     @Parameters({
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
-            @Parameter(parameterName = "申请参与共识", parameterDes = "申请参与共识表单", requestType = @TypeDescriptor(value = DepositForm.class))
+            @Parameter(parameterName = "委托参与共识", parameterDes = "委托参与共识表单", requestType = @TypeDescriptor(value = DepositForm.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "value", description = "交易hash")
@@ -311,9 +310,9 @@ public class ConsensusController {
 
         Result<DepositInfo> result = consensusProvider.getDepositList(req);
         RpcResult rpcResult = ResultUtil.getJsonRpcResult(result);
-        if(result.isSuccess()) {
+        if (result.isSuccess()) {
             List<DepositInfo> list = result.getList();
-            if(list != null && !list.isEmpty()) {
+            if (list != null && !list.isEmpty()) {
                 List<DepositInfoDto> dtoList = list.stream().map(info -> {
                     DepositInfoDto dto = new DepositInfoDto();
                     BeanCopierManager.beanCopier(info, dto);
@@ -326,7 +325,7 @@ public class ConsensusController {
     }
 
     @RpcMethod("createAgentOffline")
-    @ApiOperation(description = "离线组装 - 创建共识节点", order = 550)
+    @ApiOperation(description = "离线组装 - 创建共识节点", order = 550, detailDesc = "参与共识所需资产可通过查询链信息接口获取(agentChainId和agentAssetId)")
     @Parameters({
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
             @Parameter(parameterName = "离线创建共识节点", parameterDes = "离线创建共识节点表单", requestType = @TypeDescriptor(value = ConsensusDto.class))
@@ -407,8 +406,7 @@ public class ConsensusController {
     }
 
     @RpcMethod("stopAgentOffline")
-    @ApiOperation(description = "离线组装 - 注销共识节点", order = 551, detailDesc = "组装交易的StopDepositDto信息，可通过查询节点的委托共识列表获取，" +
-            "input的nonce值可为空")
+    @ApiOperation(description = "离线组装 - 注销共识节点", order = 551, detailDesc = "组装交易的StopDepositDto信息，可通过查询节点的委托共识列表获取，input的nonce值可为空")
     @Parameters({
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
             @Parameter(parameterName = "离线注销共识节点", parameterDes = "离线注销共识节点表单", requestType = @TypeDescriptor(value = StopConsensusDto.class))
@@ -487,10 +485,10 @@ public class ConsensusController {
     }
 
     @RpcMethod("depositToAgentOffline")
-    @ApiOperation(description = "离线组装 - 申请参与共识", order = 552)
+    @ApiOperation(description = "离线组装 - 委托参与共识", order = 552, detailDesc = "参与共识所需资产可通过查询链信息接口获取(agentChainId和agentAssetId)")
     @Parameters({
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
-            @Parameter(parameterName = "离线申请参与共识", parameterDes = "离线申请参与共识表单", requestType = @TypeDescriptor(value = DepositDto.class))
+            @Parameter(parameterName = "离线委托参与共识", parameterDes = "离线委托参与共识表单", requestType = @TypeDescriptor(value = DepositDto.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "hash", description = "交易hash"),

@@ -34,7 +34,7 @@ import io.nuls.model.form.Base;
 /**
  * @author Niels
  */
-@ApiModel(name = "申请参与共识表单数据")
+@ApiModel(name = "委托参与共识表单数据")
 public class DepositForm extends Base {
 
     @ApiModelProperty(description = "参与共识账户地址", required = true)

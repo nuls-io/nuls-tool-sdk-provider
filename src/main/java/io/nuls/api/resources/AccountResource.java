@@ -140,7 +140,7 @@ public class AccountResource {
     @POST
     @Path("/prikey/{address}")
     @Produces({MediaType.APPLICATION_JSON})
-    @ApiOperation(description = "导出账户私钥", order = 103, detailDesc = "只能导出本地钱包创建或导入的账户")
+    @ApiOperation(description = "导出账户私钥", order = 103, detailDesc = "只能导出本地钱包已存在账户的私钥")
     @Parameters({
             @Parameter(parameterName = "address", parameterDes = "账户地址"),
             @Parameter(parameterName = "账户密码信息", parameterDes = "账户密码信息表单", requestType = @TypeDescriptor(value = AccountPasswordForm.class))
@@ -148,7 +148,7 @@ public class AccountResource {
     @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "value", description = "私钥")
     }))
-    public RpcClientResult getPrikey(@PathParam("address") String address, AccountPasswordForm form) {
+    public RpcClientResult getPriKey(@PathParam("address") String address, AccountPasswordForm form) {
         if (form == null) {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
         }
@@ -168,7 +168,7 @@ public class AccountResource {
     @POST
     @Path("/import/pri")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "根据私钥导入账户", order = 104, detailDesc = "导入私钥时，需要输入密码给私钥加密")
+    @ApiOperation(description = "根据私钥导入账户", order = 104, detailDesc = "导入私钥时，需要输入密码给明文私钥加密")
     @Parameters({
             @Parameter(parameterName = "根据私钥导入账户", parameterDes = "根据私钥导入账户表单", requestType = @TypeDescriptor(value = AccountPriKeyPasswordForm.class))
     })
@@ -342,56 +342,6 @@ public class AccountResource {
     }
 
     @POST
-    @Path("/multi/sign")
-    @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "多账户摘要签名", order = 110, detailDesc = "用于签名离线组装的多账户转账交易，调用接口时，参数可以传地址和私钥，或者传地址和加密私钥和加密密码")
-    @Parameters({
-            @Parameter(parameterName = "多账户摘要签名", parameterDes = "多账户摘要签名表单", requestType = @TypeDescriptor(value = MultiSignForm.class))
-    })
-    @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
-            @Key(name = "hash", description = "交易hash"),
-            @Key(name = "txHex", description = "签名后的交易16进制字符串")
-    }))
-    public RpcClientResult multiSign(MultiSignForm form) {
-        io.nuls.core.basic.Result result = NulsSDKTool.sign(form.getDtoList(), form.getTxHex());
-        return ResultUtil.getRpcClientResult(result);
-    }
-
-
-    @POST
-    @Path("/priKey/sign")
-    @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "明文私钥摘要签名", order = 111)
-    @Parameters({
-            @Parameter(parameterName = "明文私钥摘要签名", parameterDes = "明文私钥摘要签名表单", requestType = @TypeDescriptor(value = PriKeySignForm.class))
-    })
-    @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
-            @Key(name = "hash", description = "交易hash"),
-            @Key(name = "txHex", description = "签名后的交易16进制字符串")
-    }))
-    public RpcClientResult priKeySign(PriKeySignForm form) {
-        io.nuls.core.basic.Result result = NulsSDKTool.sign(form.getTxHex(), form.getAddress(), form.getPriKey());
-        return ResultUtil.getRpcClientResult(result);
-    }
-
-    @POST
-    @Path("/encryptedPriKey/sign")
-    @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "密文私钥摘要签名", order = 112)
-    @Parameters({
-            @Parameter(parameterName = "密文私钥摘要签名", parameterDes = "密文私钥摘要签名表单", requestType = @TypeDescriptor(value = EncryptedPriKeySignForm.class))
-    })
-    @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
-            @Key(name = "hash", description = "交易hash"),
-            @Key(name = "txHex", description = "签名后的交易16进制字符串")
-    }))
-    public RpcClientResult encryptedPriKeySign(EncryptedPriKeySignForm form) {
-        io.nuls.core.basic.Result result = NulsSDKTool.sign(form.getTxHex(), form.getAddress(), form.getEncryptedPriKey(), form.getPassword());
-        return ResultUtil.getRpcClientResult(result);
-    }
-
-
-    @POST
     @Path("/offline")
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(description = "离线 - 批量创建账户", order = 151, detailDesc = "创建的账户不会保存到钱包中,接口直接返回账户的keystore信息")
@@ -436,6 +386,54 @@ public class AccountResource {
     }))
     public RpcClientResult resetPasswordOffline(ResetPasswordForm form) {
         io.nuls.core.basic.Result result = NulsSDKTool.resetPasswordOffline(form.getAddress(), form.getEncryptedPriKey(), form.getOldPassword(), form.getNewPassword());
+        return ResultUtil.getRpcClientResult(result);
+    }
+
+    @POST
+    @Path("/multi/sign")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "多账户摘要签名", order = 154, detailDesc = "用于签名离线组装的多账户转账交易，调用接口时，参数可以传地址和私钥，或者传地址和加密私钥和加密密码")
+    @Parameters({
+            @Parameter(parameterName = "多账户摘要签名", parameterDes = "多账户摘要签名表单", requestType = @TypeDescriptor(value = MultiSignForm.class))
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "hash", description = "交易hash"),
+            @Key(name = "txHex", description = "签名后的交易16进制字符串")
+    }))
+    public RpcClientResult multiSign(MultiSignForm form) {
+        io.nuls.core.basic.Result result = NulsSDKTool.sign(form.getDtoList(), form.getTxHex());
+        return ResultUtil.getRpcClientResult(result);
+    }
+
+    @POST
+    @Path("/priKey/sign")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "明文私钥摘要签名", order = 155)
+    @Parameters({
+            @Parameter(parameterName = "明文私钥摘要签名", parameterDes = "明文私钥摘要签名表单", requestType = @TypeDescriptor(value = PriKeySignForm.class))
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "hash", description = "交易hash"),
+            @Key(name = "txHex", description = "签名后的交易16进制字符串")
+    }))
+    public RpcClientResult priKeySign(PriKeySignForm form) {
+        io.nuls.core.basic.Result result = NulsSDKTool.sign(form.getTxHex(), form.getAddress(), form.getPriKey());
+        return ResultUtil.getRpcClientResult(result);
+    }
+
+    @POST
+    @Path("/encryptedPriKey/sign")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "密文私钥摘要签名", order = 156)
+    @Parameters({
+            @Parameter(parameterName = "密文私钥摘要签名", parameterDes = "密文私钥摘要签名表单", requestType = @TypeDescriptor(value = EncryptedPriKeySignForm.class))
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "hash", description = "交易hash"),
+            @Key(name = "txHex", description = "签名后的交易16进制字符串")
+    }))
+    public RpcClientResult encryptedPriKeySign(EncryptedPriKeySignForm form) {
+        io.nuls.core.basic.Result result = NulsSDKTool.sign(form.getTxHex(), form.getAddress(), form.getEncryptedPriKey(), form.getPassword());
         return ResultUtil.getRpcClientResult(result);
     }
 }

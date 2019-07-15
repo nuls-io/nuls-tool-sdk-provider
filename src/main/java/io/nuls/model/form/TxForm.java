@@ -41,7 +41,7 @@ import java.math.BigInteger;
 @ApiModel(name = "交易序列化字符串表单")
 public class TxForm {
 
-    @ApiModelProperty(description = "交易序列化字符串", required = true)
+    @ApiModelProperty(description = "交易序列化16进制字符串", required = true)
     private String txHex;
 
 }
