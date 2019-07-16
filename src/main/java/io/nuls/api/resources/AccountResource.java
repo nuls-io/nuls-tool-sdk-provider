@@ -46,7 +46,6 @@ import io.nuls.model.form.*;
 import io.nuls.utils.Log;
 import io.nuls.utils.ResultUtil;
 import io.nuls.v2.model.dto.AccountDto;
-import io.nuls.v2.model.dto.SignDto;
 import io.nuls.v2.util.NulsSDKTool;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -254,20 +253,25 @@ public class AccountResource {
     }
 
     @POST
-    @Path("/import/keystore/string")
+    @Path("/import/keystore/json")
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(description = "根据keystore字符串导入账户", order = 107)
     @Parameters({
-            @Parameter(parameterName = "根据keystore字符串导入账户", parameterDes = "根据keystore字符串导入账户表单", requestType = @TypeDescriptor(value = AccountKeyStoreStringImportForm.class))
+            @Parameter(parameterName = "根据keystore字符串导入账户", parameterDes = "根据keystore字符串导入账户表单", requestType = @TypeDescriptor(value = AccountKeyStoreJsonImportForm.class))
     })
     @ResponseData(name = "返回值", description = "返回账户地址", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "value", description = "账户地址")
     }))
-    public RpcClientResult importAccountByKeystoreString(AccountKeyStoreStringImportForm form) {
+    public RpcClientResult importAccountByKeystoreJson(AccountKeyStoreJsonImportForm form) {
         if (form == null) {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
         }
-        String keystore = form.getKeystoreString();
+        String keystore = null;
+        try {
+            keystore = JSONUtils.obj2json(form.getKeystore());
+        } catch (JsonProcessingException e) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "keystore is invalid"));
+        }
         ImportAccountByKeyStoreReq req = new ImportAccountByKeyStoreReq(form.getPassword(), HexUtil.encode(keystore.getBytes()), form.getOverwrite());
         req.setChainId(config.getChainId());
         Result<String> result = accountService.importAccountByKeyStore(req);
@@ -375,7 +379,7 @@ public class AccountResource {
     }
 
     @PUT
-    @Path("/password/offline/{address}")
+    @Path("/password/offline/")
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(description = "离线修改账户密码", order = 153)
     @Parameters({

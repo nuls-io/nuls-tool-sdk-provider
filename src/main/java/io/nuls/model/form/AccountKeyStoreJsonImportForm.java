@@ -28,6 +28,7 @@ package io.nuls.model.form;
 
 import io.nuls.core.rpc.model.ApiModel;
 import io.nuls.core.rpc.model.ApiModelProperty;
+import io.nuls.model.dto.AccountKeyStoreDto;
 import lombok.Data;
 
 /**
@@ -35,10 +36,10 @@ import lombok.Data;
  */
 @Data
 @ApiModel(description = "导入账户KeyStore字符串")
-public class AccountKeyStoreStringImportForm {
+public class AccountKeyStoreJsonImportForm {
 
     @ApiModelProperty(description = "keystore字符串", required = true)
-    private String keystoreString;
+    private AccountKeyStoreDto keystore;
 
     @ApiModelProperty(description = "密码")
     private String password;

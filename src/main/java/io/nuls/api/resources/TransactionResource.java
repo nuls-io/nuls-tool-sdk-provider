@@ -62,7 +62,7 @@ public class TransactionResource {
     TransactionTools transactionTools;
 
     @GET
-    @Path("/tx/{hash}")
+    @Path("/{hash}")
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(description = "根据hash获取交易", order = 301)
     @Parameters({
