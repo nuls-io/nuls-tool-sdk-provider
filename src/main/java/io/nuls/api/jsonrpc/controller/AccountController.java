@@ -26,6 +26,7 @@ import io.nuls.base.api.provider.ServiceManager;
 import io.nuls.base.api.provider.account.AccountService;
 import io.nuls.base.api.provider.account.facade.*;
 import io.nuls.base.basic.AddressTool;
+import io.nuls.core.constant.CommonCodeConstanst;
 import io.nuls.core.core.annotation.Autowired;
 import io.nuls.core.core.annotation.Controller;
 import io.nuls.core.core.annotation.RpcMethod;
@@ -35,6 +36,7 @@ import io.nuls.core.model.StringUtils;
 import io.nuls.core.parse.JSONUtils;
 import io.nuls.core.rpc.model.*;
 import io.nuls.model.dto.AccountBalanceDto;
+import io.nuls.model.dto.AccountKeyStoreDto;
 import io.nuls.model.jsonrpc.RpcResult;
 import io.nuls.model.jsonrpc.RpcResultError;
 import io.nuls.rpctools.AccountTools;
@@ -49,6 +51,7 @@ import io.nuls.v2.model.dto.AccountDto;
 import io.nuls.v2.model.dto.SignDto;
 import io.nuls.v2.util.NulsSDKTool;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -347,12 +350,17 @@ public class AccountController {
         req.setChainId(chainId);
         Result<String> result = accountService.getAccountKeyStore(req);
         RpcResult rpcResult = new RpcResult();
-        if (result.isSuccess()) {
-            rpcResult.setResult(result.getData());
-        } else {
-            rpcResult.setError(new RpcResultError(result.getStatus(), result.getMessage(), null));
+        try {
+            if (result.isSuccess()) {
+                AccountKeyStoreDto keyStoreDto = JSONUtils.json2pojo(result.getData(), AccountKeyStoreDto.class);
+                rpcResult.setResult(keyStoreDto);
+            } else {
+                rpcResult.setError(new RpcResultError(result.getStatus(), result.getMessage(), null));
+            }
+            return rpcResult;
+        } catch (IOException e) {
+            return RpcResult.failed(CommonCodeConstanst.DATA_PARSE_ERROR);
         }
-        return rpcResult;
     }
 
     @RpcMethod("getAccountBalance")
@@ -527,7 +535,7 @@ public class AccountController {
     @ApiOperation(description = "多账户摘要签名", order = 154, detailDesc = "用于签名离线组装的多账户转账交易,调用接口时，参数可以传地址和私钥，或者传地址和加密私钥和加密密码")
     @Parameters({
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
-            @Parameter(parameterName = "signDtoList", parameterDes = "摘要签名表单", requestType = @TypeDescriptor(value = SignDto.class)),
+            @Parameter(parameterName = "signDtoList", parameterDes = "摘要签名表单", requestType = @TypeDescriptor(value = List.class, collectionElement = SignDto.class)),
             @Parameter(parameterName = "txHex", parameterType = "String", parameterDes = "交易序列化16进制字符串")
     })
     @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {

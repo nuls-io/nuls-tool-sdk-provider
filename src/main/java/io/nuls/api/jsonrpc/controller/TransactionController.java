@@ -288,7 +288,7 @@ public class TransactionController {
             return RpcResult.paramError("[password] is inValid");
         }
         try {
-            amount = (String) params.get(5);
+            amount = params.get(5).toString();
         } catch (Exception e) {
             return RpcResult.paramError("[amount] is inValid");
         }

@@ -1,4 +1,143 @@
 {
+  "info": {
+    "request": {"jsonrpc":"2.0","method":"info","params":[],"id":1234},
+    "response" : {"jsonrpc":"2.0","id":"1234","result":{"agentChainId":2,"inflationAmount":500000000000000,"agentAssetId":1,"chainId":2,"assetId":1}}
+  },
+  "createAccount": {
+    "request": {"jsonrpc":"2.0","method":"createAccount","params":[2,1,"abcd1234"],"id":1234},
+    "response" : {"jsonrpc":"2.0","id":"1234","result":["tNULSeBaMhcccH1KeXhMpH5y3pvtRzatAiuMJk"]}
+  },
+  "updatePassword": {
+    "request": {"jsonrpc":"2.0","method":"updatePassword","params":[2,"tNULSeBaMhcccH1KeXhMpH5y3pvtRzatAiuMJk","abcd1234","abcd1111"],"id":1234},
+    "response" : {"jsonrpc":"2.0","id":"1234","result":true}
+  },
+  "getPriKey": {
+    "request": {"jsonrpc":"2.0","method":"getPriKey","params":[2,"tNULSeBaMhcccH1KeXhMpH5y3pvtRzatAiuMJk","abcd1111"],"id":1234},
+    "response" : {"jsonrpc":"2.0","id":"1234","result":"53b02c91605451ea35175df894b4c47b7d1effbd05d6b269b3e7c785f3f6dc18"}
+  },
+  "importPriKey": {
+    "request": {"jsonrpc":"2.0","method":"importPriKey","params":[2,"53b02c91605451ea35175df894b4c47b7d1effbd05d6b269b3e7c785f3f6dc18","abcd1234"],"id":1234},
+    "response" : {"jsonrpc":"2.0","id":"1234","result":"tNULSeBaMhcccH1KeXhMpH5y3pvtRzatAiuMJk"}
+  },
+  "importKeystore": {
+    "request": {"jsonrpc":"2.0","method":"importKeystore","params":[2,{"address":"tNULSeBaMhcccH1KeXhMpH5y3pvtRzatAiuMJk","encryptedPrivateKey":"8dbe5c1da7228c0a8b6a26c328231b8df2d4dbfd3f9b029557708d4560de9ecd53a353bb2d688d7c68bd11d741e5d3ed","pubKey":"024477033a4521efee5f90caf30f8eb3284e8d1bb7fef2923ae21617b24aacc8cb","prikey":null},"abcd1234"],"id":1234},
+    "response" : {"jsonrpc":"2.0","id":"1234","result":"tNULSeBaMhcccH1KeXhMpH5y3pvtRzatAiuMJk"}
+  },
+  "exportKeystore": {
+    "request": {"jsonrpc":"2.0","method":"exportKeystore","params":[2,"tNULSeBaMhcccH1KeXhMpH5y3pvtRzatAiuMJk","abcd1234"],"id":1234},
+    "response" : {"jsonrpc":"2.0","id":"1234","result":"{\"address\":\"tNULSeBaMhcccH1KeXhMpH5y3pvtRzatAiuMJk\",\"encryptedPrivateKey\":\"8dbe5c1da7228c0a8b6a26c328231b8df2d4dbfd3f9b029557708d4560de9ecd53a353bb2d688d7c68bd11d741e5d3ed\",\"pubKey\":\"024477033a4521efee5f90caf30f8eb3284e8d1bb7fef2923ae21617b24aacc8cb\",\"prikey\":null}"}
+  },
+  "getAccountBalance": {
+    "request": {"jsonrpc":"2.0","method":"getAccountBalance","params":[2,2,1,"tNULSeBaMhcccH1KeXhMpH5y3pvtRzatAiuMJk"],"id":1234},
+    "response" : {"jsonrpc":"2.0","id":"1234","result":{"totalBalance":"0","balance":"0","timeLock":"0","consensusLock":"0","freeze":"0","nonce":"0000000000000000","nonceType":1}}
+  },
+  "createAccountOffline": {
+    "request": {"jsonrpc":"2.0","method":"createAccountOffline","params":[2,1,"abcd1234"],"id":1234},
+    "response" : {"jsonrpc":"2.0","id":"1234","result":[{"address":"tNULSeBaMnS7et6FdFMMMLyK8Wvy1daVVeohfu","pubKey":"02756e0d0827df60f5806bc00c44f97a9f5c234f78502a314aa40bb0a0156cd9f0","prikey":"","encryptedPrivateKey":"720e9f7ac1ab2ee997bad249d1c42212a5c5c744358a7bc65f472a1fe61a87a8f0bc841fdc74c8313fe6c94f496f3676"}]}
+  },
+  "getPriKeyOffline": {
+    "request": {"jsonrpc":"2.0","method":"getPriKeyOffline","params":[2,"tNULSeBaMhcccH1KeXhMpH5y3pvtRzatAiuMJk","8dbe5c1da7228c0a8b6a26c328231b8df2d4dbfd3f9b029557708d4560de9ecd53a353bb2d688d7c68bd11d741e5d3ed","abcd1234"],"id":1234},
+    "response" : {"jsonrpc":"2.0","id":"1234","result":{"priKey":"53b02c91605451ea35175df894b4c47b7d1effbd05d6b269b3e7c785f3f6dc18"}}
+  },
+  "resetPasswordOffline": {
+    "request": {"jsonrpc":"2.0","method":"resetPasswordOffline","params":[2,"tNULSeBaMhcccH1KeXhMpH5y3pvtRzatAiuMJk","8dbe5c1da7228c0a8b6a26c328231b8df2d4dbfd3f9b029557708d4560de9ecd53a353bb2d688d7c68bd11d741e5d3ed","abcd1234","abcd1111"],"id":1234},
+    "response" : {"jsonrpc":"2.0","id":"1234","result":{"newEncryptedPriKey":"8dbe5c1da7228c0a8b6a26c328231b8df2d4dbfd3f9b029557708d4560de9ecd53a353bb2d688d7c68bd11d741e5d3ed"}}
+  },
+  "multiSign": {
+    "request": {"jsonrpc":"2.0","method":"multiSign","params":[2,[{"address":"tNULSeBaMhcccH1KeXhMpH5y3pvtRzatAiuMJk","priKey":"53b02c91605451ea35175df894b4c47b7d1effbd05d6b269b3e7c785f3f6dc18"},{"address":"tNULSABFehEc2HgKhXFMtH3yGHpSStBthiuMfd","encryptedPrivateKey":"8dbe5c1da7228c0a8b6a26c328231b8df2d4dbfd3f9b029557708d4560de9ecd53a353bb2d688d7c68bd11d741e5d3ed","password":"abcd1234"}],"0200b67f2d5d0672656d61726b008c01170200012a9af4ee49f4cb1ee84eafd42aec41bc04b28f7b02000100402a8648170000000000000000000000000000000000000000000000000000000800000000000000000001170200012a9af4ee49f4cb1ee84eafd42aec41bc04b28f7b0200010000e8764817000000000000000000000000000000000000000000000000000000000000000000000000"],"id":1234},
+    "response" : {"jsonrpc":"2.0","id":"1234","result":{"txHex":"0200b67f2d5d0672656d61726b008c01170200012a9af4ee49f4cb1ee84eafd42aec41bc04b28f7b02000100402a8648170000000000000000000000000000000000000000000000000000000800000000000000000001170200012a9af4ee49f4cb1ee84eafd42aec41bc04b28f7b0200010000e876481700000000000000000000000000000000000000000000000000000000000000000000006a21024477033a4521efee5f90caf30f8eb3284e8d1bb7fef2923ae21617b24aacc8cb473045022100a8b3d10dfdf4fb0c7c6ede1f5d216a631689fbbd0e9beb46cac1918a5e64ccbc02202a654c3d9a27a99e8458ac18a8b9bc460f520bff10e4592102ad04e22890b412","hash":"748184df91eda8d09be76e075d553313434c56bfeec3d449abc99ba6c430c00c"}}
+  },
+  "priKeySign": {
+    "request": {"jsonrpc":"2.0","method":"priKeySign","params":[2,"0200b67f2d5d0672656d61726b008c01170200012a9af4ee49f4cb1ee84eafd42aec41bc04b28f7b02000100402a8648170000000000000000000000000000000000000000000000000000000800000000000000000001170200012a9af4ee49f4cb1ee84eafd42aec41bc04b28f7b0200010000e8764817000000000000000000000000000000000000000000000000000000000000000000000000","tNULSeBaMhcccH1KeXhMpH5y3pvtRzatAiuMJk","53b02c91605451ea35175df894b4c47b7d1effbd05d6b269b3e7c785f3f6dc18"],"id":1234},
+    "response" : {"jsonrpc":"2.0","id":"1234","result":{"txHex":"0200b67f2d5d0672656d61726b008c01170200012a9af4ee49f4cb1ee84eafd42aec41bc04b28f7b02000100402a8648170000000000000000000000000000000000000000000000000000000800000000000000000001170200012a9af4ee49f4cb1ee84eafd42aec41bc04b28f7b0200010000e876481700000000000000000000000000000000000000000000000000000000000000000000006a21024477033a4521efee5f90caf30f8eb3284e8d1bb7fef2923ae21617b24aacc8cb473045022100a8b3d10dfdf4fb0c7c6ede1f5d216a631689fbbd0e9beb46cac1918a5e64ccbc02202a654c3d9a27a99e8458ac18a8b9bc460f520bff10e4592102ad04e22890b412","hash":"748184df91eda8d09be76e075d553313434c56bfeec3d449abc99ba6c430c00c"}}
+  },
+  "encryptedPriKeySign": {
+    "request": {"jsonrpc":"2.0","method":"encryptedPriKeySign","params":[2,"0200b67f2d5d0672656d61726b008c01170200012a9af4ee49f4cb1ee84eafd42aec41bc04b28f7b02000100402a8648170000000000000000000000000000000000000000000000000000000800000000000000000001170200012a9af4ee49f4cb1ee84eafd42aec41bc04b28f7b0200010000e8764817000000000000000000000000000000000000000000000000000000000000000000000000","tNULSeBaMhcccH1KeXhMpH5y3pvtRzatAiuMJk","8dbe5c1da7228c0a8b6a26c328231b8df2d4dbfd3f9b029557708d4560de9ecd53a353bb2d688d7c68bd11d741e5d3ed","abcd"],"id":1234},
+    "response" : {"jsonrpc":"2.0","id":"1234","result":{"txHex":"0200b67f2d5d0672656d61726b008c01170200012a9af4ee49f4cb1ee84eafd42aec41bc04b28f7b02000100402a8648170000000000000000000000000000000000000000000000000000000800000000000000000001170200012a9af4ee49f4cb1ee84eafd42aec41bc04b28f7b0200010000e876481700000000000000000000000000000000000000000000000000000000000000000000006a21024477033a4521efee5f90caf30f8eb3284e8d1bb7fef2923ae21617b24aacc8cb473045022100a8b3d10dfdf4fb0c7c6ede1f5d216a631689fbbd0e9beb46cac1918a5e64ccbc02202a654c3d9a27a99e8458ac18a8b9bc460f520bff10e4592102ad04e22890b412","hash":"748184df91eda8d09be76e075d553313434c56bfeec3d449abc99ba6c430c00c"}}
+  },
+
+  "getHeaderByHeight": {
+    "request": {"jsonrpc":"2.0","method":"getHeaderByHeight","params":[2,1],"id":1234},
+    "response" : {"jsonrpc":"2.0","id":"1234","result":{"hash":"0061dee8b289df58e3c820f38b31ce47d02993797f976eacd6020ced392a6b5b","preHash":"d8880f913c984e4dece5cfb3f5f1d96d6ee923ffb0b47be0079fe84472ddda83","merkleHash":"8930f7386e33eaf79c22025956820fa58f403b7dbdf3d39ca5f2be5776e8b8e5","time":"1970-01-19 10:14:08.008","height":1,"txCount":1,"blockSignature":"473045022100f2012721b3eef4bc052bcef76903cb4eab029020b09a300968f7dde6fb7c56be0220621774e67bc8b09440ab40273f64795d83394ec6ad3c9458801c36e9b0f29850","size":247,"packingAddress":"tNULSeBaMkrt4z9FYEkkR9D6choPVvQr94oYZp","roundIndex":156324818,"consensusMemberCount":1,"roundStartTime":"1970-01-19 10:14:08.008","packingIndexOfRound":1,"mainVersion":1,"blockVersion":1,"stateRoot":"56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421"}}
+  },
+  "getHeaderByHash": {
+    "request": {"jsonrpc":"2.0","method":"getHeaderByHash","params":[2,"0061dee8b289df58e3c820f38b31ce47d02993797f976eacd6020ced392a6b5b"],"id":1234},
+    "response" : {"jsonrpc":"2.0","id":"1234","result":{"hash":"0061dee8b289df58e3c820f38b31ce47d02993797f976eacd6020ced392a6b5b","preHash":"d8880f913c984e4dece5cfb3f5f1d96d6ee923ffb0b47be0079fe84472ddda83","merkleHash":"8930f7386e33eaf79c22025956820fa58f403b7dbdf3d39ca5f2be5776e8b8e5","time":"1970-01-19 10:14:08.008","height":1,"txCount":1,"blockSignature":"473045022100f2012721b3eef4bc052bcef76903cb4eab029020b09a300968f7dde6fb7c56be0220621774e67bc8b09440ab40273f64795d83394ec6ad3c9458801c36e9b0f29850","size":247,"packingAddress":"tNULSeBaMkrt4z9FYEkkR9D6choPVvQr94oYZp","roundIndex":156324818,"consensusMemberCount":1,"roundStartTime":"1970-01-19 10:14:08.008","packingIndexOfRound":1,"mainVersion":1,"blockVersion":1,"stateRoot":"56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421"}}
+  },
+  "getBestBlockHeader": {
+    "request": {"jsonrpc":"2.0","method":"getBestBlockHeader","params":[2],"id":1234},
+    "response" : {"jsonrpc":"2.0","id":"1234","result":{"hash":"f1003ee7c46ee33c5d6c518342c993cad7d202767cb4b7b5ddb69ce19d8899ea","preHash":"8edfb6610be130020c3815915e81eccaa4c3c426362d1239030119b3a2941923","merkleHash":"4b4564bff52373d698dbb4d95ea66d23b18a2ae09079a9e62b8f4d7ddf8bdb5c","time":"1970-01-19 10:14:18.018","height":1000,"txCount":1,"blockSignature":"4730450221009d13cd79b918fba44b4ca549a37dc715e368ac55fe80170f54f52c2742da0ed802207312ee6d38b95a28feaca40ed9c91fba4d47fe5efa1940ecd4fe63e7b9cb5533","size":247,"packingAddress":"tNULSeBaMkrt4z9FYEkkR9D6choPVvQr94oYZp","roundIndex":156325817,"consensusMemberCount":1,"roundStartTime":"1970-01-19 10:14:18.018","packingIndexOfRound":1,"mainVersion":1,"blockVersion":1,"stateRoot":"56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421"}}
+  },
+  "getBestBlock": {
+    "request": {"jsonrpc":"2.0","method":"getBestBlock","params":[2],"id":1234},
+    "response" : {"jsonrpc":"2.0","id":"1234","result":{"header":{"hash":"55ff1491334a3e636e504f1bc12ba04fa0c582381a0b8e0c3f7aaa12a27fabb5","preHash":"97bb75f9d12e945396ffb386373941c05d9671770bd4639554e5ed948e775f8c","merkleHash":"0ecd099ee9c5955588516a6f619d9bef6406a7d2aa31eec592df2c6cb19e326d","time":"1970-01-19 10:14:21.021","height":1348,"txCount":1,"blockSignature":"463044022046aa28d324da4ec487829fcc8901e351eb13a0290bdd05c084d5e42a876ab6a1022024aa4386081787506771f5e8ddbe7a625d6f4aff67e5c10818fbd4f98ccf264e","size":234,"packingAddress":"tNULSeBaMkrt4z9FYEkkR9D6choPVvQr94oYZp","roundIndex":156326165,"consensusMemberCount":1,"roundStartTime":"1970-01-19 10:14:21.021","packingIndexOfRound":1,"mainVersion":1,"blockVersion":1,"stateRoot":"56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421"},"txs":[{"type":1,"coinData":"AAA=","txData":null,"time":1563261651,"transactionSignature":null,"remark":null,"hash":{"bytes":"Ds0JnunFlVWIUWpvYZ2b72QGp9KqMe7Fkt8sbLGeMm0="},"blockHeight":1348,"status":"UNCONFIRM","size":12,"inBlockIndex":0,"coinDataInstance":{"from":[],"to":[],"fromAddressCount":0},"fee":0,"multiSignTx":false}]}}
+  },
+  "getBlockByHeight": {
+    "request": {"jsonrpc":"2.0","method":"getBlockByHeight","params":[2,100],"id":1234},
+    "response" : {"jsonrpc":"2.0","id":"1234","result":{"header":{"hash":"0620b926b2f09921315cc251bd65fe803cfa9e2259275900f7f7509cd0dac6d3","preHash":"975c90cbc8dedc577ebf315be4d11b4153c2bbb1b9704484c45752215717aa1d","merkleHash":"c9144c126f64f2e79d11879af9f4c94839202c464bb854dae17d89800de30fc6","time":"1970-01-19 10:14:09.009","height":100,"txCount":1,"blockSignature":"463044022060286d182fb808bb24543730a0316688b2c02f8378f112bca15d0860288dc5340220566b867e1813ed57c79b5b6ed9baf1f07e29afa8b445a842120c5407557a7363","size":234,"packingAddress":"tNULSeBaMkrt4z9FYEkkR9D6choPVvQr94oYZp","roundIndex":156324917,"consensusMemberCount":1,"roundStartTime":"1970-01-19 10:14:09.009","packingIndexOfRound":1,"mainVersion":1,"blockVersion":1,"stateRoot":"56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421"},"txs":[{"type":1,"coinData":"AAA=","txData":null,"time":1563249171,"transactionSignature":null,"remark":null,"hash":{"bytes":"yRRMEm9k8uedEYea+fTJSDkgLEZLuFTa4X2JgA3jD8Y="},"blockHeight":100,"status":"UNCONFIRM","size":12,"inBlockIndex":0,"coinDataInstance":{"from":[],"to":[],"fromAddressCount":0},"fee":0,"multiSignTx":false}]}}
+  },
+  "getBlockByHash": {
+    "request": {"jsonrpc":"2.0","method":"getBlockByHash","params":[2,"0620b926b2f09921315cc251bd65fe803cfa9e2259275900f7f7509cd0dac6d3"],"id":1234},
+    "response" : {"jsonrpc":"2.0","id":"1234","result":{"header":{"hash":"0620b926b2f09921315cc251bd65fe803cfa9e2259275900f7f7509cd0dac6d3","preHash":"975c90cbc8dedc577ebf315be4d11b4153c2bbb1b9704484c45752215717aa1d","merkleHash":"c9144c126f64f2e79d11879af9f4c94839202c464bb854dae17d89800de30fc6","time":"1970-01-19 10:14:09.009","height":100,"txCount":1,"blockSignature":"463044022060286d182fb808bb24543730a0316688b2c02f8378f112bca15d0860288dc5340220566b867e1813ed57c79b5b6ed9baf1f07e29afa8b445a842120c5407557a7363","size":234,"packingAddress":"tNULSeBaMkrt4z9FYEkkR9D6choPVvQr94oYZp","roundIndex":156324917,"consensusMemberCount":1,"roundStartTime":"1970-01-19 10:14:09.009","packingIndexOfRound":1,"mainVersion":1,"blockVersion":1,"stateRoot":"56e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b421"},"txs":[{"type":1,"coinData":"AAA=","txData":null,"time":1563249171,"transactionSignature":null,"remark":null,"hash":{"bytes":"yRRMEm9k8uedEYea+fTJSDkgLEZLuFTa4X2JgA3jD8Y="},"blockHeight":100,"status":"UNCONFIRM","size":12,"inBlockIndex":0,"coinDataInstance":{"from":[],"to":[],"fromAddressCount":0},"fee":0,"multiSignTx":false}]}}
+  },
+  "getTx": {
+    "request": {"jsonrpc":"2.0","method":"getTx","params":[2,"40acabd7e7b7643aa545f2b74d09f8d65eecf885919d968d263a7a24255f8698"],"id":1234},
+    "response" : {"jsonrpc":"2.0","id":"1234","result":{"hash":"40acabd7e7b7643aa545f2b74d09f8d65eecf885919d968d263a7a24255f8698","type":2,"time":"2019-07-16 15:24:55.055","blockHeight":1373,"remark":null,"transactionSignature":"2103958b790c331954ed367d37bac901de5c2f06ac8368b37d7bd6cd5ae143c1d7e3473045022100c2cdaec043c8e5f26cf2efcd63ce9a27461d0569fc4f5c13ee685c506329da4702204f3e0fc3aed450dbb8ac14b5745c1e694100092bad63a40247a534a82fcdab9d","status":1,"size":256,"inBlockIndex":0,"form":[{"address":"tNULSeBaMvEtDfvZuukDf2mVyfGo3DdiN8KLRG","assetsChainId":2,"assetsId":1,"amount":"10000000100000","nonce":"0000000000000000","locked":0}],"to":[{"address":"tNULSeBaMhcccH1KeXhMpH5y3pvtRzatAiuMJk","assetsChainId":2,"assetsId":1,"amount":"10000000000000","lockTime":0}]}}
+  },
+  "transfer": {
+    "request": {"jsonrpc":"2.0","method":"transfer","params":[2,1,"tNULSeBaMvEtDfvZuukDf2mVyfGo3DdiN8KLRG","tNULSeBaMhcccH1KeXhMpH5y3pvtRzatAiuMJk","nuls123456","10000000000000","transfer tx"],"id":1234},
+    "response" : {"jsonrpc":"2.0","id":"1234","result":{"hash":"40acabd7e7b7643aa545f2b74d09f8d65eecf885919d968d263a7a24255f8698"}}
+  },
+  "createTransferTxOffline": {
+    "request": {"jsonrpc":"2.0","method":"createTransferTxOffline","params":[[{"address":"tNULSeBaMhcccH1KeXhMpH5y3pvtRzatAiuMJk","assetChainId":2,"assetId":1,"amount":"100001000000","nonce":"0000000000000000"}],[{"address":"tNULSeBaMhcccH1KeXhMpH5y3pvtRzatAiuMJk","assetChainId":2,"assetId":1,"amount":"100000000000","lockTime":0}],"remark"],"id":1234},
+    "response" : {"jsonrpc":"2.0","id":"1234","result":{"txHex":"0200b67f2d5d0672656d61726b008c01170200012a9af4ee49f4cb1ee84eafd42aec41bc04b28f7b02000100402a8648170000000000000000000000000000000000000000000000000000000800000000000000000001170200012a9af4ee49f4cb1ee84eafd42aec41bc04b28f7b0200010000e8764817000000000000000000000000000000000000000000000000000000000000000000000000","hash":"748184df91eda8d09be76e075d553313434c56bfeec3d449abc99ba6c430c00c"}}
+  },
+  "calcTransferTxFee": {
+    "request": {"jsonrpc":"2.0","method":"calcTransferTxFee","params":[6,6,2,"remark","1000000"],"id":1234},
+    "response" : {"jsonrpc":"2.0","id":"1234","result":{"value":2000000}}
+  },
+
+  "createAgent": {
+    "request": {"jsonrpc":"2.0","method":"createAgent","params":[2,"tNULSeBaMhcccH1KeXhMpH5y3pvtRzatAiuMJk","tNULSeBaMhbVDg6CpiWx2jzExLFarBr6vJ6aSF","tNULSeBaMhcccH1KeXhMpH5y3pvtRzatAiuMJk",10,"2000000000000","abcd1234"],"id":1234},
+    "response" : {"jsonrpc":"2.0","id":"1234","result":"157ad5e8061328c764090b85b60624d461d1815357c22f2910506a3cdcbbb6d5"}
+  },
+  "depositToAgent": {
+    "request": {"jsonrpc":"2.0","method":"depositToAgent","params":[2,"tNULSeBaMhcccH1KeXhMpH5y3pvtRzatAiuMJk","157ad5e8061328c764090b85b60624d461d1815357c22f2910506a3cdcbbb6d5","200000000000","abcd1234"],"id":1234},
+    "response" : {"jsonrpc":"2.0","id":"1234","result":"4a1177e2a738f72ba5063a8667a81e10bd7523f91ea08b2aa3fb851ca8dc8b07"}
+  },
+  "xxx": {
+    "request": {},
+    "response" : {}
+  },
+  "xxx": {
+    "request": {},
+    "response" : {}
+  },
+  "xxx": {
+    "request": {},
+    "response" : {}
+  },
+  "xxx": {
+    "request": {},
+    "response" : {}
+  },
+  "xxx": {
+    "request": {},
+    "response" : {}
+  },
+  "xxx": {
+    "request": {},
+    "response" : {}
+  },
+  "xxx": {
+    "request": {},
+    "response" : {}
+  },
+
+
+
+
+
   "getContract" : {
     "request": {},
     "response": {"jsonrpc":"2.0","id":"1234","result":{"createTxHash":"ec11dfb9202090276fcde3d5c615caaa406ae6a5826a479878f560758db27bd9","address":"tNULSeBaNCP8xykvLm4CaVrGtkiybQwPx6LrSD","creater":"tNULSeBaMvEtDfvZuukDf2mVyfGo3DdiN8KLRG","alias":"kqb","createTime":1563170044,"blockHeight":27048,"directPayable":false,"nrc20":true,"nrc20TokenName":"KQB","nrc20TokenSymbol":"KongQiBi","decimals":2,"totalSupply":"1000000000000","status":"normal","method":[{"name":"name","desc":"() return String","args":[],"returnArg":"String","view":true,"event":false,"payable":false},{"name":"symbol","desc":"() return String","args":[],"returnArg":"String","view":true,"event":false,"payable":false},{"name":"decimals","desc":"() return int","args":[],"returnArg":"int","view":true,"event":false,"payable":false},{"name":"totalSupply","desc":"() return BigInteger","args":[],"returnArg":"BigInteger","view":true,"event":false,"payable":false},{"name":"<init>","desc":"(String name, String symbol, BigInteger initialAmount, int decimals) return void","args":[{"type":"String","name":"name","required":true},{"type":"String","name":"symbol","required":true},{"type":"BigInteger","name":"initialAmount","required":true},{"type":"int","name":"decimals","required":true}],"returnArg":"void","view":false,"event":false,"payable":false},{"name":"allowance","desc":"(Address owner, Address spender) return BigInteger","args":[{"type":"Address","name":"owner","required":true},{"type":"Address","name":"spender","required":true}],"returnArg":"BigInteger","view":true,"event":false,"payable":false},{"name":"transferFrom","desc":"(Address from, Address to, BigInteger value) return boolean","args":[{"type":"Address","name":"from","required":true},{"type":"Address","name":"to","required":true},{"type":"BigInteger","name":"value","required":true}],"returnArg":"boolean","view":false,"event":false,"payable":false},{"name":"balanceOf","desc":"(Address owner) return BigInteger","args":[{"type":"Address","name":"owner","required":true}],"returnArg":"BigInteger","view":true,"event":false,"payable":false},{"name":"transfer","desc":"(Address to, BigInteger value) return boolean","args":[{"type":"Address","name":"to","required":true},{"type":"BigInteger","name":"value","required":true}],"returnArg":"boolean","view":false,"event":false,"payable":false},{"name":"approve","desc":"(Address spender, BigInteger value) return boolean","args":[{"type":"Address","name":"spender","required":true},{"type":"BigInteger","name":"value","required":true}],"returnArg":"boolean","view":false,"event":false,"payable":false},{"name":"increaseApproval","desc":"(Address spender, BigInteger addedValue) return boolean","args":[{"type":"Address","name":"spender","required":true},{"type":"BigInteger","name":"addedValue","required":true}],"returnArg":"boolean","view":false,"event":false,"payable":false},{"name":"decreaseApproval","desc":"(Address spender, BigInteger subtractedValue) return boolean","args":[{"type":"Address","name":"spender","required":true},{"type":"BigInteger","name":"subtractedValue","required":true}],"returnArg":"boolean","view":false,"event":false,"payable":false},{"name":"TransferEvent","desc":"(Address from, Address to, BigInteger value) return void","args":[{"type":"Address","name":"from","required":false},{"type":"Address","name":"to","required":true},{"type":"BigInteger","name":"value","required":true}],"returnArg":"void","view":false,"event":true,"payable":false},{"name":"ApprovalEvent","desc":"(Address owner, Address spender, BigInteger value) return void","args":[{"type":"Address","name":"owner","required":true},{"type":"Address","name":"spender","required":true},{"type":"BigInteger","name":"value","required":true}],"returnArg":"void","view":false,"event":true,"payable":false}]}}
