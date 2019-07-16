@@ -78,11 +78,13 @@ do
 		if [ "${titleTemp}" == "${title}" -a ! -n "$TEMP"  ]; then
 			pname=$(echo $line | awk -F '=' '{print $1}')
 			if ! echo "${itemName[@]}" | grep -w "${pname}" &>/dev/null ; then
-	    		itemName[${#itemName[@]}]=$pname
+                str=${pname/'#'*/""}
+			    if [ -n "$str" ]; then
+			        itemName[${#itemName[@]}]=$pname
+			    fi
 			fi
 		fi
 	done
-	# echo ${itemName[@]}
 	echo $title >> $moduleNcf
 	for name in ${itemName[@]}
 	do
