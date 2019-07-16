@@ -66,6 +66,14 @@ _**详细描述: 获取本链相关信息**_
 | inflationAmount | string | 本链默认主资产的初始数量 |
 | agentChainId    | string | 本链共识资产的链ID   |
 | agentAssetId    | string | 本链共识资产的ID    |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -97,6 +105,14 @@ _**详细描述: 创建的账户存在于本地钱包内**_
 | 字段名  |      字段类型       | 参数描述 |
 | ---- |:---------------:| ---- |
 | list | list&lt;string> | 账户地址 |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -129,6 +145,14 @@ _**详细描述: 修改账户密码**_
 | 字段名   |  字段类型   | 参数描述   |
 | ----- |:-------:| ------ |
 | value | boolean | 是否修改成功 |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -159,6 +183,14 @@ _**详细描述: 只能导出本地钱包已存在账户的私钥**_
 | 字段名   |  字段类型  | 参数描述 |
 | ----- |:------:| ---- |
 | value | string | 私钥   |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -192,6 +224,14 @@ _**详细描述: 导入私钥时，需要输入密码给明文私钥加密**_
 | 字段名   |  字段类型  | 参数描述 |
 | ----- |:------:| ---- |
 | value | string | 账户地址 |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -214,6 +254,14 @@ _**详细描述: 根据keyStore导入账户**_
 | 字段名   |  字段类型  | 参数描述 |
 | ----- |:------:| ---- |
 | value | string | 账户地址 |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -247,6 +295,14 @@ _**详细描述: 根据keystore文件路径导入账户**_
 | 字段名   |  字段类型  | 参数描述 |
 | ----- |:------:| ---- |
 | value | string | 账户地址 |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -280,6 +336,14 @@ _**详细描述: 根据keystore字符串导入账户**_
 | 字段名   |  字段类型  | 参数描述 |
 | ----- |:------:| ---- |
 | value | string | 账户地址 |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -312,6 +376,14 @@ _**详细描述: 账户备份，导出AccountKeyStore文件到指定目录**_
 | 字段名  |  字段类型  | 参数描述    |
 | ---- |:------:| ------- |
 | path | string | 导出的文件路径 |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -349,6 +421,14 @@ _**详细描述: 根据资产链ID和资产ID，查询本链账户对应资产�
 | consensusLock | string |  共识锁定金额                   |
 | nonce         | string | 账户资产nonce值                |
 | nonceType     |  int   | 1：已确认的nonce值,0：未确认的nonce值 |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -384,6 +464,14 @@ _**详细描述: 创建的账户不会保存到钱包中,接口直接返回账�
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pubKey              |     string      | 公钥           |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prikey              |     string      | 明文私钥         |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;encryptedPrivateKey |     string      | 加密后的私钥       |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -417,6 +505,14 @@ _**详细描述: 离线获取账户明文私钥**_
 | 字段名   |  字段类型  | 参数描述 |
 | ----- |:------:| ---- |
 | value | string | 明文私钥 |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -452,6 +548,14 @@ _**详细描述: 离线修改账户密码**_
 | 字段名   |  字段类型  | 参数描述       |
 | ----- |:------:| ---------- |
 | value | string | 重置密码后的加密私钥 |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -493,6 +597,14 @@ _**详细描述: 用于签名离线组装的多账户转账交易，调用接口
 | ----- |:------:| ------------- |
 | hash  | string | 交易hash        |
 | txHex | string | 签名后的交易16进制字符串 |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -527,6 +639,14 @@ _**详细描述: 明文私钥摘要签名**_
 | ----- |:------:| ------------- |
 | hash  | string | 交易hash        |
 | txHex | string | 签名后的交易16进制字符串 |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -563,6 +683,14 @@ _**详细描述: 密文私钥摘要签名**_
 | ----- |:------:| ------------- |
 | hash  | string | 交易hash        |
 | txHex | string | 签名后的交易16进制字符串 |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -599,6 +727,14 @@ _**详细描述: 根据区块高度查询区块头**_
 | mainVersion          | short  | 主网当前生效的版本            |
 | blockVersion         | short  | 区块的版本，可以理解为本地钱包的版本   |
 | stateRoot            | string | 智能合约世界状态根            |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -635,6 +771,14 @@ _**详细描述: 根据区块hash查询区块头**_
 | mainVersion          | short  | 主网当前生效的版本            |
 | blockVersion         | short  | 区块的版本，可以理解为本地钱包的版本   |
 | stateRoot            | string | 智能合约世界状态根            |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -669,6 +813,14 @@ _**详细描述: 查询最新区块头信息**_
 | mainVersion          | short  | 主网当前生效的版本            |
 | blockVersion         | short  | 区块的版本，可以理解为本地钱包的版本   |
 | stateRoot            | string | 智能合约世界状态根            |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -727,6 +879,14 @@ _**详细描述: 包含区块打包的所有交易信息，此接口返回数据
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetsId      |       int       | 资产id                                      |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount        |     string      | 数量                                        |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lockTime      |      long       | 解锁时间，-1为永久锁定                              |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -763,6 +923,14 @@ _**详细描述: 包含区块打包的所有交易信息，此接口返回数据
 | mainVersion          | short  | 主网当前生效的版本            |
 | blockVersion         | short  | 区块的版本，可以理解为本地钱包的版本   |
 | stateRoot            | string | 智能合约世界状态根            |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -799,6 +967,14 @@ _**详细描述: 包含区块打包的所有交易信息，此接口返回数据
 | mainVersion          | short  | 主网当前生效的版本            |
 | blockVersion         | short  | 区块的版本，可以理解为本地钱包的版本   |
 | stateRoot            | string | 智能合约世界状态根            |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -841,6 +1017,14 @@ _**详细描述: 根据hash获取交易**_
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetsId      |       int       | 资产id                                      |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount        |     string      | 数量                                        |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lockTime      |      long       | 解锁时间，-1为永久锁定                              |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -870,6 +1054,14 @@ _**详细描述: 验证离线组装的交易,验证成功返回交易hash值,失
 | 字段名   |  字段类型  | 参数描述   |
 | ----- |:------:| ------ |
 | value | string | 交易hash |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -900,6 +1092,14 @@ _**详细描述: 广播离线组装的交易,成功返回true,失败返回错误
 | ----- |:-------:| ------ |
 | value | boolean | 是否成功   |
 | hash  | string  | 交易hash |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -937,6 +1137,14 @@ _**详细描述: 发起单账户单资产的转账交易**_
 | 字段名   |  字段类型  | 参数描述   |
 | ----- |:------:| ------ |
 | value | string | 交易hash |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -993,6 +1201,14 @@ _**详细描述: 根据inputs和outputs离线组装转账交易，用于单账�
 | ----- |:------:| ------------ |
 | hash  | string | 交易hash       |
 | txHex | string | 交易序列化16进制字符串 |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -1030,6 +1246,14 @@ _**详细描述: 计算离线创建转账交易所需手续费**_
 | 字段名   |  字段类型  | 参数描述  |
 | ----- |:------:| ----- |
 | value | string | 交易手续费 |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -1074,6 +1298,16 @@ _**详细描述: 发布合约**_
 | --------------- |:------:| ----------- |
 | txHash          | string | 发布合约的交易hash |
 | contractAddress | string | 生成的合约地址     |
+### Example request data: 
+
+_**request path:**_
+http://localhost:9898/api/contract/create
+
+_**request form data:**_
+```json
+{ }
+```
+
 ### Example response data: 
 ```json
 {
@@ -1129,6 +1363,16 @@ _**详细描述: 调用合约**_
 | 字段名    |  字段类型  | 参数描述        |
 | ------ |:------:| ----------- |
 | txHash | string | 调用合约的交易hash |
+### Example request data: 
+
+_**request path:**_
+http://localhost:9898/api/contract/call
+
+_**request form data:**_
+```json
+{ }
+```
+
 ### Example response data: 
 ```json
 {
@@ -1171,6 +1415,14 @@ _**详细描述: 删除合约**_
 | 字段名    |  字段类型  | 参数描述        |
 | ------ |:------:| ----------- |
 | txHash | string | 删除合约的交易hash |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -1210,6 +1462,14 @@ _**详细描述: token转账**_
 | 字段名    |  字段类型  | 参数描述   |
 | ------ |:------:| ------ |
 | txHash | string | 交易hash |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -1247,6 +1507,14 @@ _**详细描述: 从账户地址向合约地址转账(主链资产)的合约交�
 | 字段名    |  字段类型  | 参数描述   |
 | ------ |:------:| ------ |
 | txHash | string | 交易hash |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -1275,6 +1543,14 @@ _**详细描述: 获取账户地址的指定token余额**_
 | decimals        |  long  | token支持的小数位数            |
 | blockHeight     |  long  | 合约创建时的区块高度              |
 | status          |  int   | 合约状态(0-不存在, 1-正常, 2-终止) |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -1319,6 +1595,14 @@ _**详细描述: 获取智能合约详细信息**_
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;view                                                     |     boolean     | 是否视图方法（调用此方法数据不上链）            |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;event                                                    |     boolean     | 是否是事件                         |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;payable                                                  |     boolean     | 是否是可接受主链资产转账的方法               |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -1376,6 +1660,16 @@ _**详细描述: 获取智能合约执行结果**_
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;newTxHash                                             |     string      | 生成的交易hash（当调用的命令模式是 NEW\_TX 时，会生成交易）        |
 | contractTxList                                                                                        | list&lt;string> | 合约生成交易的序列化字符串列表                             |
 | remark                                                                                                |     string      | 备注                                          |
+### Example request data: 
+
+_**request path:**_
+http://localhost:9898/api/contract/result/f0a5fc5d20c39355e35f1fe8011b1a28e7c65d8566ae8d76b297a22d1110851d
+
+_**request form data:**_
+```json
+{ }
+```
+
 ### Example response data: 
 ```json
 {
@@ -1452,6 +1746,14 @@ _**详细描述: 获取合约代码构造函数**_
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;event                                                    |     boolean     | 是否是事件              |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;payable                                                  |     boolean     | 是否是可接受主链资产转账的方法    |
 | isNrc20                                                                                                  |     boolean     | 是否是NRC20合约         |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -1494,6 +1796,14 @@ _**详细描述: 获取已发布合约指定函数的信息**_
 | view                                                     |     boolean     | 是否视图方法（调用此方法数据不上链） |
 | event                                                    |     boolean     | 是否是事件              |
 | payable                                                  |     boolean     | 是否是可接受主链资产转账的方法    |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -1527,6 +1837,14 @@ _**详细描述: 获取已发布合约指定函数的参数类型列表**_
 | 字段名 |      字段类型       | 参数描述 |
 | --- |:---------------:| ---- |
 | 返回值 | list&lt;string> |      |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -1566,6 +1884,14 @@ _**详细描述: 验证发布合约**_
 | success | boolean | 验证成功与否    |
 | code    | string  | 验证失败的错误码  |
 | msg     | string  | 验证失败的错误信息 |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -1611,6 +1937,14 @@ _**详细描述: 验证调用合约**_
 | success | boolean | 验证成功与否    |
 | code    | string  | 验证失败的错误码  |
 | msg     | string  | 验证失败的错误信息 |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -1644,6 +1978,14 @@ _**详细描述: 验证删除合约**_
 | success | boolean | 验证成功与否    |
 | code    | string  | 验证失败的错误码  |
 | msg     | string  | 验证失败的错误信息 |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -1677,6 +2019,14 @@ _**详细描述: 估算发布合约交易的GAS**_
 | 字段名      | 字段类型 | 参数描述              |
 | -------- |:----:| ----------------- |
 | gasLimit | long | 消耗的gas值，执行失败返回数值1 |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -1716,6 +2066,14 @@ _**详细描述: 估算调用合约交易的GAS**_
 | 字段名      | 字段类型 | 参数描述              |
 | -------- |:----:| ----------------- |
 | gasLimit | long | 消耗的gas值，执行失败返回数值1 |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -1751,6 +2109,14 @@ _**详细描述: 调用合约不上链方法**_
 | 字段名    |  字段类型  | 参数描述      |
 | ------ |:------:| --------- |
 | result | string | 视图方法的调用结果 |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -1790,6 +2156,14 @@ _**详细描述: 离线组装 - 发布合约的交易**_
 | hash            | string | 交易hash   |
 | txHex           | string | 交易序列化字符串 |
 | contractAddress | string | 生成的合约地址  |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -1832,6 +2206,14 @@ _**详细描述: 离线组装 - 调用合约的交易**_
 | ----- |:------:| -------- |
 | hash  | string | 交易hash   |
 | txHex | string | 交易序列化字符串 |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -1866,6 +2248,14 @@ _**详细描述: 离线组装 - 删除合约交易**_
 | ----- |:------:| -------- |
 | hash  | string | 交易hash   |
 | txHex | string | 交易序列化字符串 |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -1904,6 +2294,14 @@ _**详细描述: 离线组装 - token转账交易**_
 | ----- |:------:| -------- |
 | hash  | string | 交易hash   |
 | txHex | string | 交易序列化字符串 |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -1940,6 +2338,14 @@ _**详细描述: 离线组装 - 从账户地址向合约地址转账(主链资�
 | ----- |:------:| -------- |
 | hash  | string | 交易hash   |
 | txHex | string | 交易序列化字符串 |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -1979,6 +2385,14 @@ _**详细描述: 创建共识节点**_
 | 字段名   |  字段类型  | 参数描述   |
 | ----- |:------:| ------ |
 | value | string | 交易hash |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -2010,6 +2424,14 @@ _**详细描述: 注销共识节点**_
 | 字段名   |  字段类型  | 参数描述   |
 | ----- |:------:| ------ |
 | value | string | 交易hash |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -2045,6 +2467,14 @@ _**详细描述: 委托参与共识**_
 | 字段名   |  字段类型  | 参数描述   |
 | ----- |:------:| ------ |
 | value | string | 交易hash |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -2078,6 +2508,14 @@ _**详细描述: 退出共识**_
 | 字段名   |  字段类型  | 参数描述   |
 | ----- |:------:| ------ |
 | value | string | 交易hash |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -2105,6 +2543,14 @@ _**详细描述: 查询节点的委托共识列表**_
 | txHash      | string | 委托交易hash  |
 | blockHeight |  long  | 委托时的区块高度  |
 | delHeight   |  long  | 退出委托的区块高度 |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -2156,6 +2602,14 @@ _**详细描述: 参与共识所需资产可通过查询链信息接口获取(ag
 | ----- |:------:| -------- |
 | hash  | string | 交易hash   |
 | txHex | string | 交易序列化字符串 |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -2210,6 +2664,14 @@ _**详细描述: 组装交易的StopDepositDto信息，可通过查询节点的�
 | ----- |:------:| -------- |
 | hash  | string | 交易hash   |
 | txHex | string | 交易序列化字符串 |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -2257,6 +2719,14 @@ _**详细描述: 参与共识所需资产可通过查询链信息接口获取(ag
 | ----- |:------:| -------- |
 | hash  | string | 交易hash   |
 | txHex | string | 交易序列化字符串 |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 
@@ -2304,6 +2774,14 @@ _**详细描述: 接口的input数据，则是委托共识交易的output数据�
 | ----- |:------:| -------- |
 | hash  | string | 交易hash   |
 | txHex | string | 交易序列化字符串 |
+### Example request data: 
+
+_**request path:**_
+略
+
+_**request form data:**_
+略
+
 ### Example response data: 
 略
 

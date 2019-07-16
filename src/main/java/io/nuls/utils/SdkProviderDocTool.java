@@ -738,22 +738,71 @@ public class SdkProviderDocTool {
                 buildResult(writer, cmd.result);
 
                 // 增加示例
-                String egDesc = "略";
+                String egReqDesc = "略";
+                String egReqPathDesc = "略";
+                String egRespDesc = "略";
                 if(egMap != null) {
-                    Object eg = egMap.get(cmd.cmdName);
-                    if(eg != null) {
-                        egDesc = JSONUtils.obj2PrettyJson(eg);
+                    Map egCmdMap = (Map) egMap.get(cmd.cmdName);
+                    if(egCmdMap != null) {
+                        Object request = egCmdMap.get("request");
+                        Object requestPath = egCmdMap.get("requestPath");
+                        Object response = egCmdMap.get("response");
+                        if(request != null) {
+                            egReqDesc = JSONUtils.obj2PrettyJson(request);
+                        }
+                        if(requestPath != null) {
+                            egReqPathDesc = requestPath.toString();
+                        }
+                        if(response != null) {
+                            egRespDesc = JSONUtils.obj2PrettyJson(response);
+                        }
                     }
                 }
                 writer.newLine();
+                writer.write(new Heading("Example request data: ", 3).toString());
+                writer.newLine();
+                if(jsonrpc) {
+                    if("略".equals(egReqDesc)) {
+                        writer.write(new Text(egReqDesc).toString());
+                    } else {
+                        writer.write(new Text("```json").toString());
+                        writer.newLine();
+                        writer.write(new Text(egReqDesc).toString());
+                        writer.newLine();
+                        writer.write(new Text("```").toString());
+                    }
+                    writer.newLine();
+                } else {
+                    writer.newLine();
+                    writer.write(new Text("_**request path:**_").toString());
+                    writer.newLine();
+                    writer.write(new Text(egReqPathDesc).toString());
+
+                    writer.newLine();
+                    writer.newLine();
+                    writer.write(new Text("_**request form data:**_").toString());
+                    writer.newLine();
+                    if("略".equals(egReqDesc)) {
+                        writer.write(new Text(egReqDesc).toString());
+                    } else {
+                        writer.write(new Text("```json").toString());
+                        writer.newLine();
+                        writer.write(new Text(egReqDesc).toString());
+                        writer.newLine();
+                        writer.write(new Text("```").toString());
+                    }
+                    writer.newLine();
+                }
+
+                writer.newLine();
                 writer.write(new Heading("Example response data: ", 3).toString());
                 writer.newLine();
-                if("略".equals(egDesc)) {
-                    writer.write(new Text(egDesc).toString());
+                if("略".equals(egRespDesc)) {
+                    writer.write(new Text(egRespDesc).toString());
                 } else {
                     writer.write(new Text("```json").toString());
                     writer.newLine();
-                    writer.write(new Text(egDesc).toString());
+                    writer.write(new Text(egRespDesc).toString());
                     writer.newLine();
                     writer.write(new Text("```").toString());
                 }
