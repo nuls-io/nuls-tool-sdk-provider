@@ -1304,10 +1304,25 @@ _**详细描述: 验证离线组装的交易,验证成功返回交易hash值,失
 | ----- |:------:| ------ |
 | value | string | 交易hash |
 ### Example request data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "method" : "validateTx",
+  "params" : [ 2, "02003fac2d5d00008c0117020001efa328e600912da9872390a675486ab9e8ec211402000100e0c8100000000000000000000000000000000000000000000000000000000000080000000000000000000117020001f7ec6473df12e751d64cf20a8baa7edd50810f810200010040420f000000000000000000000000000000000000000000000000000000000000000000000000006921023cee1aa6158ee640c8f48f9a9fa9735c8ed5426f2c353b0ed65e123033d820e646304402203c376fd0121fce6228516c011126a8526c5bc543afb7e4272c0de708a55d834f02204ebcd942e019b77bbec37f7e2b77b591ba4ce0fbc5fe9335ab91ae925ded6bed" ],
+  "id" : 1234
+}
+```
 
 ### Example response data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "id" : "1234",
+  "result" : {
+    "value" : "5a91b75e6a6d1f415638375627933b42ce7179b4c6390ca0dcc5a0c2c74bd34a"
+  }
+}
+```
 
 3.3 广播交易
 ========
@@ -1329,10 +1344,26 @@ _**详细描述: 广播离线组装的交易,成功返回true,失败返回错误
 | value | boolean | 是否成功   |
 | hash  | string  | 交易hash |
 ### Example request data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "method" : "broadcastTx",
+  "params" : [ 2, "02003fac2d5d00008c0117020001efa328e600912da9872390a675486ab9e8ec211402000100e0c8100000000000000000000000000000000000000000000000000000000000080000000000000000000117020001f7ec6473df12e751d64cf20a8baa7edd50810f810200010040420f000000000000000000000000000000000000000000000000000000000000000000000000006921023cee1aa6158ee640c8f48f9a9fa9735c8ed5426f2c353b0ed65e123033d820e646304402203c376fd0121fce6228516c011126a8526c5bc543afb7e4272c0de708a55d834f02204ebcd942e019b77bbec37f7e2b77b591ba4ce0fbc5fe9335ab91ae925ded6bed" ],
+  "id" : 1234
+}
+```
 
 ### Example response data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "id" : "1234",
+  "result" : {
+    "value" : true,
+    "hash" : "5a91b75e6a6d1f415638375627933b42ce7179b4c6390ca0dcc5a0c2c74bd34a"
+  }
+}
+```
 
 3.4 单笔转账
 ========
@@ -2284,13 +2315,13 @@ _**详细描述: 验证发布合约**_
 
 ### Example response data: 
 ```json
-{
+[ {
   "jsonrpc" : "2.0",
   "id" : "1234",
   "result" : {
     "success" : true
   }
-}
+}, "校验失败示例请参考[validateContractDelete] - 验证删除合约" ]
 ```
 
 4.13 验证调用合约
@@ -2332,13 +2363,13 @@ _**详细描述: 验证调用合约**_
 
 ### Example response data: 
 ```json
-{
+[ {
   "jsonrpc" : "2.0",
   "id" : "1234",
   "result" : {
     "success" : true
   }
-}
+}, "校验失败示例请参考[validateContractDelete] - 验证删除合约" ]
 ```
 
 4.14 验证删除合约
@@ -2808,10 +2839,23 @@ _**详细描述: 注销共识节点**_
 | ----- |:------:| ------ |
 | value | string | 交易hash |
 ### Example request data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "method" : "stopAgent",
+  "params" : [ 2, "tNULSeBaMujLBcZWfE2wHKnZo7PGvqvNrt6yWG", "abcd1234" ],
+  "id" : 1234
+}
+```
 
 ### Example response data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "id" : "1234",
+  "result" : "fcaf8c92a0eafd2ca57744c165e1a955edcbfde98248494937200cc30d524e2e"
+}
+```
 
 5.3 委托参与共识
 ==========
@@ -2876,10 +2920,23 @@ _**详细描述: 退出共识**_
 | ----- |:------:| ------ |
 | value | string | 交易hash |
 ### Example request data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "method" : "withdraw",
+  "params" : [ 2, "tNULSeBaMujLBcZWfE2wHKnZo7PGvqvNrt6yWG", "4ae333f8bf821884d0f589f35516c8bdd9661dbd8a7009b063ac862eeefc10f6", "abcd1234" ],
+  "id" : 1234
+}
+```
 
 ### Example response data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "id" : "1234",
+  "result" : "13a0e252bf05ec02f3ae0a84fc3b8183dbfc0e16c562b20b8e28b73b139f2c0e"
+}
+```
 
 5.5 查询节点的委托共识列表
 ===============
@@ -2906,10 +2963,39 @@ _**详细描述: 查询节点的委托共识列表**_
 | blockHeight |  long  | 委托时的区块高度  |
 | delHeight   |  long  | 退出委托的区块高度 |
 ### Example request data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "method" : "getDepositList",
+  "params" : [ 2, "786402b17649b968e4643cb52fa30225645b0dc7b8761b047a1f080d3dd30dcd" ],
+  "id" : 1234
+}
+```
 
 ### Example response data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "id" : "1234",
+  "result" : [ {
+    "deposit" : "200000000000",
+    "agentHash" : "786402b17649b968e4643cb52fa30225645b0dc7b8761b047a1f080d3dd30dcd",
+    "address" : "tNULSeBaMujLBcZWfE2wHKnZo7PGvqvNrt6yWG",
+    "time" : 1563277510,
+    "txHash" : "bd93cf73331c0d9986cb90922d2eec785ea9eda3da85cd9d629b5a4c7f36c452",
+    "blockHeight" : 462,
+    "delHeight" : -1
+  }, {
+    "deposit" : "200000000000",
+    "agentHash" : "786402b17649b968e4643cb52fa30225645b0dc7b8761b047a1f080d3dd30dcd",
+    "address" : "tNULSeBaMujLBcZWfE2wHKnZo7PGvqvNrt6yWG",
+    "time" : 1563277712,
+    "txHash" : "be5257bc0814cbda61378ff2afa81e98cae0018cd7d78b8d1ca9812c66d27e84",
+    "blockHeight" : 482,
+    "delHeight" : -1
+  } ]
+}
+```
 
 5.6 离线组装 - 创建共识节点
 =================
@@ -2942,10 +3028,32 @@ _**详细描述: 参与共识所需资产可通过查询链信息接口获取(ag
 | hash  | string | 交易hash   |
 | txHex | string | 交易序列化字符串 |
 ### Example request data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "method" : "createAgentOffline",
+  "params" : [ 2, "tNULSeBaMujLBcZWfE2wHKnZo7PGvqvNrt6yWG", "tNULSeBaMvEtDfvZuukDf2mVyfGo3DdiN8KLRG", "tNULSeBaMujLBcZWfE2wHKnZo7PGvqvNrt6yWG", 10, "2000000000000", {
+    "address" : "tNULSeBaMujLBcZWfE2wHKnZo7PGvqvNrt6yWG",
+    "assetChainId" : 2,
+    "assetId" : 1,
+    "amount" : "2000001000000",
+    "nonce" : "63ac862eeefc10f6"
+  } ],
+  "id" : 1234
+}
+```
 
 ### Example response data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "id" : "1234",
+  "result" : {
+    "txHex" : "0400e6b72d5d006600204aa9d1010000000000000000000000000000000000000000000000000000020001efa328e600912da9872390a675486ab9e8ec2114020001f7ec6473df12e751d64cf20a8baa7edd50810f81020001efa328e600912da9872390a675486ab9e8ec21140a8c0117020001efa328e600912da9872390a675486ab9e8ec211402000100406259a9d10100000000000000000000000000000000000000000000000000000863ac862eeefc10f6000117020001efa328e600912da9872390a675486ab9e8ec21140200010000204aa9d1010000000000000000000000000000000000000000000000000000ffffffffffffffff00",
+    "hash" : "7a5c405239c742d0253a4067dd7df94b0bd4103b0edc4d3226575b5176a07ad0"
+  }
+}
+```
 
 5.7 离线组装 - 注销共识节点
 =================
@@ -2979,10 +3087,44 @@ _**详细描述: 组装交易的StopDepositDto信息，可通过查询节点的�
 | hash  | string | 交易hash   |
 | txHex | string | 交易序列化字符串 |
 ### Example request data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "method" : "stopAgentOffline",
+  "params" : [ 2, "786402b17649b968e4643cb52fa30225645b0dc7b8761b047a1f080d3dd30dcd", "tNULSeBaMujLBcZWfE2wHKnZo7PGvqvNrt6yWG", "2000000000000", "100000", [ {
+    "depositHash" : "bd93cf73331c0d9986cb90922d2eec785ea9eda3da85cd9d629b5a4c7f36c452",
+    "input" : {
+      "address" : "tNULSeBaMujLBcZWfE2wHKnZo7PGvqvNrt6yWG",
+      "assetChainId" : 2,
+      "assetId" : 1,
+      "amount" : "200000000000",
+      "nonce" : ""
+    }
+  }, {
+    "depositHash" : "be5257bc0814cbda61378ff2afa81e98cae0018cd7d78b8d1ca9812c66d27e84",
+    "input" : {
+      "address" : "tNULSeBaMujLBcZWfE2wHKnZo7PGvqvNrt6yWG",
+      "assetChainId" : 2,
+      "assetId" : 1,
+      "amount" : "200000000000",
+      "nonce" : ""
+    }
+  } ] ],
+  "id" : 1234
+}
+```
 
 ### Example response data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "id" : "1234",
+  "result" : {
+    "txHex" : "090075bd2d5d0020786402b17649b968e4643cb52fa30225645b0dc7b8761b047a1f080d3dd30dcdfd5c010317020001efa328e600912da9872390a675486ab9e8ec21140200010000204aa9d1010000000000000000000000000000000000000000000000000000087a1f080d3dd30dcdff17020001efa328e600912da9872390a675486ab9e8ec21140200010000d0ed902e00000000000000000000000000000000000000000000000000000008629b5a4c7f36c452ff17020001efa328e600912da9872390a675486ab9e8ec21140200010000d0ed902e000000000000000000000000000000000000000000000000000000081ca9812c66d27e84ff0217020001efa328e600912da9872390a675486ab9e8ec211402000100609948a9d101000000000000000000000000000000000000000000000000000085cb2d5d0000000017020001efa328e600912da9872390a675486ab9e8ec21140200010000a0db215d000000000000000000000000000000000000000000000000000000000000000000000000",
+    "hash" : "15e9f16c7b430ea217408ae63dd6e90739bc0a5f0f6b3c0907b4689d02dc744a"
+  }
+}
+```
 
 5.8 离线组装 - 委托参与共识
 =================
@@ -3013,10 +3155,32 @@ _**详细描述: 参与共识所需资产可通过查询链信息接口获取(ag
 | hash  | string | 交易hash   |
 | txHex | string | 交易序列化字符串 |
 ### Example request data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "method" : "depositToAgentOffline",
+  "params" : [ 2, "tNULSeBaMujLBcZWfE2wHKnZo7PGvqvNrt6yWG", "200000000000", "786402b17649b968e4643cb52fa30225645b0dc7b8761b047a1f080d3dd30dcd", {
+    "address" : "tNULSeBaMujLBcZWfE2wHKnZo7PGvqvNrt6yWG",
+    "assetChainId" : 2,
+    "assetId" : 1,
+    "amount" : "200010000000",
+    "nonce" : "7a1f080d3dd30dcd"
+  } ],
+  "id" : 1234
+}
+```
 
 ### Example response data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "id" : "1234",
+  "result" : {
+    "txHex" : "0500c6b82d5d005700d0ed902e000000000000000000000000000000000000000000000000000000020001efa328e600912da9872390a675486ab9e8ec2114786402b17649b968e4643cb52fa30225645b0dc7b8761b047a1f080d3dd30dcd8c0117020001efa328e600912da9872390a675486ab9e8ec211402000100806686912e000000000000000000000000000000000000000000000000000000087a1f080d3dd30dcd000117020001efa328e600912da9872390a675486ab9e8ec21140200010000d0ed902e000000000000000000000000000000000000000000000000000000ffffffffffffffff00",
+    "hash" : "bd93cf73331c0d9986cb90922d2eec785ea9eda3da85cd9d629b5a4c7f36c452"
+  }
+}
+```
 
 5.9 离线组装 - 退出共识
 ===============
@@ -3047,8 +3211,30 @@ _**详细描述: 离线组装 - 退出共识**_
 | hash  | string | 交易hash   |
 | txHex | string | 交易序列化字符串 |
 ### Example request data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "method" : "withdrawOffline",
+  "params" : [ 2, "tNULSeBaMujLBcZWfE2wHKnZo7PGvqvNrt6yWG", "be5257bc0814cbda61378ff2afa81e98cae0018cd7d78b8d1ca9812c66d27e84", "1000000", {
+    "address" : "tNULSeBaMujLBcZWfE2wHKnZo7PGvqvNrt6yWG",
+    "assetChainId" : 2,
+    "assetId" : 1,
+    "amount" : 200000000000,
+    "nonce" : ""
+  } ],
+  "id" : 1234
+}
+```
 
 ### Example response data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "id" : "1234",
+  "result" : {
+    "txHex" : "060031bb2d5d0020be5257bc0814cbda61378ff2afa81e98cae0018cd7d78b8d1ca9812c66d27e848c0117020001efa328e600912da9872390a675486ab9e8ec21140200010000d0ed902e000000000000000000000000000000000000000000000000000000081ca9812c66d27e84ff0117020001efa328e600912da9872390a675486ab9e8ec211402000100c08dde902e000000000000000000000000000000000000000000000000000000000000000000000000",
+    "hash" : "bad82cb423722793a77d729444fee0c1a99a679c8ab0a2cb5ccc10be584c7726"
+  }
+}
+```
 

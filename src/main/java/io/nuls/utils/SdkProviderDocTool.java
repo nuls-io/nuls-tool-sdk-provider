@@ -738,7 +738,7 @@ public class SdkProviderDocTool {
                 buildResult(writer, cmd.result);
 
                 // 增加示例
-                String egReqDesc = "略";
+                String egReqDesc = "无";
                 String egReqPathDesc = "略";
                 String egRespDesc = "略";
                 if(egMap != null) {
@@ -749,9 +749,15 @@ public class SdkProviderDocTool {
                         Object response = egCmdMap.get("response");
                         if(request != null) {
                             egReqDesc = JSONUtils.obj2PrettyJson(request);
+                            if(request instanceof Map && ((Map)request).size() == 0) {
+                                egReqDesc = "无";
+                            }
                         }
-                        if(requestPath != null) {
+                        if(requestPath != null && StringUtils.isNotBlank(requestPath.toString())) {
                             egReqPathDesc = requestPath.toString();
+                            if(request != null && request instanceof Map && ((Map)request).size() == 0) {
+                                egReqDesc = "无";
+                            }
                         }
                         if(response != null) {
                             egRespDesc = JSONUtils.obj2PrettyJson(response);
@@ -762,7 +768,7 @@ public class SdkProviderDocTool {
                 writer.write(new Heading("Example request data: ", 3).toString());
                 writer.newLine();
                 if(jsonrpc) {
-                    if("略".equals(egReqDesc)) {
+                    if("无".equals(egReqDesc)) {
                         writer.write(new Text(egReqDesc).toString());
                     } else {
                         writer.write(new Text("```json").toString());
@@ -782,7 +788,7 @@ public class SdkProviderDocTool {
                     writer.newLine();
                     writer.write(new Text("_**request form data:**_").toString());
                     writer.newLine();
-                    if("略".equals(egReqDesc)) {
+                    if("无".equals(egReqDesc)) {
                         writer.write(new Text(egReqDesc).toString());
                     } else {
                         writer.write(new Text("```json").toString());
