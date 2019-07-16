@@ -1301,7 +1301,7 @@ _**详细描述: 发布合约**_
 ### Example request data: 
 
 _**request path:**_
-http://localhost:9898/api/contract/create
+
 
 _**request form data:**_
 ```json
@@ -1366,7 +1366,7 @@ _**详细描述: 调用合约**_
 ### Example request data: 
 
 _**request path:**_
-http://localhost:9898/api/contract/call
+
 
 _**request form data:**_
 ```json
@@ -1426,11 +1426,11 @@ _**request form data:**_
 ### Example response data: 
 略
 
-4.4 token转账
-===========
+4.4 合约token转账
+=============
 Cmd: /api/contract/tokentransfer
 --------------------------------
-_**详细描述: token转账**_
+_**详细描述: 合约token转账**_
 ### HttpMethod: POST
 
 ### Form json data: 
@@ -1518,11 +1518,11 @@ _**request form data:**_
 ### Example response data: 
 略
 
-4.6 获取账户地址的指定token余额
-====================
+4.6 获取账户地址的指定合约的token余额
+=======================
 Cmd: /api/contract/balance/token/{contractAddress}/{address}
 ------------------------------------------------------------
-_**详细描述: 获取账户地址的指定token余额**_
+_**详细描述: 获取账户地址的指定合约的token余额**_
 ### HttpMethod: GET
 
 参数列表
@@ -2259,11 +2259,11 @@ _**request form data:**_
 ### Example response data: 
 略
 
-4.21 离线组装 - token转账交易
-=====================
+4.21 离线组装 - 合约token转账交易
+=======================
 Cmd: /api/contract/tokentransfer/offline
 ----------------------------------------
-_**详细描述: 离线组装 - token转账交易**_
+_**详细描述: 离线组装 - 合约token转账交易**_
 ### HttpMethod: POST
 
 ### Form json data: 
