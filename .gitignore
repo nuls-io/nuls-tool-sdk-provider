@@ -2,3 +2,8 @@ target
 .base_modules
 .idea
 outer/
+*.iml
+logs
+/DEVNOTE.md
+/**/cn.txt
+/**/en.txt
