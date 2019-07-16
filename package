@@ -62,7 +62,7 @@ do
 		if [ "${cfgDomain}" != "[JAVA]" ]; then
 			echo $line >> $moduleNcf
 		fi
-done < ./module.ncfCD
+done < ./module.ncf
 
 
 hasPackageModule(){
