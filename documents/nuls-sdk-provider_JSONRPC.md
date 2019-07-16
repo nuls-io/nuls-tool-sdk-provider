@@ -1513,10 +1513,26 @@ _**详细描述: 发布合约**_
 | txHash          | string | 发布合约的交易hash |
 | contractAddress | string | 生成的合约地址     |
 ### Example request data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "method" : "contractCreate",
+  "params" : [ 2, "tNULSeBaMvEtDfvZuukDf2mVyfGo3DdiN8KLRG", "nuls123456", "jsonrpc_nrc20", 20000, 30, "504b03040a0000080000aa7b564e00000000000000000000000003000400696f2ffeca0000504b03040a0000080000aa7b564e00000000000000000000000008000000696f2f6e756c732f504b03040a0000080000aa7b564e00000000000000000000000011000000696f2f6e756c732f636f6e74726163742f504b03040a0000080000aa7b564e00000000000000000000000017000000696f2f6e756c732f636f6e74726163742f746f6b656e2f504b0304140008080800aa7b564e00000000000000000000000028000000696f2f6e756c732f636f6e74726163742f746f6b656e2f53696d706c65546f6b656e2e636c617373b558f97754e5197eeecc90990c972d9090059209a498cc9291a58a8152020d35ca5602b1605bbd99b9492ecc12670922b46ead4babd56aeb5ad1565bd4aa2c020169d59ed353cfe93fd17f84d3d3e7fdee9d3b37612639d5d31ff2ddf77ecbfb3eeff67c77f2afff7cf639804df87b23a23825c323329c96e14c1831fcb411cdf859108f86119497281e93e171997e22cce149197e1ec62ff0d462acc2d3413c13c672fc2a8ce7f0bcccfc3a8817827831cc53bf91e125195e96e5df8af4bb205e09a3430e44f19a0cafcbf086a87d5386df87f096cc9c9597b7457a27843fc8f38f21bc2b7ade0be24f41fc39887341bcaf219033b2a686a6bdc78d692399317213c99152c1ca4d6cd3d0503c951dcb673484d266caca1a99a2066d58c3e252be646446ca535399531a5aeca359a33499dc654d0ce74ae68459e0f1d098417d2993a796d97bca252b93dc674c71b171c49ac819a57281c68766af6edf6be593b972a6984ce573a582912a258be913c9c174ba60168bdb6a9bdb419d412393c99f34d31a4a5f43e337342f0056f5f6d58a6360773e6d4a10ac9cb9bf9c1d330b878db18c8a7a3e6564468d8225efce64a0346931643db7c228e54f98b9e488959de26691a9bbed503957b2b2e6a855b4787c3097636e4a563e47151b6a7b62b87b92a39679924afcbd7d4c6b6b05fdada96cd86ee5acd20e0d3b7a6f75b0decc5c35c37da31a968822cbc80c66f304ae61dd6cfc078d02ebb164166639125dd09143e64365ab60a6a5b2541548e16938dcbb4032e75dad1b8e45f99339b3a0a173fef3acc8e294994bcb565d1d19ac14e8a269235336a5796655c0a9a94a152c192919a9132c47f56eb302b5d048ae386e16f614f2590d47be917bb5bdeb3bc6121c57ea7da53cc3e974f181710d772c60af6ec0828e129242c5030d772e84be2ebea0313555c84f53dd722b972a9846d11c543306c92a6ca4d3667ad48eef7232d79cf565c5f29832e66e0ae53315510ebb49fabf84973d1032ec2d1babe2260f2ed77eb868565f96550e559739b3ab12d7af19cc5109a6bdc583c0d5ba283569a64e90657aeb9f4fd659ab7fa24115ffc68a40df63f3eaf0528b9cf7678b131a06ff27bbb5358547f2e542cadc6349cb2df7306bbf6cd7d18fa48edb65d8884d3a36638b8e217ca0e3436cd1b0a27a6fdc6d1427d9ac3abe8d3b74dc25c35f64f347f858c727381fc4051d177149c7a7b84c42abc3edca76cf61a74586a64da1c82573def5e11ca96477c62816cda2e0213d5cd17115333aaee13a0fccbacf782dd58a888e49983a72c8e83821c367b8a1c382b910ba4a2755d0cd7ad79116adf7e05e1d79301e7fc5df747c8ef31a3a8673c5f2f8b895b2b82fe274703aa254cbe6691d5fe0bc8ea36087270e4f9a11551d916cb9588a8c999109f6312f864869d2c845f2850819dfc8f078e4f67e394e289db32c389413c98fdb36fac5c52f79e32c7cafb216aae57260ecb899a2f6b535fb6bb7f3a261cd7c5153772c0b2e706ce8d001be1c1edacf712a7f527a6bb82e6f86b2e54cc9529f59fdf55ab0ded9d69a78f749eb34149d5b29c22b7f812bcc3f55a6735bbdf7be1d916db7cef4dd3aa5a1bda68123ac4e524ec0cc5a54df5587bd544dd93d3f6172df861a306a1a0d16ec0f025ae83d26e71b53f9ec9451607ee761337e04f9c9868c7b85097943f71eabc51de8e637750c3ec49140039a842af8e3a049d8423d49187cfa8433d493c400d2b492b7f2ef2ecffb003fd699616ca3bc9d3349be697c2e8a5e8676416df90ec70635b9163b38eaf6067c173bf91c745677f1a911422d45beb98ad62fa8682376d750e4ff688ea2be05156dc6f76a280acc45945c50d110f6388afecd1d8bf834a3335476090d571088de40f0e80c4257d05815c3d1d81568d1f815f8a2cd812bf0471397b0b8397015fa552c915397d1780d4b05d0752cf3e3be1b587e54736666b0e21a9a2eba40fbb158fd060c30658bb11a2d6865296cc606a639c6246f645a0799d6434c729a491687b6d8401d8744ea57711049cac5a7a4ef739f5f491b95febb29b705b86d58797eeb4892e50189c51754212692441c8e5dc74a1fbec4aafd89af1064602e24e2ce54f340a02df015429c1449c21f505e75f2f72a887529313611650bc3bd8ec9bf8d798b33e4552f92ae1749ecc53e276dfb29f978ba1b07e8bf9f6797e0204f04f00327a1f6da56ae1de2cc52f86ea22588919b680ee2f0ac248bdf4b7c737c3d825127ef670823c0674f34c6142566d0128d715c1d8d736c95d4c54492ac05aa85daa2c0df8b46825e46b0cd84bc8e80c4b1a8adcf75ac07f7398ef5e087ca31910eaaf408b895fe9ae9e0bde5a4e3491e914cf6c4fe8960e01c02fe6b68932aaba4a6795fdc4ecdbeb8e4c0ef817884d11a453b2174d2f83aea1488115b9f07a21dfb7684713f81f9545417c31fdaa9dd446bad90063517e98ff0632798166d8ae6ae2863199728c6e24e143921f29c3836a9583d80101e64120d92d1980760970bb04b454e53d24105b0665a7fe22279d041d21e750cb7df404705c49ad92096aa9d134ce624bbcff200687701b4ab9ad494340f80075c00136c0151d15d01b0b602404d5c45671d1c59e2c8d1cdbc0747b78ba3dbc5d14d1febe2305c1c978943623c142586ae8aedfdf1c45544ce62859a60e53040e7a057b0b6cc83d5efe9f022a35c22ee32ab6d9a55f4302faf47d8e7a73d8d30e4621f72b10f31cd5b5487df89946a04a9b746e9e21e165ba896533ef914a42c4e3de1907584f545740381685b40bc4bc8108bb705e85d375daaf2acdd0d8fb2d01ea3d5c7b1923abad85955268ab83823187770469846bb61234ec3865821f72826f2c907af83e78c83a7d38327d1b46e06eb2b687a66a1b1cbfe296a7b1a2bf00ccbfe590f924e1749a78ba4d345d2e922697191582e927f7045740cd8b1f0f2b74dd66dce453610508b6dce1dd51688276c49507a59fc39ea7b5efe958836bc40067991fcfc126fa2973d88075cc4032ee20117f1808378156fb5e3e4f32a8bdb335b3923f90f816493248bf3147f42381e9de6aa448ba1bc8a6fed8fc69b36cce0b68a7b8db10423de5d85ee4df72b64ac577975bcc680bf4ee86f78ca72bd0b793d5b6e9ff30563b776031372bf82ec931f340e90a203a4cb01928837f54a862b207ae682b0b3fc16d59d65cdbdcd78bee301e025b7ec1c726b60ac2b00f8b3c701708c6f12cfd5bc075648d3b285dfacde0817dde60cab6def320aef29832df631d7e06a654653415f045fd34e4dd979c8b133e5dc371dd19804597843cabab62ddbc973d4f33eed7e407afcd0435c1daecd0e14944d918aee1543eb2d8ef59263dd74acb7d6f0327e0d7d73ddfc98ee7ce231d9ea9a6c75dc14a9acbe8be6383ced96984f79b1a68ec38959666d8f2f52d12542f894fe5cf6a4758d6b7e8debf11ac7639104887fb6ef2755c53c8c5f2ae53e2c278b3e4b36ece0f35534fe17504b0708ec308779cb09000028180000504b0304140008080800aa7b564e00000000000000000000000022000000696f2f6e756c732f636f6e74726163742f746f6b656e2f546f6b656e2e636c617373a552d14e1341143d03b5cb16aa28a8a0284a08697970131ff481a76a24694282a19507dfa6bb431d989da933b325fc9a0f7e801f65bc534ba5b6a5896eb23b3be79e7bcebd33f7c7cf6fdf01bcc64e84e711b623bc60a8367a3d6bfa5c7de80bed19569a5a0bfb5e71e7848bf092186dcbb53b1376c828699e0b86f55afde89cf779a2b8ee262d6fa5ee1e306c9e14dacb5c9c4a273b4a34b4369e7b69b463d83b9226d18572496ab4b73cf589cb2e123ee224a7525c9248d95de51da318963291ca9c2b4a5eacd59b0ccb9ea8aa55f47aea8a61e3ba869cfb2fc93bd96d6a2fbac29244dce154582a8ecf18ded4a61b37b2cc0ae70e668aec8c37f3915b6add0b3bd6d5fedcae4ec4d7425a9191e2921f1e26c3db39554d2faafe99eee85ae4d09a9ce1d33ca17fb489f86034e8ae63ae94b90cc7c9d0fe2fb799475d6999c2a6e2502af2a8b4cd85d0af0295616b42d0876832e030acfe19c2e3ceb9486942f76fcbd8fd6be06f278fcd7e99816101e1894b749788695fa15d99d66580b0952958157727b07b589dc0eee301a9dfc0b0466f144cd70784877844ff01ac2efc0647a1c7d81886d6166f864684cdd9b94ff0748aef388d085b83ef33dca135141a7c4ad46e488a10ff02504b070868fe421cca0100005e040000504b0304140008080800aa7b564e00000000000000000000000030000000696f2f6e756c732f636f6e74726163742f746f6b656e2f546f6b656e24417070726f76616c4576656e742e636c6173738d565b6f1b4514fec6bbde75b69bbb49d224b46929e05b6a2ee19a4b73218140d2943835b4406163af926d9cdd74771d90a0129540ea033c801020242e2f252f790089b80824c45390f82ffc03049c995dbb89e3243cf8ccd93367e67cdf7c6746fef39f5f7e03f018ae6988e34213148c7333c1cd248f4da998d63083e735bcc0cd0c66b937abe2450d2770218697f838c7cd7c0c176358e0ee256e5e56b1a822c71075deb64d97e1d49ce564ed72c9cb161cdb778d829ff58a6bd98962d1353d6f9841f5364cbbc853a39b46a96c3274cd5d37368decbae1af6627ad9559db37574c97529511cbb6fc3186cb89a3773d66b6e1f6c93c833ce5140940eb9c659b17cbebcba6bb642c9728d231e7148c52de702dfe1d06657fd5f2189a2736365c87b04f6f9ab6cfa0cfdac47caa64789e49d39983607c67cdb4b34bdc9edbb798389e5d2cdbbeb56ee62dcfa22a970cd758377dd39db06dc7377ccbb169cf546382462d27bb68de285bae59a41d632ba6bf10883190481e2747ccab659f39e694f98969b479ae2aa0e6edf9e065f381a03d54f6104979b930eb64e2706114a2639488f97d6152c9b057b20bcbd7cd823f9cbccac01c2ed28129219241a234e77ca3b0366f6c08eda8c1a9f4aae1ad06824b89e42c152156e5122533fa88f94ece772d7b85215e852f760ea2b4b39673ca6ec19cb1782f6842cdf33c4d471f967474a15b470f3727d1abe332f22a5e21e9fe7f37a87855c7237854c5151d4fe16986ee7a189365ab244e3bbe6fe5bbe2f28deab88ad7b8799d006606c28b364ae43203e2ae898c37740c6384a1adfef4187a1bea1ff6391d5a3e9059f43a43e7be7312413aa6fea308379aded362c4ab514b9054c60627c330983828cd41b5c2631aaecbaff6cf11f9fd89a9c3a771869ecc38a82b2121c215a78735c2451723e94ea346f37de8a7effbe9ab44a34c633c75172c95de412495d981941adc81fca358758a6c17a2646f50a68b267868818f4e94719aa2a9603d06f000203c5e97098f578e088fd796708efc4e89261f2467bf7d080f93e590b234f2e5d1d44f88fc50c3a088e03ba2a61e248435191248868bc7289b575404977b0c34117d8fd6dc143b74055935d44a889a2e444320523d90f71b0249370622d503f980d67c7808909e104806830d80c8f5406e3704725e2c3a0044ae07f211adf9f810205c335e98ae7cb8d75f9423d1782b95fe1e51793bbd8b965405d134fdee202a6da77f8732cf75dba58ea22143bf0ad4afd0ba45375ec4298b9f679020514cda9b205513e45db4f381627205b12db472ef0fa8f21664699b404882462f01053e818a4fe9e43e23989f13e52ff026be14b40602c0355ab7e89fc6e3824e1143148be009d1a0badac2fe46bf8a2715d6adb0b836cea9d32b1752ff393cc6e9805d734a306be26046da4ef7ad069c78580ac36f55e37210271a5a10efbb07bf43dc9eafe9367d43cdf32da6f0dd1e35a643d89d04fa193c4b5038d84128ede3ec5fbae511824b30c947e84718cbefffa445f49c862caed1b6bc51867ec5892b77a1773457484141a5b5a32df025eeb7073e616e6dbb594147059df58d77674fe30d8540231815760c67c3a746c173f42c35fd07504b0708ea7bbc798f040000e6090000504b0304140008080800aa7b564e00000000000000000000000030000000696f2f6e756c732f636f6e74726163742f746f6b656e2f546f6b656e245472616e736665724576656e742e636c6173738d56df531b5514fe6e76b31bb60be19740015b5aab8624b06ad156c36f84160da5051a0bd5da25d9c296b08bbb1b5e1c1ffa6ff8aebcf0a033923a3ae3f88433fe2ffe078e7aeedd854212c0879c7bf6dc73eef9cef9cebd933ffff9e53700efe189864e4c3441c12417535c4c73db8c8a590d73b8a3e12e177398e7dabc8a4f345cc244029ff235cfc54202f71258e4ea7d2e1ea85852b1cc203ff3dc6d862b79db359c4ad9378aae1378663130fcd29631552a7996efe7186281cb10df35cb158ba12bffdcdc358d6d33d834a6ed8d7927b0362c8fbc9451dbb183718687a9f30fbc60b7e1f18305823be3960840326f3bd6bdcaf6bae5ad98eb65b2b4e7dda2592e989ecdbf23a31c6cda3e43f38a673afe33cb9bddb59c80419f771ccb9b299bbe6fd176b61e4ce06e598eb1c2e58d53c154e3f5a58a13d8db56c1f66dca72dff4cc6d2bb0bc29c7710333b05d87ce4c372ed03cf63196acaf2ab66795e84475c30ae6040d03a9c18b8850fd23e76b17f498f72b4e47af70e6fc704dd0772124b187729d4163c23ff6ba9c3a9b0c854a30cb54ed6b9153d974368cc5f5e75631c80dae3130971353b72588318988e6e5c02c6e2d983b822f1a674abd69fa9b21c9526a709e92502d95323933fa4804ee72e0d9ce0643e7117c717268a593b565b7e215ad399bf3af090687b99b8e3eace8e842b78e1e2e2ea357c74314547c4674fdff0950f148c73b7857c5aa8e5bb8cdd05d0b63ba62974b96c7d0712af26b7ed5c674ace131179f132bd981c01da3b2b203e26689cd2f74e430cad05adb3786de867c47534ded2a84048bc9a6eca73a248cd4a0fef34a6db47d62a4a8eb8d8681483277762ca7c43094aa27a59ea7a841b91affa3c939c7bf3f3573f636aed1d3d8099a47488871aee9018d71bac54a8cd3aad17e1ffae9fb75fa2ad32ad3da997e0996ce1c2096ce1e404a0f1d40fe51445d21d98538c92c790ea109c36881810e1a82ab644d87f118c01b80d0785e26349e3926349e5bc20dd293120986374fc8b7f036490ec7a09587c6d33f21f6c3717e45186f8a7c7ae810e5634861300a1e276f9e4d1175bc42af09eb2d8ab92d4ee80abd8e112b1162ba060d8148b540720d81641a03916a814c50cce419407a2220596a743d10b916c84c4320c322a80e885c0be40ec5dc3d0308e78b27a68b1e9df517f970ea5ea433df232eef670ed192ae229ea1df77884bfb99dfa12c70de0e699a68c9d2af0af55b24f7a065859dbc783f4307896cd24907e9c8413e441b5fc8265791d843926b7f4095f7204bfb04421265f41250200f150bd4b94582f9804a5ec2975816650d84808fcb7a41ff266e8a724a18215b0cef8be1d4d516f637fa557ca0b06e85756a93bc747adba2d27f8eda381b56d79c1695357130a3ad57fb36c39ab8598acc4f8fec7268a732b4d0def70a7ebbb8398fe826add2f0ac119b8f4fb0311bc1ee20d01fe22382c2c10e41699b64ffd20d8f115c82493a223dc658e1f42705d1531a55f1848ee58332f22b2eadbe84dede5c25064529c9f6d65097b8de16ea8439d9fa4d15ed5574d40eded313833712018d614cc8715c8f9e19051fd393d4f41f504b0708826261e37e040000ca090000504b01020a000a0000080000aa7b564e000000000000000000000000030004000000000000000000000000000000696f2ffeca0000504b01020a000a0000080000aa7b564e000000000000000000000000080000000000000000000000000025000000696f2f6e756c732f504b01020a000a0000080000aa7b564e00000000000000000000000011000000000000000000000000004b000000696f2f6e756c732f636f6e74726163742f504b01020a000a0000080000aa7b564e00000000000000000000000017000000000000000000000000007a000000696f2f6e756c732f636f6e74726163742f746f6b656e2f504b01021400140008080800aa7b564eec308779cb090000281800002800000000000000000000000000af000000696f2f6e756c732f636f6e74726163742f746f6b656e2f53696d706c65546f6b656e2e636c617373504b01021400140008080800aa7b564e68fe421cca0100005e0400002200000000000000000000000000d00a0000696f2f6e756c732f636f6e74726163742f746f6b656e2f546f6b656e2e636c617373504b01021400140008080800aa7b564eea7bbc798f040000e60900003000000000000000000000000000ea0c0000696f2f6e756c732f636f6e74726163742f746f6b656e2f546f6b656e24417070726f76616c4576656e742e636c617373504b01021400140008080800aa7b564e826261e37e040000ca0900003000000000000000000000000000d7110000696f2f6e756c732f636f6e74726163742f746f6b656e2f546f6b656e245472616e736665724576656e742e636c617373504b0506000000000800080051020000b31600000000", [ "io", "IO", 80000, 1 ], null ],
+  "id" : 1234
+}
+```
 
 ### Example response data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "id" : "1234",
+  "result" : {
+    "txHash" : "0b8a56835e47ab67c57d1a3e7c9102315b0b219af4c3a7c0fa820d16f09a12f3",
+    "contractAddress" : "tNULSeBaMx2zjgThursB6k9XsST7VvZmr2vB3J"
+  }
+}
+```
 
 4.2 调用合约
 ========
@@ -1546,10 +1562,25 @@ _**详细描述: 调用合约**_
 | ------ |:------:| ----------- |
 | txHash | string | 调用合约的交易hash |
 ### Example request data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "method" : "contractCall",
+  "params" : [ 2, "tNULSeBaMvEtDfvZuukDf2mVyfGo3DdiN8KLRG", "nuls123456", 0, 200000, 30, "tNULSeBaMx2zjgThursB6k9XsST7VvZmr2vB3J", "transfer", null, [ "tNULSeBaMtkzQ1tH8JWBGZDCmRHCmySevE4frM", "4000" ], "remark-jsonrpc-call" ],
+  "id" : 1234
+}
+```
 
 ### Example response data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "id" : "1234",
+  "result" : {
+    "txHash" : "1e9d4676e09a7ead64a400971625c0cc0cd0991086bc969fe27a433bb6e6efb9"
+  }
+}
+```
 
 4.3 删除合约
 ========
@@ -1573,10 +1604,25 @@ _**详细描述: 删除合约**_
 | ------ |:------:| ----------- |
 | txHash | string | 删除合约的交易hash |
 ### Example request data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "method" : "contractDelete",
+  "params" : [ 2, "tNULSeBaMvEtDfvZuukDf2mVyfGo3DdiN8KLRG", "nuls123456", "tNULSeBaMx2zjgThursB6k9XsST7VvZmr2vB3J", "delete-remark" ],
+  "id" : 1234
+}
+```
 
 ### Example response data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "id" : "1234",
+  "result" : {
+    "txHash" : "12f521540bc9dba75b4c8fb605bb7387681891748265c0d4b869c64389008fca"
+  }
+}
+```
 
 4.4 合约token转账
 =============
@@ -1602,10 +1648,25 @@ _**详细描述: 合约token转账**_
 | ------ |:------:| ------ |
 | txHash | string | 交易hash |
 ### Example request data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "method" : "tokentransfer",
+  "params" : [ 2, "tNULSeBaMvEtDfvZuukDf2mVyfGo3DdiN8KLRG", "nuls123456", "tNULSeBaMnrs6JKrCy6TQdzYJZkMZJDng7QAsD", "tNULSeBaN7GnASHHfknQ1a9ywiLsNsuim6ASwi", 80, "8个" ],
+  "id" : 1234
+}
+```
 
 ### Example response data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "id" : "1234",
+  "result" : {
+    "txHash" : "f628c9787830ff67fe9a3e423899225d7b975add83f9ee505d4ce9d75a79b1fb"
+  }
+}
+```
 
 4.5 从账户地址向合约地址转账(主链资产)的合约交易
 ===========================
@@ -1630,10 +1691,25 @@ _**详细描述: 从账户地址向合约地址转账(主链资产)的合约交�
 | ------ |:------:| ------ |
 | txHash | string | 交易hash |
 ### Example request data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "method" : "transfer2contract",
+  "params" : [ 2, "tNULSeBaMvEtDfvZuukDf2mVyfGo3DdiN8KLRG", "nuls123456", "tNULSeBaNA4yaXmfaQVXpX3QWPcUaHRRryoXHa", 900000000, "向合约转账" ],
+  "id" : 1234
+}
+```
 
 ### Example response data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "id" : "1234",
+  "result" : {
+    "txHash" : "6a10dea1845b189ff5542939df0ababa5c478fb9414884937212549af1603ad4"
+  }
+}
+```
 
 4.6 获取账户地址的指定合约的token余额
 =======================
@@ -1661,10 +1737,31 @@ _**详细描述: 获取账户地址的指定合约的token余额**_
 | blockHeight     |  long  | 合约创建时的区块高度              |
 | status          |  int   | 合约状态(0-不存在, 1-正常, 2-终止) |
 ### Example request data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "method" : "getTokenBalance",
+  "params" : [ 2, "tNULSeBaMvkanBqyWF1h7MuQ22Pq3JkL8FTfsL", "tNULSeBaMnrs6JKrCy6TQdzYJZkMZJDng7QAsD" ],
+  "id" : 1234
+}
+```
 
 ### Example response data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "id" : "1234",
+  "result" : {
+    "contractAddress" : "tNULSeBaMvkanBqyWF1h7MuQ22Pq3JkL8FTfsL",
+    "name" : "io",
+    "symbol" : "IO",
+    "amount" : "80",
+    "decimals" : 1,
+    "blockHeight" : 505,
+    "status" : 1
+  }
+}
+```
 
 4.7 获取智能合约详细信息
 ==============
@@ -1709,7 +1806,12 @@ _**详细描述: 获取智能合约详细信息**_
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;payable                                                  |     boolean     | 是否是可接受主链资产转账的方法               |
 ### Example request data: 
 ```json
-{ }
+{
+  "jsonrpc" : "2.0",
+  "method" : "getContract",
+  "params" : [ 2, "tNULSeBaNA4yaXmfaQVXpX3QWPcUaHRRryoXHa" ],
+  "id" : 1234
+}
 ```
 
 ### Example response data: 
@@ -1718,226 +1820,122 @@ _**详细描述: 获取智能合约详细信息**_
   "jsonrpc" : "2.0",
   "id" : "1234",
   "result" : {
-    "createTxHash" : "ec11dfb9202090276fcde3d5c615caaa406ae6a5826a479878f560758db27bd9",
-    "address" : "tNULSeBaNCP8xykvLm4CaVrGtkiybQwPx6LrSD",
+    "createTxHash" : "3a932a0bae1cd78c9e56264824a1ff9c96baf857bd799fe6941d0c4e98c19cf0",
+    "address" : "tNULSeBaNA4yaXmfaQVXpX3QWPcUaHRRryoXHa",
     "creater" : "tNULSeBaMvEtDfvZuukDf2mVyfGo3DdiN8KLRG",
-    "alias" : "kqb",
-    "createTime" : 1563170044,
-    "blockHeight" : 27048,
-    "directPayable" : false,
-    "nrc20" : true,
-    "nrc20TokenName" : "KQB",
-    "nrc20TokenSymbol" : "KongQiBi",
-    "decimals" : 2,
-    "totalSupply" : "1000000000000",
+    "alias" : "offline_payable_jr",
+    "createTime" : 1563270456,
+    "blockHeight" : 427,
+    "directPayable" : true,
+    "nrc20" : false,
+    "nrc20TokenName" : null,
+    "nrc20TokenSymbol" : null,
+    "decimals" : 0,
+    "totalSupply" : null,
     "status" : "normal",
     "method" : [ {
-      "name" : "name",
-      "desc" : "() return String",
+      "name" : "_payable",
+      "desc" : "() return void",
       "args" : [ ],
-      "returnArg" : "String",
-      "view" : true,
+      "returnArg" : "void",
+      "view" : false,
+      "event" : false,
+      "payable" : true
+    }, {
+      "name" : "<init>",
+      "desc" : "() return void",
+      "args" : [ ],
+      "returnArg" : "void",
+      "view" : false,
       "event" : false,
       "payable" : false
     }, {
-      "name" : "symbol",
+      "name" : "getName",
       "desc" : "() return String",
       "args" : [ ],
       "returnArg" : "String",
-      "view" : true,
+      "view" : false,
       "event" : false,
       "payable" : false
     }, {
-      "name" : "decimals",
+      "name" : "getSymbol",
+      "desc" : "() return String",
+      "args" : [ ],
+      "returnArg" : "String",
+      "view" : false,
+      "event" : false,
+      "payable" : false
+    }, {
+      "name" : "getDecimals",
       "desc" : "() return int",
       "args" : [ ],
       "returnArg" : "int",
-      "view" : true,
+      "view" : false,
       "event" : false,
       "payable" : false
     }, {
-      "name" : "totalSupply",
-      "desc" : "() return BigInteger",
+      "name" : "balance",
+      "desc" : "() return String",
       "args" : [ ],
-      "returnArg" : "BigInteger",
-      "view" : true,
-      "event" : false,
-      "payable" : false
-    }, {
-      "name" : "<init>",
-      "desc" : "(String name, String symbol, BigInteger initialAmount, int decimals) return void",
-      "args" : [ {
-        "type" : "String",
-        "name" : "name",
-        "required" : true
-      }, {
-        "type" : "String",
-        "name" : "symbol",
-        "required" : true
-      }, {
-        "type" : "BigInteger",
-        "name" : "initialAmount",
-        "required" : true
-      }, {
-        "type" : "int",
-        "name" : "decimals",
-        "required" : true
-      } ],
-      "returnArg" : "void",
+      "returnArg" : "String",
       "view" : false,
       "event" : false,
       "payable" : false
     }, {
-      "name" : "allowance",
-      "desc" : "(Address owner, Address spender) return BigInteger",
-      "args" : [ {
-        "type" : "Address",
-        "name" : "owner",
-        "required" : true
-      }, {
-        "type" : "Address",
-        "name" : "spender",
-        "required" : true
-      } ],
-      "returnArg" : "BigInteger",
-      "view" : true,
-      "event" : false,
-      "payable" : false
-    }, {
-      "name" : "transferFrom",
-      "desc" : "(Address from, Address to, BigInteger value) return boolean",
-      "args" : [ {
-        "type" : "Address",
-        "name" : "from",
-        "required" : true
-      }, {
-        "type" : "Address",
-        "name" : "to",
-        "required" : true
-      }, {
-        "type" : "BigInteger",
-        "name" : "value",
-        "required" : true
-      } ],
-      "returnArg" : "boolean",
+      "name" : "single",
+      "desc" : "() return String",
+      "args" : [ ],
+      "returnArg" : "String",
       "view" : false,
       "event" : false,
       "payable" : false
     }, {
-      "name" : "balanceOf",
-      "desc" : "(Address owner) return BigInteger",
-      "args" : [ {
-        "type" : "Address",
-        "name" : "owner",
-        "required" : true
-      } ],
-      "returnArg" : "BigInteger",
-      "view" : true,
-      "event" : false,
-      "payable" : false
-    }, {
-      "name" : "transfer",
-      "desc" : "(Address to, BigInteger value) return boolean",
-      "args" : [ {
-        "type" : "Address",
-        "name" : "to",
-        "required" : true
-      }, {
-        "type" : "BigInteger",
-        "name" : "value",
-        "required" : true
-      } ],
-      "returnArg" : "boolean",
+      "name" : "multy",
+      "desc" : "() return String",
+      "args" : [ ],
+      "returnArg" : "String",
       "view" : false,
       "event" : false,
-      "payable" : false
+      "payable" : true
     }, {
-      "name" : "approve",
-      "desc" : "(Address spender, BigInteger value) return boolean",
+      "name" : "multyForAddress",
+      "desc" : "(Address add1, BigInteger add1_na, Address add2, BigInteger add2_na, String add3ForString, BigInteger add3_na) return String",
       "args" : [ {
         "type" : "Address",
-        "name" : "spender",
-        "required" : true
+        "name" : "add1",
+        "required" : false
       }, {
         "type" : "BigInteger",
-        "name" : "value",
-        "required" : true
-      } ],
-      "returnArg" : "boolean",
-      "view" : false,
-      "event" : false,
-      "payable" : false
-    }, {
-      "name" : "increaseApproval",
-      "desc" : "(Address spender, BigInteger addedValue) return boolean",
-      "args" : [ {
-        "type" : "Address",
-        "name" : "spender",
-        "required" : true
-      }, {
-        "type" : "BigInteger",
-        "name" : "addedValue",
-        "required" : true
-      } ],
-      "returnArg" : "boolean",
-      "view" : false,
-      "event" : false,
-      "payable" : false
-    }, {
-      "name" : "decreaseApproval",
-      "desc" : "(Address spender, BigInteger subtractedValue) return boolean",
-      "args" : [ {
-        "type" : "Address",
-        "name" : "spender",
-        "required" : true
-      }, {
-        "type" : "BigInteger",
-        "name" : "subtractedValue",
-        "required" : true
-      } ],
-      "returnArg" : "boolean",
-      "view" : false,
-      "event" : false,
-      "payable" : false
-    }, {
-      "name" : "TransferEvent",
-      "desc" : "(Address from, Address to, BigInteger value) return void",
-      "args" : [ {
-        "type" : "Address",
-        "name" : "from",
+        "name" : "add1_na",
         "required" : false
       }, {
         "type" : "Address",
-        "name" : "to",
-        "required" : true
+        "name" : "add2",
+        "required" : false
       }, {
         "type" : "BigInteger",
-        "name" : "value",
-        "required" : true
+        "name" : "add2_na",
+        "required" : false
+      }, {
+        "type" : "String",
+        "name" : "add3ForString",
+        "required" : false
+      }, {
+        "type" : "BigInteger",
+        "name" : "add3_na",
+        "required" : false
       } ],
-      "returnArg" : "void",
+      "returnArg" : "String",
       "view" : false,
-      "event" : true,
-      "payable" : false
+      "event" : false,
+      "payable" : true
     }, {
-      "name" : "ApprovalEvent",
-      "desc" : "(Address owner, Address spender, BigInteger value) return void",
-      "args" : [ {
-        "type" : "Address",
-        "name" : "owner",
-        "required" : true
-      }, {
-        "type" : "Address",
-        "name" : "spender",
-        "required" : true
-      }, {
-        "type" : "BigInteger",
-        "name" : "value",
-        "required" : true
-      } ],
-      "returnArg" : "void",
+      "name" : "allInfo",
+      "desc" : "() return String",
+      "args" : [ ],
+      "returnArg" : "String",
       "view" : false,
-      "event" : true,
+      "event" : false,
       "payable" : false
     } ]
   }
@@ -2000,7 +1998,12 @@ _**详细描述: 获取智能合约执行结果**_
 | remark                                                                                                |     string      | 备注                                          |
 ### Example request data: 
 ```json
-{ }
+{
+  "jsonrpc" : "2.0",
+  "method" : "getContractTxResult",
+  "params" : [ 2, "b8db1792fbfb6630a5106a1a92ee182aaa694aa1142454e81e4d8286e19ffc11" ],
+  "id" : 1234
+}
 ```
 
 ### Example response data: 
@@ -2011,31 +2014,58 @@ _**详细描述: 获取智能合约执行结果**_
   "result" : {
     "success" : true,
     "errorMessage" : null,
-    "contractAddress" : "tNULSeBaNCP8xykvLm4CaVrGtkiybQwPx6LrSD",
-    "result" : null,
+    "contractAddress" : "tNULSeBaN1rhd9k9eqNkvwC9HXBWLQ79dRuy81",
+    "result" : "multyForAddress: 888634777633",
     "gasLimit" : 200000,
-    "gasUsed" : 15794,
+    "gasUsed" : 20038,
     "price" : 25,
-    "totalFee" : "5700000",
-    "txSizeFee" : "700000",
-    "actualContractFee" : "394850",
-    "refundFee" : "4605150",
-    "value" : "0",
+    "totalFee" : "5100000",
+    "txSizeFee" : "100000",
+    "actualContractFee" : "500950",
+    "refundFee" : "4499050",
+    "value" : 10000000000,
     "stackTrace" : null,
-    "transfers" : [ ],
-    "events" : [ "{\"contractAddress\":\"tNULSeBaNCP8xykvLm4CaVrGtkiybQwPx6LrSD\",\"blockNumber\":27048,\"event\":\"TransferEvent\",\"payload\":{\"from\":null,\"to\":\"tNULSeBaMvEtDfvZuukDf2mVyfGo3DdiN8KLRG\",\"value\":\"1000000000000\"}}" ],
-    "tokenTransfers" : [ {
-      "contractAddress" : "tNULSeBaNCP8xykvLm4CaVrGtkiybQwPx6LrSD",
-      "from" : null,
-      "to" : "tNULSeBaMvEtDfvZuukDf2mVyfGo3DdiN8KLRG",
-      "value" : "1000000000000",
-      "name" : "KQB",
-      "symbol" : "KongQiBi",
-      "decimals" : 2
+    "transfers" : [ {
+      "txHash" : "4877f6a865dea5b4ac82a8370d73e62da15bc7acb2145a03822dddfdab329d2b",
+      "from" : "tNULSeBaN1rhd9k9eqNkvwC9HXBWLQ79dRuy81",
+      "value" : "200000000",
+      "outputs" : [ {
+        "to" : "tNULSeBaMp9wC9PcWEcfesY7YmWrPfeQzkN1xL",
+        "value" : "100000000"
+      }, {
+        "to" : "tNULSeBaMshNPEnuqiDhMdSA4iNs6LMgjY6tcL",
+        "value" : "100000000"
+      } ],
+      "orginTxHash" : "b5473eefecd1c70ac4276f70062a92bdbfe8f779cbe48de2d0315686cc7e6789"
     } ],
-    "invokeRegisterCmds" : [ ],
-    "contractTxList" : [ ],
-    "remark" : "create"
+    "events" : [ "{\"contractAddress\":\"TTb1LZLo6izPGmXa9dGPmb5D2vpLpNqA\",\"blockNumber\":1343847,\"event\":\"TransferEvent\",\"payload\":{\"from\":\"TTasNs8MGGGaFT9hd9DLmkammYYv69vs\",\"to\":\"TTau7kAxyhc4yMomVJ2QkMVECKKZK1uG\",\"value\":\"1000\"}}" ],
+    "tokenTransfers" : [ {
+      "contractAddress" : "TTb1LZLo6izPGmXa9dGPmb5D2vpLpNqA",
+      "from" : "TTasNs8MGGGaFT9hd9DLmkammYYv69vs",
+      "to" : "TTau7kAxyhc4yMomVJ2QkMVECKKZK1uG",
+      "value" : "1000",
+      "name" : "a",
+      "symbol" : "a",
+      "decimals" : 8
+    } ],
+    "invokeRegisterCmds" : [ {
+      "cmdName" : "cs_createContractAgent",
+      "args" : {
+        "contractBalance" : "2030000000000",
+        "commissionRate" : "100",
+        "chainId" : 2,
+        "deposit" : "2000000000000",
+        "contractAddress" : "tNULSeBaMzZedU4D3xym1JcyNa5sqtuFku8AKm",
+        "contractNonce" : "0000000000000000",
+        "blockTime" : 1562564381,
+        "packingAddress" : "tNULSeBaMtEPLXxUgyfnBt9bpb5Xv84dyJV98p",
+        "contractSender" : "tNULSeBaMvEtDfvZuukDf2mVyfGo3DdiN8KLRG"
+      },
+      "cmdRegisterMode" : "NEW_TX",
+      "newTxHash" : "a8eae11b52990e39c9d3233ba1d2c8827336d261c0f14aca43dd4f06435dfaba"
+    } ],
+    "contractTxList" : [ "12002fbb225d0037b5473eefecd1c70ac4276f70062a92bdbfe8f779cbe48de2d0315686cc7e678902000253472f4702eb83b71871a4c4e0c71526bb86b8afd0011702000253472f4702eb83b71871a4c4e0c71526bb86b8af0200010000c2eb0b0000000000000000000000000000000000000000000000000000000008000000000000000000021702000194f6239c075d184e265eaea97a67eeced51725160200010000e1f50500000000000000000000000000000000000000000000000000000000000000000000000017020001ce8ffa95606f0bfd2778cff2eff8fe8999e20c440200010000e1f50500000000000000000000000000000000000000000000000000000000000000000000000000", "1400bf6b285d006600204aa9d1010000000000000000000000000000000000000000000000000000020002f246b18e8c697f00ed9bd22696998e469d3f824b020001d7424d91c83566eb94233b5416f2aa77709c03e1020002f246b18e8c697f00ed9bd22696998e469d3f824b648c0117020002f246b18e8c697f00ed9bd22696998e469d3f824b0200010000204aa9d1010000000000000000000000000000000000000000000000000000080000000000000000000117020002f246b18e8c697f00ed9bd22696998e469d3f824b0200010000204aa9d1010000000000000000000000000000000000000000000000000000ffffffffffffffff00" ],
+    "remark" : "call"
   }
 }
 ```
@@ -2070,10 +2100,50 @@ _**详细描述: 获取合约代码构造函数**_
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;payable                                                  |     boolean     | 是否是可接受主链资产转账的方法    |
 | isNrc20                                                                                                  |     boolean     | 是否是NRC20合约         |
 ### Example request data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "method" : "getContractConstructor",
+  "params" : [ 2, "504b03040a0000080000aa7b564e00000000000000000000000003000400696f2ffeca0000504b03040a0000080000aa7b564e00000000000000000000000008000000696f2f6e756c732f504b03040a0000080000aa7b564e00000000000000000000000011000000696f2f6e756c732f636f6e74726163742f504b03040a0000080000aa7b564e00000000000000000000000017000000696f2f6e756c732f636f6e74726163742f746f6b656e2f504b0304140008080800aa7b564e00000000000000000000000028000000696f2f6e756c732f636f6e74726163742f746f6b656e2f53696d706c65546f6b656e2e636c617373b558f97754e5197eeecc90990c972d9090059209a498cc9291a58a8152020d35ca5602b1605bbd99b9492ecc12670922b46ead4babd56aeb5ad1565bd4aa2c020169d59ed353cfe93fd17f84d3d3e7fdee9d3b37612639d5d31ff2ddf77ecbfb3eeff67c77f2afff7cf639804df87b23a23825c323329c96e14c1831fcb411cdf859108f86119497281e93e171997e22cce149197e1ec62ff0d462acc2d3413c13c672fc2a8ce7f0bcccfc3a8817827831cc53bf91e125195e96e5df8af4bb205e09a3430e44f19a0cafcbf086a87d5386df87f096cc9c9597b7457a27843fc8f38f21bc2b7ade0be24f41fc39887341bcaf219033b2a686a6bdc78d692399317213c99152c1ca4d6cd3d0503c951dcb673484d266caca1a99a2066d58c3e252be646446ca535399531a5aeca359a33499dc654d0ce74ae68459e0f1d098417d2993a796d97bca252b93dc674c71b171c49ac819a57281c68766af6edf6be593b972a6984ce573a582912a258be913c9c174ba60168bdb6a9bdb419d412393c99f34d31a4a5f43e337342f0056f5f6d58a6360773e6d4a10ac9cb9bf9c1d330b878db18c8a7a3e6564468d8225efce64a0346931643db7c228e54f98b9e488959de26691a9bbed503957b2b2e6a855b4787c3097636e4a563e47151b6a7b62b87b92a39679924afcbd7d4c6b6b05fdada96cd86ee5acd20e0d3b7a6f75b0decc5c35c37da31a968822cbc80c66f304ae61dd6cfc078d02ebb164166639125dd09143e64365ab60a6a5b2541548e16938dcbb4032e75dad1b8e45f99339b3a0a173fef3acc8e294994bcb565d1d19ac14e8a269235336a5796655c0a9a94a152c192919a9132c47f56eb302b5d048ae386e16f614f2590d47be917bb5bdeb3bc6121c57ea7da53cc3e974f181710d772c60af6ec0828e129242c5030d772e84be2ebea0313555c84f53dd722b972a9846d11c543306c92a6ca4d3667ad48eef7232d79cf565c5f29832e66e0ae53315510ebb49fabf84973d1032ec2d1babe2260f2ed77eb868565f96550e559739b3ab12d7af19cc5109a6bdc583c0d5ba283569a64e90657aeb9f4fd659ab7fa24115ffc68a40df63f3eaf0528b9cf7678b131a06ff27bbb5358547f2e542cadc6349cb2df7306bbf6cd7d18fa48edb65d8884d3a36638b8e217ca0e3436cd1b0a27a6fdc6d1427d9ac3abe8d3b74dc25c35f64f347f858c727381fc4051d177149c7a7b84c42abc3edca76cf61a74586a64da1c82573def5e11ca96477c62816cda2e0213d5cd17115333aaee13a0fccbacf782dd58a888e49983a72c8e83821c367b8a1c382b910ba4a2755d0cd7ad79116adf7e05e1d79301e7fc5df747c8ef31a3a8673c5f2f8b895b2b82fe274703aa254cbe6691d5fe0bc8ea36087270e4f9a11551d916cb9588a8c999109f6312f864869d2c845f2850819dfc8f078e4f67e394e289db32c389413c98fdb36fac5c52f79e32c7cafb216aae57260ecb899a2f6b535fb6bb7f3a261cd7c5153772c0b2e706ce8d001be1c1edacf712a7f527a6bb82e6f86b2e54cc9529f59fdf55ab0ded9d69a78f749eb34149d5b29c22b7f812bcc3f55a6735bbdf7be1d916db7cef4dd3aa5a1bda68123ac4e524ec0cc5a54df5587bd544dd93d3f6172df861a306a1a0d16ec0f025ae83d26e71b53f9ec9451607ee761337e04f9c9868c7b85097943f71eabc51de8e637750c3ec49140039a842af8e3a049d8423d49187cfa8433d493c400d2b492b7f2ef2ecffb003fd699616ca3bc9d3349be697c2e8a5e8676416df90ec70635b9163b38eaf6067c173bf91c745677f1a911422d45beb98ad62fa8682376d750e4ff688ea2be05156dc6f76a280acc45945c50d110f6388afecd1d8bf834a3335476090d571088de40f0e80c4257d05815c3d1d81568d1f815f8a2cd812bf0471397b0b8397015fa552c915397d1780d4b05d0752cf3e3be1b587e54736666b0e21a9a2eba40fbb158fd060c30658bb11a2d6865296cc606a639c6246f645a0799d6434c729a491687b6d8401d8744ea57711049cac5a7a4ef739f5f491b95febb29b705b86d58797eeb4892e50189c51754212692441c8e5dc74a1fbec4aafd89af1064602e24e2ce54f340a02df015429c1449c21f505e75f2f72a887529313611650bc3bd8ec9bf8d798b33e4552f92ae1749ecc53e276dfb29f978ba1b07e8bf9f6797e0204f04f00327a1f6da56ae1de2cc52f86ea22588919b680ee2f0ac248bdf4b7c737c3d825127ef670823c0674f34c6142566d0128d715c1d8d736c95d4c54492ac05aa85daa2c0df8b46825e46b0cd84bc8e80c4b1a8adcf75ac07f7398ef5e087ca31910eaaf408b895fe9ae9e0bde5a4e3491e914cf6c4fe8960e01c02fe6b68932aaba4a6795fdc4ecdbeb8e4c0ef817884d11a453b2174d2f83aea1488115b9f07a21dfb7684713f81f9545417c31fdaa9dd446bad90063517e98ff0632798166d8ae6ae2863199728c6e24e143921f29c3836a9583d80101e64120d92d1980760970bb04b454e53d24105b0665a7fe22279d041d21e750cb7df404705c49ad92096aa9d134ce624bbcff200687701b4ab9ad494340f80075c00136c0151d15d01b0b602404d5c45671d1c59e2c8d1cdbc0747b78ba3dbc5d14d1febe2305c1c978943623c142586ae8aedfdf1c45544ce62859a60e53040e7a057b0b6cc83d5efe9f022a35c22ee32ab6d9a55f4302faf47d8e7a73d8d30e4621f72b10f31cd5b5487df89946a04a9b746e9e21e165ba896533ef914a42c4e3de1907584f545740381685b40bc4bc8108bb705e85d375daaf2acdd0d8fb2d01ea3d5c7b1923abad85955268ab83823187770469846bb61234ec3865821f72826f2c907af83e78c83a7d38327d1b46e06eb2b687a66a1b1cbfe296a7b1a2bf00ccbfe590f924e1749a78ba4d345d2e922697191582e927f7045740cd8b1f0f2b74dd66dce453610508b6dce1dd51688276c49507a59fc39ea7b5efe958836bc40067991fcfc126fa2973d88075cc4032ee20117f1808378156fb5e3e4f32a8bdb335b3923f90f816493248bf3147f42381e9de6aa448ba1bc8a6fed8fc69b36cce0b68a7b8db10423de5d85ee4df72b64ac577975bcc680bf4ee86f78ca72bd0b793d5b6e9ff30563b776031372bf82ec931f340e90a203a4cb01928837f54a862b207ae682b0b3fc16d59d65cdbdcd78bee301e025b7ec1c726b60ac2b00f8b3c701708c6f12cfd5bc075648d3b285dfacde0817dde60cab6def320aef29832df631d7e06a654653415f045fd34e4dd979c8b133e5dc371dd19804597843cabab62ddbc973d4f33eed7e407afcd0435c1daecd0e14944d918aee1543eb2d8ef59263dd74acb7d6f0327e0d7d73ddfc98ee7ce231d9ea9a6c75dc14a9acbe8be6383ced96984f79b1a68ec38959666d8f2f52d12542f894fe5cf6a4758d6b7e8debf11ac7639104887fb6ef2755c53c8c5f2ae53e2c278b3e4b36ece0f35534fe17504b0708ec308779cb09000028180000504b0304140008080800aa7b564e00000000000000000000000022000000696f2f6e756c732f636f6e74726163742f746f6b656e2f546f6b656e2e636c617373a552d14e1341143d03b5cb16aa28a8a0284a08697970131ff481a76a24694282a19507dfa6bb431d989da933b325fc9a0f7e801f65bc534ba5b6a5896eb23b3be79e7bcebd33f7c7cf6fdf01bcc64e84e711b623bc60a8367a3d6bfa5c7de80bed19569a5a0bfb5e71e7848bf092186dcbb53b1376c828699e0b86f55afde89cf779a2b8ee262d6fa5ee1e306c9e14dacb5c9c4a273b4a34b4369e7b69b463d83b9226d18572496ab4b73cf589cb2e123ee224a7525c9248d95de51da318963291ca9c2b4a5eacd59b0ccb9ea8aa55f47aea8a61e3ba869cfb2fc93bd96d6a2fbac29244dce154582a8ecf18ded4a61b37b2cc0ae70e668aec8c37f3915b6add0b3bd6d5fedcae4ec4d7425a9191e2921f1e26c3db39554d2faafe99eee85ae4d09a9ce1d33ca17fb489f86034e8ae63ae94b90cc7c9d0fe2fb799475d6999c2a6e2502af2a8b4cd85d0af0295616b42d0876832e030acfe19c2e3ceb9486942f76fcbd8fd6be06f278fcd7e99816101e1894b749788695fa15d99d66580b0952958157727b07b589dc0eee301a9dfc0b0466f144cd70784877844ff01ac2efc0647a1c7d81886d6166f864684cdd9b94ff0748aef388d085b83ef33dca135141a7c4ad46e488a10ff02504b070868fe421cca0100005e040000504b0304140008080800aa7b564e00000000000000000000000030000000696f2f6e756c732f636f6e74726163742f746f6b656e2f546f6b656e24417070726f76616c4576656e742e636c6173738d565b6f1b4514fec6bbde75b69bbb49d224b46929e05b6a2ee19a4b73218140d2943835b4406163af926d9cdd74771d90a0129540ea033c801020242e2f252f790089b80824c45390f82ffc03049c995dbb89e3243cf8ccd93367e67cdf7c6746fef39f5f7e03f018ae6988e34213148c7333c1cd248f4da998d63083e735bcc0cd0c66b937abe2450d2770218697f838c7cd7c0c176358e0ee256e5e56b1a822c71075deb64d97e1d49ce564ed72c9cb161cdb778d829ff58a6bd98962d1353d6f9841f5364cbbc853a39b46a96c3274cd5d37368decbae1af6627ad9559db37574c97529511cbb6fc3186cb89a3773d66b6e1f6c93c833ce5140940eb9c659b17cbebcba6bb642c9728d231e7148c52de702dfe1d06657fd5f2189a2736365c87b04f6f9ab6cfa0cfdac47caa64789e49d39983607c67cdb4b34bdc9edbb798389e5d2cdbbeb56ee62dcfa22a970cd758377dd39db06dc7377ccbb169cf546382462d27bb68de285bae59a41d632ba6bf10883190481e2747ccab659f39e694f98969b479ae2aa0e6edf9e065f381a03d54f6104979b930eb64e2706114a2639488f97d6152c9b057b20bcbd7cd823f9cbccac01c2ed28129219241a234e77ca3b0366f6c08eda8c1a9f4aae1ad06824b89e42c152156e5122533fa88f94ece772d7b85215e852f760ea2b4b39673ca6ec19cb1782f6842cdf33c4d471f967474a15b470f3727d1abe332f22a5e21e9fe7f37a87855c7237854c5151d4fe16986ee7a189365ab244e3bbe6fe5bbe2f28deab88ad7b8799d006606c28b364ae43203e2ae898c37740c6384a1adfef4187a1bea1ff6391d5a3e9059f43a43e7be7312413aa6fea308379aded362c4ab514b9054c60627c330983828cd41b5c2631aaecbaff6cf11f9fd89a9c3a771869ecc38a82b2121c215a78735c2451723e94ea346f37de8a7effbe9ab44a34c633c75172c95de412495d981941adc81fca358758a6c17a2646f50a68b267868818f4e94719aa2a9603d06f000203c5e97098f578e088fd796708efc4e89261f2467bf7d080f93e590b234f2e5d1d44f88fc50c3a088e03ba2a61e248435191248868bc7289b575404977b0c34117d8fd6dc143b74055935d44a889a2e444320523d90f71b0249370622d503f980d67c7808909e104806830d80c8f5406e3704725e2c3a0044ae07f211adf9f810205c335e98ae7cb8d75f9423d1782b95fe1e51793bbd8b965405d134fdee202a6da77f8732cf75dba58ea22143bf0ad4afd0ba45375ec4298b9f679020514cda9b205513e45db4f381627205b12db472ef0fa8f21664699b404882462f01053e818a4fe9e43e23989f13e52ff026be14b40602c0355ab7e89fc6e3824e1143148be009d1a0badac2fe46bf8a2715d6adb0b836cea9d32b1752ff393cc6e9805d734a306be26046da4ef7ad069c78580ac36f55e37210271a5a10efbb07bf43dc9eafe9367d43cdf32da6f0dd1e35a643d89d04fa193c4b5038d84128ede3ec5fbae511824b30c947e84718cbefffa445f49c862caed1b6bc51867ec5892b77a1773457484141a5b5a32df025eeb7073e616e6dbb594147059df58d77674fe30d8540231815760c67c3a746c173f42c35fd07504b0708ea7bbc798f040000e6090000504b0304140008080800aa7b564e00000000000000000000000030000000696f2f6e756c732f636f6e74726163742f746f6b656e2f546f6b656e245472616e736665724576656e742e636c6173738d56df531b5514fe6e76b31bb60be19740015b5aab8624b06ad156c36f84160da5051a0bd5da25d9c296b08bbb1b5e1c1ffa6ff8aebcf0a033923a3ae3f88433fe2ffe078e7aeedd854212c0879c7bf6dc73eef9cef9cebd933ffff9e53700efe189864e4c3441c12417535c4c73db8c8a590d73b8a3e12e177398e7dabc8a4f345cc244029ff235cfc54202f71258e4ea7d2e1ea85852b1cc203ff3dc6d862b79db359c4ad9378aae1378663130fcd29631552a7996efe7186281cb10df35cb158ba12bffdcdc358d6d33d834a6ed8d7927b0362c8fbc9451dbb183718687a9f30fbc60b7e1f18305823be3960840326f3bd6bdcaf6bae5ad98eb65b2b4e7dda2592e989ecdbf23a31c6cda3e43f38a673afe33cb9bddb59c80419f771ccb9b299bbe6fd176b61e4ce06e598eb1c2e58d53c154e3f5a58a13d8db56c1f66dca72dff4cc6d2bb0bc29c7710333b05d87ce4c372ed03cf63196acaf2ab66795e84475c30ae6040d03a9c18b8850fd23e76b17f498f72b4e47af70e6fc704dd0772124b187729d4163c23ff6ba9c3a9b0c854a30cb54ed6b9153d974368cc5f5e75631c80dae3130971353b72588318988e6e5c02c6e2d983b822f1a674abd69fa9b21c9526a709e92502d95323933fa4804ee72e0d9ce0643e7117c717268a593b565b7e215ad399bf3af090687b99b8e3eace8e842b78e1e2e2ea357c74314547c4674fdff0950f148c73b7857c5aa8e5bb8cdd05d0b63ba62974b96c7d0712af26b7ed5c674ace131179f132bd981c01da3b2b203e26689cd2f74e430cad05adb3786de867c47534ded2a84048bc9a6eca73a248cd4a0fef34a6db47d62a4a8eb8d8681483277762ca7c43094aa27a59ea7a841b91affa3c939c7bf3f3573f636aed1d3d8099a47488871aee9018d71bac54a8cd3aad17e1ffae9fb75fa2ad32ad3da997e0996ce1c2096ce1e404a0f1d40fe51445d21d98538c92c790ea109c36881810e1a82ab644d87f118c01b80d0785e26349e3926349e5bc20dd293120986374fc8b7f036490ec7a09587c6d33f21f6c3717e45186f8a7c7ae810e5634861300a1e276f9e4d1175bc42af09eb2d8ab92d4ee80abd8e112b1162ba060d8148b540720d81641a03916a814c50cce419407a2220596a743d10b916c84c4320c322a80e885c0be40ec5dc3d0308e78b27a68b1e9df517f970ea5ea433df232eef670ed192ae229ea1df77884bfb99dfa12c70de0e699a68c9d2af0af55b24f7a065859dbc783f4307896cd24907e9c8413e441b5fc8265791d843926b7f4095f7204bfb04421265f41250200f150bd4b94582f9804a5ec2975816650d84808fcb7a41ff266e8a724a18215b0cef8be1d4d516f637fa557ca0b06e85756a93bc747adba2d27f8eda381b56d79c1695357130a3ad57fb36c39ab8598acc4f8fec7268a732b4d0def70a7ebbb8398fe826add2f0ac119b8f4fb0311bc1ee20d01fe22382c2c10e41699b64ffd20d8f115c82493a223dc658e1f42705d1531a55f1848ee58332f22b2eadbe84dede5c25064529c9f6d65097b8de16ea8439d9fa4d15ed5574d40eded313833712018d614cc8715c8f9e19051fd393d4f41f504b0708826261e37e040000ca090000504b01020a000a0000080000aa7b564e000000000000000000000000030004000000000000000000000000000000696f2ffeca0000504b01020a000a0000080000aa7b564e000000000000000000000000080000000000000000000000000025000000696f2f6e756c732f504b01020a000a0000080000aa7b564e00000000000000000000000011000000000000000000000000004b000000696f2f6e756c732f636f6e74726163742f504b01020a000a0000080000aa7b564e00000000000000000000000017000000000000000000000000007a000000696f2f6e756c732f636f6e74726163742f746f6b656e2f504b01021400140008080800aa7b564eec308779cb090000281800002800000000000000000000000000af000000696f2f6e756c732f636f6e74726163742f746f6b656e2f53696d706c65546f6b656e2e636c617373504b01021400140008080800aa7b564e68fe421cca0100005e0400002200000000000000000000000000d00a0000696f2f6e756c732f636f6e74726163742f746f6b656e2f546f6b656e2e636c617373504b01021400140008080800aa7b564eea7bbc798f040000e60900003000000000000000000000000000ea0c0000696f2f6e756c732f636f6e74726163742f746f6b656e2f546f6b656e24417070726f76616c4576656e742e636c617373504b01021400140008080800aa7b564e826261e37e040000ca0900003000000000000000000000000000d7110000696f2f6e756c732f636f6e74726163742f746f6b656e2f546f6b656e245472616e736665724576656e742e636c617373504b0506000000000800080051020000b31600000000" ],
+  "id" : 1234
+}
+```
 
 ### Example response data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "id" : "1234",
+  "result" : {
+    "constructor" : {
+      "name" : "<init>",
+      "desc" : "(String name, String symbol, BigInteger initialAmount, int decimals) return void",
+      "args" : [ {
+        "type" : "String",
+        "name" : "name",
+        "required" : true
+      }, {
+        "type" : "String",
+        "name" : "symbol",
+        "required" : true
+      }, {
+        "type" : "BigInteger",
+        "name" : "initialAmount",
+        "required" : true
+      }, {
+        "type" : "int",
+        "name" : "decimals",
+        "required" : true
+      } ],
+      "returnArg" : "void",
+      "view" : false,
+      "event" : false,
+      "payable" : false
+    },
+    "nrc20" : true
+  }
+}
+```
 
 4.10 获取合约方法信息
 =============
@@ -2105,10 +2175,39 @@ _**详细描述: 获取合约方法信息**_
 | event                                                    |     boolean     | 是否是事件              |
 | payable                                                  |     boolean     | 是否是可接受主链资产转账的方法    |
 ### Example request data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "method" : "getContractMethod",
+  "params" : [ 2, "tNULSeBaMvkanBqyWF1h7MuQ22Pq3JkL8FTfsL", "transfer", null ],
+  "id" : 1234
+}
+```
 
 ### Example response data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "id" : "1234",
+  "result" : {
+    "name" : "transfer",
+    "desc" : "(Address to, BigInteger value) return boolean",
+    "args" : [ {
+      "type" : "Address",
+      "name" : "to",
+      "required" : true
+    }, {
+      "type" : "BigInteger",
+      "name" : "value",
+      "required" : true
+    } ],
+    "returnArg" : "boolean",
+    "view" : false,
+    "event" : false,
+    "payable" : false
+  }
+}
+```
 
 4.11 获取合约方法参数类型
 ===============
@@ -2131,10 +2230,23 @@ _**详细描述: 获取合约方法参数类型**_
 | --- |:---------------:| ---- |
 | 返回值 | list&lt;string> |      |
 ### Example request data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "method" : "getContractMethodArgsTypes",
+  "params" : [ 2, "tNULSeBaMvkanBqyWF1h7MuQ22Pq3JkL8FTfsL", "transfer", null ],
+  "id" : 1234
+}
+```
 
 ### Example response data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "id" : "1234",
+  "result" : [ "Address", "BigInteger" ]
+}
+```
 
 4.12 验证发布合约
 ===========
@@ -2161,10 +2273,25 @@ _**详细描述: 验证发布合约**_
 | code    | string  | 验证失败的错误码  |
 | msg     | string  | 验证失败的错误信息 |
 ### Example request data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "method" : "validateContractCreate",
+  "params" : [ 2, "tNULSeBaMvEtDfvZuukDf2mVyfGo3DdiN8KLRG", 20000, 30, "504b0304140008080800038b2d4d000000000000000000000000090004004d4554412d494e462ffeca00000300504b0708000000000200000000000000504b0304140008080800038b2d4d000000000000000000000000140000004d4554412d494e462f4d414e49464553542e4d46f34dcccb4c4b2d2ed10d4b2d2acecccfb35230d433e0e5722e4a4d2c494dd175aa040958e819c41b9a982868f8172526e7a42a38e71715e417259600d56bf272f1720100504b07089e7c76534400000045000000504b03040a0000080000fb8a2d4d0000000000000000000000001b00000074657374636f6e74726163742f6d756c74797472616e736665722f504b0304140008080800fb8a2d4d0000000000000000000000003200000074657374636f6e74726163742f6d756c74797472616e736665722f546573744d756c74795472616e736665722e636c6173739d56eb7313d715ffad257997454e8cea00f210aa262d91658cb00c989a94c498180cb6f143d8d86d4256d25a5a4bda95b52b83d31749daa4e933e9234ddf8f90a68fb40d2d96dd64265f3ac34cfb0ff463ff857eea97cc747acedd95ac48824e6a8ff69e7b9ebf73ef3967f7efff79e73d00c7f08e8a53585590df85fb505050e4d5e48725a3a442c62a3fd6149479b515382cacc85857710dd75584b0a1e219d8323eabe073bcff7c00fcf7daab3758f005667d51c18d1af75905cf0a5a1a1c8082e75cfa6f7fbda1e079155fc29715bcc0be5f64435ba5685f51f09282af32f36b8ce2eb0abec19b6ff2e65b0a5ee6cd2b0abeade03b2abe8beff1e35505dfe7f535053f50f043267fa4e0c7327e22e3a712fca656d425842657b5752d5ed0cc6c7cde291b66f694844e7ba398b20a12bac62cd37634d359d00a15d256327ada286a055b8234e123d82109b256284c982b1649af96b40d2d5520455fb46f81628c5919dadc3f6998fa74a598d2cb49571c9ab4d25a61412b1bbcf7987e276790e323938e6e3b69cb74ca5ada89172b05678348d35ed1cbf12489a69893f43884363c57311da3a82f18b6418e464dd37234c720e412fa260d2b6e560a76bceed0cee4e35a5d273ee342e6ac1f354cc3394d196575675a9c4e4fb4afddf9ec228579ef8876137db67e2a94f7043948696490d6f924c98293dba5653265ddb6af0e4a38d81ed4a8ab41fe0322e906a344033d44072ae4e356d9339170337a6f9f6e1645cdc9c5cf18d909d3d1b37476ff974dcb79b4d76b7b707e4a62904b8696aba626616f7b635733e16a26846617514394b2ebcb950cb99279474be7a7b49257479d5aa9a49b19090f445b3170592aae825e96a0ce5b95725a1f37d8706f4b751d61fb20a6312e614f8b34884f81caa523990ce2319c0e62146724ec6b8e79a6621432acade367748f9181c8e8e2e0f1939783f83966242088b3ece6f087297b19bf08e297783d88246eca7843c2817bdda584c8b49d71b2b3e746af5f99c91d1fb296af8f2eae2e94ccf3e6c5e162e5d8b525ce7225885fe1cd207e8ddf1050af884722c25a3fbe9c3766edc1d9c152e60967eee2b52bf913d3f91396b554494c26bc001b99e4c2a29d9f4a0f9fcb2f3f93b2d712e3d6586eede2f8b5a91509fb3d3491b4e8bf484a8fe8c592b37144c66f83f81ddea2a0aa2d6e662412c4ef393d1d64a8aa5ef13316455de761c41a7fc04dd6f8236b6435bba0af38cc7e1bb798fd276a4e6697ca465aa8ff19b7a843555595d0ada6e848cf14ac74febc66e74622326e07b1c986556cb161da32cc94660bc36dbcced072ba91cd398c21a8f2c0a1c9582cb1fc2fec5862b73b777f29b5aaa71d090fb6bd97316f2361a05d91b6b0bc1aa2c6501cabd602fbdbba9eb2bdeef02e3e7a9719b8336ef6d7a65c6b1bf6b4e3937b710597e86ac2d10b7735566af5cb6a779912d48ebd6de15d760c1ea872595fab1865eecee872fb76eeb4bd660eacbb6fa90f1ca97b0ff73c52d9ab1d31be2f502bd5736a7f03b59aba1b74515684cb14af3cee2466e4a8ce7826b5f1cd4e6bf546eaf5dac2c7e8e57f0a121e851f1d3c6df895cbb386788f13dd41fc108f9dfa7e8c7e6785de6ee23d8171da9fa35d3f7f63f0ef96503b4fcf4ec18863023c838410177091d6494f3a257834fde8c94e36e0137ac3b12d48b150c7267cb1907f1381587768139def425eda82125bbe0d5f15bb422a3daad82db4829be8da097d90be5b804142ff085444d18d3eec450247318413f455b60369d88324e112663c18715a59168851a0b79bf2196e300ed48d67ebc6039eb12fe46f363dd560eaab9bce61bed9b43bf45693e9636d4d93f5a8c73c53751bf757d15dc59ee6e0630d1ed4ba87cb750f05f2db41ebd177115a0a7d640b3d93fd3d78601bfbaad8ef9d7c284c275e8fe09efe4e9cfbc05f6ce7c8fb79f450348eb7d7f5e9c55371080b581458af5064b774b6c9ce4feb950f44eead4526de01e24d1deec1830dbc8f126f7aa007910f81d02d8b4b84638610ced17e9e8a23498571995a6051208eb958ea88a73dc407318225a23a48fb109689f235d5f1a7f1192fa37f924ca175a6ff0eba07ee20180edc81ec7f137e5fe8a16d3cdc7f98100f84fd5e2ee100e5322287e570e7ffcec42732e9a5b8a078fbf0240ee0293c84ab543e4f531d68228b3937be9705534f8a2c987a8a743b04f5b4c882298d787e41a5a8b903824a13af93bc3e2cb295911115dfb1e771a929f1b3b5229266c90907793f56cbe2e3228b4f5471c84d610b8fd465d15a866d647d4216aba2bf4970580806aa38d224880bc1d11d4168b0519c10e2a16d1c6b0d765cc84eb4061b768d5a839d14824f36041be1e76d74ed545b82ba0d58a1fbc9e2247234230cacd2fff3c8e325eab73750c47b30f10f58f8174af837d61a7af47defee3af813c5ebd139af477b1b26611721e9af0dc28611a80acd0ac2586fe8c4de7a45f412aad3a21373c2c6f82f504b07087c257e1c05070000b30e0000504b01021400140008080800038b2d4d0000000002000000000000000900040000000000000000000000000000004d4554412d494e462ffeca0000504b01021400140008080800038b2d4d9e7c7653440000004500000014000000000000000000000000003d0000004d4554412d494e462f4d414e49464553542e4d46504b01020a000a0000080000fb8a2d4d0000000000000000000000001b00000000000000000000000000c300000074657374636f6e74726163742f6d756c74797472616e736665722f504b01021400140008080800fb8a2d4d7c257e1c05070000b30e00003200000000000000000000000000fc00000074657374636f6e74726163742f6d756c74797472616e736665722f546573744d756c74795472616e736665722e636c617373504b0506000000000400040026010000610800000000", [ ] ],
+  "id" : 1234
+}
+```
 
 ### Example response data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "id" : "1234",
+  "result" : {
+    "success" : true
+  }
+}
+```
 
 4.13 验证调用合约
 ===========
@@ -2194,10 +2321,25 @@ _**详细描述: 验证调用合约**_
 | code    | string  | 验证失败的错误码  |
 | msg     | string  | 验证失败的错误信息 |
 ### Example request data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "method" : "validateContractCall",
+  "params" : [ 2, "tNULSeBaMvEtDfvZuukDf2mVyfGo3DdiN8KLRG", 80000000000, 200000, 30, "tNULSeBaNA4yaXmfaQVXpX3QWPcUaHRRryoXHa", "multyForAddress", null, [ "tNULSeBaMtkzQ1tH8JWBGZDCmRHCmySevE4frM", "400000000", "tNULSeBaMhKaLzhQh1AhhecUqh15ZKw98peg29", "900000000", "tNULSeBaMv8q3pWzS7bHpQWW8yypNGo8auRoPf", "800000000" ] ],
+  "id" : 1234
+}
+```
 
 ### Example response data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "id" : "1234",
+  "result" : {
+    "success" : true
+  }
+}
+```
 
 4.14 验证删除合约
 ===========
@@ -2221,10 +2363,33 @@ _**详细描述: 验证删除合约**_
 | code    | string  | 验证失败的错误码  |
 | msg     | string  | 验证失败的错误信息 |
 ### Example request data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "method" : "validateContractDelete",
+  "params" : [ 2, "tNULSeBaMvEtDfvZuukDf2mVyfGo3DdiN8KLRG", "tNULSeBaMvkanBqyWF1h7MuQ22Pq3JkL8FTfsL" ],
+  "id" : 1234
+}
+```
 
 ### Example response data: 
-略
+```json
+[ {
+  "jsonrpc" : "2.0",
+  "id" : "1234",
+  "result" : {
+    "success" : true
+  }
+}, {
+  "jsonrpc" : "2.0",
+  "id" : "1234",
+  "result" : {
+    "msg" : "Cannot delete contract when balance is not 0;Cannot delete contract when balance is not 0",
+    "success" : false,
+    "code" : "sc_0017"
+  }
+} ]
+```
 
 4.15 估算发布合约交易的GAS
 =================
@@ -2247,10 +2412,25 @@ _**详细描述: 估算发布合约交易的GAS**_
 | -------- |:----:| ----------------- |
 | gasLimit | long | 消耗的gas值，执行失败返回数值1 |
 ### Example request data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "method" : "imputedContractCreateGas",
+  "params" : [ 2, "tNULSeBaMvEtDfvZuukDf2mVyfGo3DdiN8KLRG", "504b03040a0000080000aa7b564e00000000000000000000000003000400696f2ffeca0000504b03040a0000080000aa7b564e00000000000000000000000008000000696f2f6e756c732f504b03040a0000080000aa7b564e00000000000000000000000011000000696f2f6e756c732f636f6e74726163742f504b03040a0000080000aa7b564e00000000000000000000000017000000696f2f6e756c732f636f6e74726163742f746f6b656e2f504b0304140008080800aa7b564e00000000000000000000000028000000696f2f6e756c732f636f6e74726163742f746f6b656e2f53696d706c65546f6b656e2e636c617373b558f97754e5197eeecc90990c972d9090059209a498cc9291a58a8152020d35ca5602b1605bbd99b9492ecc12670922b46ead4babd56aeb5ad1565bd4aa2c020169d59ed353cfe93fd17f84d3d3e7fdee9d3b37612639d5d31ff2ddf77ecbfb3eeff67c77f2afff7cf639804df87b23a23825c323329c96e14c1831fcb411cdf859108f86119497281e93e171997e22cce149197e1ec62ff0d462acc2d3413c13c672fc2a8ce7f0bcccfc3a8817827831cc53bf91e125195e96e5df8af4bb205e09a3430e44f19a0cafcbf086a87d5386df87f096cc9c9597b7457a27843fc8f38f21bc2b7ade0be24f41fc39887341bcaf219033b2a686a6bdc78d692399317213c99152c1ca4d6cd3d0503c951dcb673484d266caca1a99a2066d58c3e252be646446ca535399531a5aeca359a33499dc654d0ce74ae68459e0f1d098417d2993a796d97bca252b93dc674c71b171c49ac819a57281c68766af6edf6be593b972a6984ce573a582912a258be913c9c174ba60168bdb6a9bdb419d412393c99f34d31a4a5f43e337342f0056f5f6d58a6360773e6d4a10ac9cb9bf9c1d330b878db18c8a7a3e6564468d8225efce64a0346931643db7c228e54f98b9e488959de26691a9bbed503957b2b2e6a855b4787c3097636e4a563e47151b6a7b62b87b92a39679924afcbd7d4c6b6b05fdada96cd86ee5acd20e0d3b7a6f75b0decc5c35c37da31a968822cbc80c66f304ae61dd6cfc078d02ebb164166639125dd09143e64365ab60a6a5b2541548e16938dcbb4032e75dad1b8e45f99339b3a0a173fef3acc8e294994bcb565d1d19ac14e8a269235336a5796655c0a9a94a152c192919a9132c47f56eb302b5d048ae386e16f614f2590d47be917bb5bdeb3bc6121c57ea7da53cc3e974f181710d772c60af6ec0828e129242c5030d772e84be2ebea0313555c84f53dd722b972a9846d11c543306c92a6ca4d3667ad48eef7232d79cf565c5f29832e66e0ae53315510ebb49fabf84973d1032ec2d1babe2260f2ed77eb868565f96550e559739b3ab12d7af19cc5109a6bdc583c0d5ba283569a64e90657aeb9f4fd659ab7fa24115ffc68a40df63f3eaf0528b9cf7678b131a06ff27bbb5358547f2e542cadc6349cb2df7306bbf6cd7d18fa48edb65d8884d3a36638b8e217ca0e3436cd1b0a27a6fdc6d1427d9ac3abe8d3b74dc25c35f64f347f858c727381fc4051d177149c7a7b84c42abc3edca76cf61a74586a64da1c82573def5e11ca96477c62816cda2e0213d5cd17115333aaee13a0fccbacf782dd58a888e49983a72c8e83821c367b8a1c382b910ba4a2755d0cd7ad79116adf7e05e1d79301e7fc5df747c8ef31a3a8673c5f2f8b895b2b82fe274703aa254cbe6691d5fe0bc8ea36087270e4f9a11551d916cb9588a8c999109f6312f864869d2c845f2850819dfc8f078e4f67e394e289db32c389413c98fdb36fac5c52f79e32c7cafb216aae57260ecb899a2f6b535fb6bb7f3a261cd7c5153772c0b2e706ce8d001be1c1edacf712a7f527a6bb82e6f86b2e54cc9529f59fdf55ab0ded9d69a78f749eb34149d5b29c22b7f812bcc3f55a6735bbdf7be1d916db7cef4dd3aa5a1bda68123ac4e524ec0cc5a54df5587bd544dd93d3f6172df861a306a1a0d16ec0f025ae83d26e71b53f9ec9451607ee761337e04f9c9868c7b85097943f71eabc51de8e637750c3ec49140039a842af8e3a049d8423d49187cfa8433d493c400d2b492b7f2ef2ecffb003fd699616ca3bc9d3349be697c2e8a5e8676416df90ec70635b9163b38eaf6067c173bf91c745677f1a911422d45beb98ad62fa8682376d750e4ff688ea2be05156dc6f76a280acc45945c50d110f6388afecd1d8bf834a3335476090d571088de40f0e80c4257d05815c3d1d81568d1f815f8a2cd812bf0471397b0b8397015fa552c915397d1780d4b05d0752cf3e3be1b587e54736666b0e21a9a2eba40fbb158fd060c30658bb11a2d6865296cc606a639c6246f645a0799d6434c729a491687b6d8401d8744ea57711049cac5a7a4ef739f5f491b95febb29b705b86d58797eeb4892e50189c51754212692441c8e5dc74a1fbec4aafd89af1064602e24e2ce54f340a02df015429c1449c21f505e75f2f72a887529313611650bc3bd8ec9bf8d798b33e4552f92ae1749ecc53e276dfb29f978ba1b07e8bf9f6797e0204f04f00327a1f6da56ae1de2cc52f86ea22588919b680ee2f0ac248bdf4b7c737c3d825127ef670823c0674f34c6142566d0128d715c1d8d736c95d4c54492ac05aa85daa2c0df8b46825e46b0cd84bc8e80c4b1a8adcf75ac07f7398ef5e087ca31910eaaf408b895fe9ae9e0bde5a4e3491e914cf6c4fe8960e01c02fe6b68932aaba4a6795fdc4ecdbeb8e4c0ef817884d11a453b2174d2f83aea1488115b9f07a21dfb7684713f81f9545417c31fdaa9dd446bad90063517e98ff0632798166d8ae6ae2863199728c6e24e143921f29c3836a9583d80101e64120d92d1980760970bb04b454e53d24105b0665a7fe22279d041d21e750cb7df404705c49ad92096aa9d134ce624bbcff200687701b4ab9ad494340f80075c00136c0151d15d01b0b602404d5c45671d1c59e2c8d1cdbc0747b78ba3dbc5d14d1febe2305c1c978943623c142586ae8aedfdf1c45544ce62859a60e53040e7a057b0b6cc83d5efe9f022a35c22ee32ab6d9a55f4302faf47d8e7a73d8d30e4621f72b10f31cd5b5487df89946a04a9b746e9e21e165ba896533ef914a42c4e3de1907584f545740381685b40bc4bc8108bb705e85d375daaf2acdd0d8fb2d01ea3d5c7b1923abad85955268ab83823187770469846bb61234ec3865821f72826f2c907af83e78c83a7d38327d1b46e06eb2b687a66a1b1cbfe296a7b1a2bf00ccbfe590f924e1749a78ba4d345d2e922697191582e927f7045740cd8b1f0f2b74dd66dce453610508b6dce1dd51688276c49507a59fc39ea7b5efe958836bc40067991fcfc126fa2973d88075cc4032ee20117f1808378156fb5e3e4f32a8bdb335b3923f90f816493248bf3147f42381e9de6aa448ba1bc8a6fed8fc69b36cce0b68a7b8db10423de5d85ee4df72b64ac577975bcc680bf4ee86f78ca72bd0b793d5b6e9ff30563b776031372bf82ec931f340e90a203a4cb01928837f54a862b207ae682b0b3fc16d59d65cdbdcd78bee301e025b7ec1c726b60ac2b00f8b3c701708c6f12cfd5bc075648d3b285dfacde0817dde60cab6def320aef29832df631d7e06a654653415f045fd34e4dd979c8b133e5dc371dd19804597843cabab62ddbc973d4f33eed7e407afcd0435c1daecd0e14944d918aee1543eb2d8ef59263dd74acb7d6f0327e0d7d73ddfc98ee7ce231d9ea9a6c75dc14a9acbe8be6383ced96984f79b1a68ec38959666d8f2f52d12542f894fe5cf6a4758d6b7e8debf11ac7639104887fb6ef2755c53c8c5f2ae53e2c278b3e4b36ece0f35534fe17504b0708ec308779cb09000028180000504b0304140008080800aa7b564e00000000000000000000000022000000696f2f6e756c732f636f6e74726163742f746f6b656e2f546f6b656e2e636c617373a552d14e1341143d03b5cb16aa28a8a0284a08697970131ff481a76a24694282a19507dfa6bb431d989da933b325fc9a0f7e801f65bc534ba5b6a5896eb23b3be79e7bcebd33f7c7cf6fdf01bcc64e84e711b623bc60a8367a3d6bfa5c7de80bed19569a5a0bfb5e71e7848bf092186dcbb53b1376c828699e0b86f55afde89cf779a2b8ee262d6fa5ee1e306c9e14dacb5c9c4a273b4a34b4369e7b69b463d83b9226d18572496ab4b73cf589cb2e123ee224a7525c9248d95de51da318963291ca9c2b4a5eacd59b0ccb9ea8aa55f47aea8a61e3ba869cfb2fc93bd96d6a2fbac29244dce154582a8ecf18ded4a61b37b2cc0ae70e668aec8c37f3915b6add0b3bd6d5fedcae4ec4d7425a9191e2921f1e26c3db39554d2faafe99eee85ae4d09a9ce1d33ca17fb489f86034e8ae63ae94b90cc7c9d0fe2fb799475d6999c2a6e2502af2a8b4cd85d0af0295616b42d0876832e030acfe19c2e3ceb9486942f76fcbd8fd6be06f278fcd7e99816101e1894b749788695fa15d99d66580b0952958157727b07b589dc0eee301a9dfc0b0466f144cd70784877844ff01ac2efc0647a1c7d81886d6166f864684cdd9b94ff0748aef388d085b83ef33dca135141a7c4ad46e488a10ff02504b070868fe421cca0100005e040000504b0304140008080800aa7b564e00000000000000000000000030000000696f2f6e756c732f636f6e74726163742f746f6b656e2f546f6b656e24417070726f76616c4576656e742e636c6173738d565b6f1b4514fec6bbde75b69bbb49d224b46929e05b6a2ee19a4b73218140d2943835b4406163af926d9cdd74771d90a0129540ea033c801020242e2f252f790089b80824c45390f82ffc03049c995dbb89e3243cf8ccd93367e67cdf7c6746fef39f5f7e03f018ae6988e34213148c7333c1cd248f4da998d63083e735bcc0cd0c66b937abe2450d2770218697f838c7cd7c0c176358e0ee256e5e56b1a822c71075deb64d97e1d49ce564ed72c9cb161cdb778d829ff58a6bd98962d1353d6f9841f5364cbbc853a39b46a96c3274cd5d37368decbae1af6627ad9559db37574c97529511cbb6fc3186cb89a3773d66b6e1f6c93c833ce5140940eb9c659b17cbebcba6bb642c9728d231e7148c52de702dfe1d06657fd5f2189a2736365c87b04f6f9ab6cfa0cfdac47caa64789e49d39983607c67cdb4b34bdc9edbb798389e5d2cdbbeb56ee62dcfa22a970cd758377dd39db06dc7377ccbb169cf546382462d27bb68de285bae59a41d632ba6bf10883190481e2747ccab659f39e694f98969b479ae2aa0e6edf9e065f381a03d54f6104979b930eb64e2706114a2639488f97d6152c9b057b20bcbd7cd823f9cbccac01c2ed28129219241a234e77ca3b0366f6c08eda8c1a9f4aae1ad06824b89e42c152156e5122533fa88f94ece772d7b85215e852f760ea2b4b39673ca6ec19cb1782f6842cdf33c4d471f967474a15b470f3727d1abe332f22a5e21e9fe7f37a87855c7237854c5151d4fe16986ee7a189365ab244e3bbe6fe5bbe2f28deab88ad7b8799d006606c28b364ae43203e2ae898c37740c6384a1adfef4187a1bea1ff6391d5a3e9059f43a43e7be7312413aa6fea308379aded362c4ab514b9054c60627c330983828cd41b5c2631aaecbaff6cf11f9fd89a9c3a771869ecc38a82b2121c215a78735c2451723e94ea346f37de8a7effbe9ab44a34c633c75172c95de412495d981941adc81fca358758a6c17a2646f50a68b267868818f4e94719aa2a9603d06f000203c5e97098f578e088fd796708efc4e89261f2467bf7d080f93e590b234f2e5d1d44f88fc50c3a088e03ba2a61e248435191248868bc7289b575404977b0c34117d8fd6dc143b74055935d44a889a2e444320523d90f71b0249370622d503f980d67c7808909e104806830d80c8f5406e3704725e2c3a0044ae07f211adf9f810205c335e98ae7cb8d75f9423d1782b95fe1e51793bbd8b965405d134fdee202a6da77f8732cf75dba58ea22143bf0ad4afd0ba45375ec4298b9f679020514cda9b205513e45db4f381627205b12db472ef0fa8f21664699b404882462f01053e818a4fe9e43e23989f13e52ff026be14b40602c0355ab7e89fc6e3824e1143148be009d1a0badac2fe46bf8a2715d6adb0b836cea9d32b1752ff393cc6e9805d734a306be26046da4ef7ad069c78580ac36f55e37210271a5a10efbb07bf43dc9eafe9367d43cdf32da6f0dd1e35a643d89d04fa193c4b5038d84128ede3ec5fbae511824b30c947e84718cbefffa445f49c862caed1b6bc51867ec5892b77a1773457484141a5b5a32df025eeb7073e616e6dbb594147059df58d77674fe30d8540231815760c67c3a746c173f42c35fd07504b0708ea7bbc798f040000e6090000504b0304140008080800aa7b564e00000000000000000000000030000000696f2f6e756c732f636f6e74726163742f746f6b656e2f546f6b656e245472616e736665724576656e742e636c6173738d56df531b5514fe6e76b31bb60be19740015b5aab8624b06ad156c36f84160da5051a0bd5da25d9c296b08bbb1b5e1c1ffa6ff8aebcf0a033923a3ae3f88433fe2ffe078e7aeedd854212c0879c7bf6dc73eef9cef9cebd933ffff9e53700efe189864e4c3441c12417535c4c73db8c8a590d73b8a3e12e177398e7dabc8a4f345cc244029ff235cfc54202f71258e4ea7d2e1ea85852b1cc203ff3dc6d862b79db359c4ad9378aae1378663130fcd29631552a7996efe7186281cb10df35cb158ba12bffdcdc358d6d33d834a6ed8d7927b0362c8fbc9451dbb183718687a9f30fbc60b7e1f18305823be3960840326f3bd6bdcaf6bae5ad98eb65b2b4e7dda2592e989ecdbf23a31c6cda3e43f38a673afe33cb9bddb59c80419f771ccb9b299bbe6fd176b61e4ce06e598eb1c2e58d53c154e3f5a58a13d8db56c1f66dca72dff4cc6d2bb0bc29c7710333b05d87ce4c372ed03cf63196acaf2ab66795e84475c30ae6040d03a9c18b8850fd23e76b17f498f72b4e47af70e6fc704dd0772124b187729d4163c23ff6ba9c3a9b0c854a30cb54ed6b9153d974368cc5f5e75631c80dae3130971353b72588318988e6e5c02c6e2d983b822f1a674abd69fa9b21c9526a709e92502d95323933fa4804ee72e0d9ce0643e7117c717268a593b565b7e215ad399bf3af090687b99b8e3eace8e842b78e1e2e2ea357c74314547c4674fdff0950f148c73b7857c5aa8e5bb8cdd05d0b63ba62974b96c7d0712af26b7ed5c674ace131179f132bd981c01da3b2b203e26689cd2f74e430cad05adb3786de867c47534ded2a84048bc9a6eca73a248cd4a0fef34a6db47d62a4a8eb8d8681483277762ca7c43094aa27a59ea7a841b91affa3c939c7bf3f3573f636aed1d3d8099a47488871aee9018d71bac54a8cd3aad17e1ffae9fb75fa2ad32ad3da997e0996ce1c2096ce1e404a0f1d40fe51445d21d98538c92c790ea109c36881810e1a82ab644d87f118c01b80d0785e26349e3926349e5bc20dd293120986374fc8b7f036490ec7a09587c6d33f21f6c3717e45186f8a7c7ae810e5634861300a1e276f9e4d1175bc42af09eb2d8ab92d4ee80abd8e112b1162ba060d8148b540720d81641a03916a814c50cce419407a2220596a743d10b916c84c4320c322a80e885c0be40ec5dc3d0308e78b27a68b1e9df517f970ea5ea433df232eef670ed192ae229ea1df77884bfb99dfa12c70de0e699a68c9d2af0af55b24f7a065859dbc783f4307896cd24907e9c8413e441b5fc8265791d843926b7f4095f7204bfb04421265f41250200f150bd4b94582f9804a5ec2975816650d84808fcb7a41ff266e8a724a18215b0cef8be1d4d516f637fa557ca0b06e85756a93bc747adba2d27f8eda381b56d79c1695357130a3ad57fb36c39ab8598acc4f8fec7268a732b4d0def70a7ebbb8398fe826add2f0ac119b8f4fb0311bc1ee20d01fe22382c2c10e41699b64ffd20d8f115c82493a223dc658e1f42705d1531a55f1848ee58332f22b2eadbe84dede5c25064529c9f6d65097b8de16ea8439d9fa4d15ed5574d40eded313833712018d614cc8715c8f9e19051fd393d4f41f504b0708826261e37e040000ca090000504b01020a000a0000080000aa7b564e000000000000000000000000030004000000000000000000000000000000696f2ffeca0000504b01020a000a0000080000aa7b564e000000000000000000000000080000000000000000000000000025000000696f2f6e756c732f504b01020a000a0000080000aa7b564e00000000000000000000000011000000000000000000000000004b000000696f2f6e756c732f636f6e74726163742f504b01020a000a0000080000aa7b564e00000000000000000000000017000000000000000000000000007a000000696f2f6e756c732f636f6e74726163742f746f6b656e2f504b01021400140008080800aa7b564eec308779cb090000281800002800000000000000000000000000af000000696f2f6e756c732f636f6e74726163742f746f6b656e2f53696d706c65546f6b656e2e636c617373504b01021400140008080800aa7b564e68fe421cca0100005e0400002200000000000000000000000000d00a0000696f2f6e756c732f636f6e74726163742f746f6b656e2f546f6b656e2e636c617373504b01021400140008080800aa7b564eea7bbc798f040000e60900003000000000000000000000000000ea0c0000696f2f6e756c732f636f6e74726163742f746f6b656e2f546f6b656e24417070726f76616c4576656e742e636c617373504b01021400140008080800aa7b564e826261e37e040000ca0900003000000000000000000000000000d7110000696f2f6e756c732f636f6e74726163742f746f6b656e2f546f6b656e245472616e736665724576656e742e636c617373504b0506000000000800080051020000b31600000000", [ "io", "IO", 80000, 1 ] ],
+  "id" : 1234
+}
+```
 
 ### Example response data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "id" : "1234",
+  "result" : {
+    "gasLimit" : 20143
+  }
+}
+```
 
 4.16 估算调用合约交易的GAS
 =================
@@ -2276,10 +2456,25 @@ _**详细描述: 估算调用合约交易的GAS**_
 | -------- |:----:| ----------------- |
 | gasLimit | long | 消耗的gas值，执行失败返回数值1 |
 ### Example request data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "method" : "imputedContractCallGas",
+  "params" : [ 2, "tNULSeBaMvEtDfvZuukDf2mVyfGo3DdiN8KLRG", 80000000000, "tNULSeBaNA4yaXmfaQVXpX3QWPcUaHRRryoXHa", "multyForAddress", null, [ "tNULSeBaMtkzQ1tH8JWBGZDCmRHCmySevE4frM", "400000000", "tNULSeBaMhKaLzhQh1AhhecUqh15ZKw98peg29", "900000000", "tNULSeBaMv8q3pWzS7bHpQWW8yypNGo8auRoPf", "8045645645" ] ],
+  "id" : 1234
+}
+```
 
 ### Example response data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "id" : "1234",
+  "result" : {
+    "gasLimit" : 44691
+  }
+}
+```
 
 4.17 调用合约不上链方法
 ==============
@@ -2303,10 +2498,25 @@ _**详细描述: 调用合约不上链方法**_
 | ------ |:------:| --------- |
 | result | string | 视图方法的调用结果 |
 ### Example request data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "method" : "invokeView",
+  "params" : [ 2, "tNULSeBaMvkanBqyWF1h7MuQ22Pq3JkL8FTfsL", "balanceOf", null, [ "tNULSeBaMnrs6JKrCy6TQdzYJZkMZJDng7QAsD" ] ],
+  "id" : 1234
+}
+```
 
 ### Example response data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "id" : "1234",
+  "result" : {
+    "result" : "80"
+  }
+}
+```
 
 4.18 离线 - 发布合约交易
 ================
@@ -2333,10 +2543,27 @@ _**详细描述: 离线 - 发布合约交易**_
 | txHex           | string | 交易序列化字符串 |
 | contractAddress | string | 生成的合约地址  |
 ### Example request data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "method" : "contractCreateOffline",
+  "params" : [ 2, "tNULSeBaMvEtDfvZuukDf2mVyfGo3DdiN8KLRG", "offline_payable_jr", "504b0304140008080800038b2d4d000000000000000000000000090004004d4554412d494e462ffeca00000300504b0708000000000200000000000000504b0304140008080800038b2d4d000000000000000000000000140000004d4554412d494e462f4d414e49464553542e4d46f34dcccb4c4b2d2ed10d4b2d2acecccfb35230d433e0e5722e4a4d2c494dd175aa040958e819c41b9a982868f8172526e7a42a38e71715e417259600d56bf272f1720100504b07089e7c76534400000045000000504b03040a0000080000fb8a2d4d0000000000000000000000001b00000074657374636f6e74726163742f6d756c74797472616e736665722f504b0304140008080800fb8a2d4d0000000000000000000000003200000074657374636f6e74726163742f6d756c74797472616e736665722f546573744d756c74795472616e736665722e636c6173739d56eb7313d715ffad257997454e8cea00f210aa262d91658cb00c989a94c498180cb6f143d8d86d4256d25a5a4bda95b52b83d31749daa4e933e9234ddf8f90a68fb40d2d96dd64265f3ac34cfb0ff463ff857eea97cc747acedd95ac48824e6a8ff69e7b9ebf73ef3967f7efff79e73d00c7f08e8a53585590df85fb505050e4d5e48725a3a442c62a3fd6149479b515382cacc85857710dd75584b0a1e219d8323eabe073bcff7c00fcf7daab3758f005667d51c18d1af75905cf0a5a1a1c8082e75cfa6f7fbda1e079155fc29715bcc0be5f64435ba5685f51f09282af32f36b8ce2eb0abec19b6ff2e65b0a5ee6cd2b0abeade03b2abe8beff1e35505dfe7f535053f50f043267fa4e0c7327e22e3a712fca656d425842657b5752d5ed0cc6c7cde291b66f694844e7ba398b20a12bac62cd37634d359d00a15d256327ada286a055b8234e123d82109b256284c982b1649af96b40d2d5520455fb46f81628c5919dadc3f6998fa74a598d2cb49571c9ab4d25a61412b1bbcf7987e276790e323938e6e3b69cb74ca5ada89172b05678348d35ed1cbf12489a69893f43884363c57311da3a82f18b6418e464dd37234c720e412fa260d2b6e560a76bceed0cee4e35a5d273ee342e6ac1f354cc3394d196575675a9c4e4fb4afddf9ec228579ef8876137db67e2a94f7043948696490d6f924c98293dba5653265ddb6af0e4a38d81ed4a8ab41fe0322e906a344033d44072ae4e356d9339170337a6f9f6e1645cdc9c5cf18d909d3d1b37476ff974dcb79b4d76b7b707e4a62904b8696aba626616f7b635733e16a26846617514394b2ebcb950cb99279474be7a7b49257479d5aa9a49b19090f445b3170592aae825e96a0ce5b95725a1f37d8706f4b751d61fb20a6312e614f8b34884f81caa523990ce2319c0e62146724ec6b8e79a6621432acade367748f9181c8e8e2e0f1939783f83966242088b3ece6f087297b19bf08e297783d88246eca7843c2817bdda584c8b49d71b2b3e746af5f99c91d1fb296af8f2eae2e94ccf3e6c5e162e5d8b525ce7225885fe1cd207e8ddf1050af884722c25a3fbe9c3766edc1d9c152e60967eee2b52bf913d3f91396b554494c26bc001b99e4c2a29d9f4a0f9fcb2f3f93b2d712e3d6586eede2f8b5a91509fb3d3491b4e8bf484a8fe8c592b37144c66f83f81ddea2a0aa2d6e662412c4ef393d1d64a8aa5ef13316455de761c41a7fc04dd6f8236b6435bba0af38cc7e1bb798fd276a4e6697ca465aa8ff19b7a843555595d0ada6e848cf14ac74febc66e74622326e07b1c986556cb161da32cc94660bc36dbcced072ba91cd398c21a8f2c0a1c9582cb1fc2fec5862b73b777f29b5aaa71d090fb6bd97316f2361a05d91b6b0bc1aa2c6501cabd602fbdbba9eb2bdeef02e3e7a9719b8336ef6d7a65c6b1bf6b4e3937b710597e86ac2d10b7735566af5cb6a779912d48ebd6de15d760c1ea872595fab1865eecee872fb76eeb4bd660eacbb6fa90f1ca97b0ff73c52d9ab1d31be2f502bd5736a7f03b59aba1b74515684cb14af3cee2466e4a8ce7826b5f1cd4e6bf546eaf5dac2c7e8e57f0a121e851f1d3c6df895cbb386788f13dd41fc108f9dfa7e8c7e6785de6ee23d8171da9fa35d3f7f63f0ef96503b4fcf4ec18863023c838410177091d6494f3a257834fde8c94e36e0137ac3b12d48b150c7267cb1907f1381587768139def425eda82125bbe0d5f15bb422a3daad82db4829be8da097d90be5b804142ff085444d18d3eec450247318413f455b60369d88324e112663c18715a59168851a0b79bf2196e300ed48d67ebc6039eb12fe46f363dd560eaab9bce61bed9b43bf45693e9636d4d93f5a8c73c53751bf757d15dc59ee6e0630d1ed4ba87cb750f05f2db41ebd177115a0a7d640b3d93fd3d78601bfbaad8ef9d7c284c275e8fe09efe4e9cfbc05f6ce7c8fb79f450348eb7d7f5e9c55371080b581458af5064b774b6c9ce4feb950f44eead4526de01e24d1deec1830dbc8f126f7aa007910f81d02d8b4b84638610ced17e9e8a23498571995a6051208eb958ea88a73dc407318225a23a48fb109689f235d5f1a7f1192fa37f924ca175a6ff0eba07ee20180edc81ec7f137e5fe8a16d3cdc7f98100f84fd5e2ee100e5322287e570e7ffcec42732e9a5b8a078fbf0240ee0293c84ab543e4f531d68228b3937be9705534f8a2c987a8a743b04f5b4c882298d787e41a5a8b903824a13af93bc3e2cb295911115dfb1e771a929f1b3b5229266c90907793f56cbe2e3228b4f5471c84d610b8fd465d15a866d647d4216aba2bf4970580806aa38d224880bc1d11d4168b0519c10e2a16d1c6b0d765cc84eb4061b768d5a839d14824f36041be1e76d74ed545b82ba0d58a1fbc9e2247234230cacd2fff3c8e325eab73750c47b30f10f58f8174af837d61a7af47defee3af813c5ebd139af477b1b26611721e9af0dc28611a80acd0ac2586fe8c4de7a45f412aad3a21373c2c6f82f504b07087c257e1c05070000b30e0000504b01021400140008080800038b2d4d0000000002000000000000000900040000000000000000000000000000004d4554412d494e462ffeca0000504b01021400140008080800038b2d4d9e7c7653440000004500000014000000000000000000000000003d0000004d4554412d494e462f4d414e49464553542e4d46504b01020a000a0000080000fb8a2d4d0000000000000000000000001b00000000000000000000000000c300000074657374636f6e74726163742f6d756c74797472616e736665722f504b01021400140008080800fb8a2d4d7c257e1c05070000b30e00003200000000000000000000000000fc00000074657374636f6e74726163742f6d756c74797472616e736665722f546573744d756c74795472616e736665722e636c617373504b0506000000000400040026010000610800000000", [ ], "备注" ],
+  "id" : 1234
+}
+```
 
 ### Example response data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "id" : "1234",
+  "result" : {
+    "txHex" : "0f00389d2d5d06e5a487e6b3a8fdf209020001f7ec6473df12e751d64cf20a8baa7edd50810f81020002d8d1a95d88f9da04019371f5f2efc88a822bfb00fd9d09504b0304140008080800038b2d4d000000000000000000000000090004004d4554412d494e462ffeca00000300504b0708000000000200000000000000504b0304140008080800038b2d4d000000000000000000000000140000004d4554412d494e462f4d414e49464553542e4d46f34dcccb4c4b2d2ed10d4b2d2acecccfb35230d433e0e5722e4a4d2c494dd175aa040958e819c41b9a982868f8172526e7a42a38e71715e417259600d56bf272f1720100504b07089e7c76534400000045000000504b03040a0000080000fb8a2d4d0000000000000000000000001b00000074657374636f6e74726163742f6d756c74797472616e736665722f504b0304140008080800fb8a2d4d0000000000000000000000003200000074657374636f6e74726163742f6d756c74797472616e736665722f546573744d756c74795472616e736665722e636c6173739d56eb7313d715ffad257997454e8cea00f210aa262d91658cb00c989a94c498180cb6f143d8d86d4256d25a5a4bda95b52b83d31749daa4e933e9234ddf8f90a68fb40d2d96dd64265f3ac34cfb0ff463ff857eea97cc747acedd95ac48824e6a8ff69e7b9ebf73ef3967f7efff79e73d00c7f08e8a53585590df85fb505050e4d5e48725a3a442c62a3fd6149479b515382cacc85857710dd75584b0a1e219d8323eabe073bcff7c00fcf7daab3758f005667d51c18d1af75905cf0a5a1a1c8082e75cfa6f7fbda1e079155fc29715bcc0be5f64435ba5685f51f09282af32f36b8ce2eb0abec19b6ff2e65b0a5ee6cd2b0abeade03b2abe8beff1e35505dfe7f535053f50f043267fa4e0c7327e22e3a712fca656d425842657b5752d5ed0cc6c7cde291b66f694844e7ba398b20a12bac62cd37634d359d00a15d256327ada286a055b8234e123d82109b256284c982b1649af96b40d2d5520455fb46f81628c5919dadc3f6998fa74a598d2cb49571c9ab4d25a61412b1bbcf7987e276790e323938e6e3b69cb74ca5ada89172b05678348d35ed1cbf12489a69893f43884363c57311da3a82f18b6418e464dd37234c720e412fa260d2b6e560a76bceed0cee4e35a5d273ee342e6ac1f354cc3394d196575675a9c4e4fb4afddf9ec228579ef8876137db67e2a94f7043948696490d6f924c98293dba5653265ddb6af0e4a38d81ed4a8ab41fe0322e906a344033d44072ae4e356d9339170337a6f9f6e1645cdc9c5cf18d909d3d1b37476ff974dcb79b4d76b7b707e4a62904b8696aba626616f7b635733e16a26846617514394b2ebcb950cb99279474be7a7b49257479d5aa9a49b19090f445b3170592aae825e96a0ce5b95725a1f37d8706f4b751d61fb20a6312e614f8b34884f81caa523990ce2319c0e62146724ec6b8e79a6621432acade367748f9181c8e8e2e0f1939783f83966242088b3ece6f087297b19bf08e297783d88246eca7843c2817bdda584c8b49d71b2b3e746af5f99c91d1fb296af8f2eae2e94ccf3e6c5e162e5d8b525ce7225885fe1cd207e8ddf1050af884722c25a3fbe9c3766edc1d9c152e60967eee2b52bf913d3f91396b554494c26bc001b99e4c2a29d9f4a0f9fcb2f3f93b2d712e3d6586eede2f8b5a91509fb3d3491b4e8bf484a8fe8c592b37144c66f83f81ddea2a0aa2d6e662412c4ef393d1d64a8aa5ef13316455de761c41a7fc04dd6f8236b6435bba0af38cc7e1bb798fd276a4e6697ca465aa8ff19b7a843555595d0ada6e848cf14ac74febc66e74622326e07b1c986556cb161da32cc94660bc36dbcced072ba91cd398c21a8f2c0a1c9582cb1fc2fec5862b73b777f29b5aaa71d090fb6bd97316f2361a05d91b6b0bc1aa2c6501cabd602fbdbba9eb2bdeef02e3e7a9719b8336ef6d7a65c6b1bf6b4e3937b710597e86ac2d10b7735566af5cb6a779912d48ebd6de15d760c1ea872595fab1865eecee872fb76eeb4bd660eacbb6fa90f1ca97b0ff73c52d9ab1d31be2f502bd5736a7f03b59aba1b74515684cb14af3cee2466e4a8ce7826b5f1cd4e6bf546eaf5dac2c7e8e57f0a121e851f1d3c6df895cbb386788f13dd41fc108f9dfa7e8c7e6785de6ee23d8171da9fa35d3f7f63f0ef96503b4fcf4ec18863023c838410177091d6494f3a257834fde8c94e36e0137ac3b12d48b150c7267cb1907f1381587768139def425eda82125bbe0d5f15bb422a3daad82db4829be8da097d90be5b804142ff085444d18d3eec450247318413f455b60369d88324e112663c18715a59168851a0b79bf2196e300ed48d67ebc6039eb12fe46f363dd560eaab9bce61bed9b43bf45693e9636d4d93f5a8c73c53751bf757d15dc59ee6e0630d1ed4ba87cb750f05f2db41ebd177115a0a7d640b3d93fd3d78601bfbaad8ef9d7c284c275e8fe09efe4e9cfbc05f6ce7c8fb79f450348eb7d7f5e9c55371080b581458af5064b774b6c9ce4feb950f44eead4526de01e24d1deec1830dbc8f126f7aa007910f81d02d8b4b84638610ced17e9e8a23498571995a6051208eb958ea88a73dc407318225a23a48fb109689f235d5f1a7f1192fa37f924ca175a6ff0eba07ee20180edc81ec7f137e5fe8a16d3cdc7f98100f84fd5e2ee100e5322287e570e7ffcec42732e9a5b8a078fbf0240ee0293c84ab543e4f531d68228b3937be9705534f8a2c987a8a743b04f5b4c882298d787e41a5a8b903824a13af93bc3e2cb295911115dfb1e771a929f1b3b5229266c90907793f56cbe2e3228b4f5471c84d610b8fd465d15a866d647d4216aba2bf4970580806aa38d224880bc1d11d4168b0519c10e2a16d1c6b0d765cc84eb4061b768d5a839d14824f36041be1e76d74ed545b82ba0d58a1fbc9e2247234230cacd2fff3c8e325eab73750c47b30f10f58f8174af837d61a7af47defee3af813c5ebd139af477b1b26611721e9af0dc28611a80acd0ac2586fe8c4de7a45f412aad3a21373c2c6f82f504b07087c257e1c05070000b30e0000504b01021400140008080800038b2d4d0000000002000000000000000900040000000000000000000000000000004d4554412d494e462ffeca0000504b01021400140008080800038b2d4d9e7c7653440000004500000014000000000000000000000000003d0000004d4554412d494e462f4d414e49464553542e4d46504b01020a000a0000080000fb8a2d4d0000000000000000000000001b00000000000000000000000000c300000074657374636f6e74726163742f6d756c74797472616e736665722f504b01021400140008080800fb8a2d4d7c257e1c05070000b30e00003200000000000000000000000000fc00000074657374636f6e74726163742f6d756c74797472616e736665722f546573744d756c74795472616e736665722e636c617373504b0506000000000400040026010000610800000000126f66666c696e655f70617961626c655f6a725118000000000000190000000000000000480117020001f7ec6473df12e751d64cf20a8baa7edd50810f8102000100c9f3060000000000000000000000000000000000000000000000000000000000085d4ce9d75a79b1fb000000",
+    "contractAddress" : "tNULSeBaNA4yaXmfaQVXpX3QWPcUaHRRryoXHa",
+    "hash" : "3a932a0bae1cd78c9e56264824a1ff9c96baf857bd799fe6941d0c4e98c19cf0"
+  }
+}
+```
 
 4.19 离线 - 调用合约
 ==============
@@ -2364,10 +2591,26 @@ _**详细描述: 离线 - 调用合约**_
 | hash  | string | 交易hash   |
 | txHex | string | 交易序列化字符串 |
 ### Example request data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "method" : "contractCallOffline",
+  "params" : [ 2, "tNULSeBaMvEtDfvZuukDf2mVyfGo3DdiN8KLRG", 80000000000, "tNULSeBaNA4yaXmfaQVXpX3QWPcUaHRRryoXHa", "multyForAddress", null, [ "tNULSeBaMtkzQ1tH8JWBGZDCmRHCmySevE4frM", "400000000", "tNULSeBaMhKaLzhQh1AhhecUqh15ZKw98peg29", "900000000", "tNULSeBaMv8q3pWzS7bHpQWW8yypNGo8auRoPf", "800000000" ], "remark-jsonrpc-call" ],
+  "id" : 1234
+}
+```
 
 ### Example response data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "id" : "1234",
+  "result" : {
+    "txHex" : "1000ee9e2d5d1372656d61726b2d6a736f6e7270632d63616c6cfd0901020001f7ec6473df12e751d64cf20a8baa7edd50810f81020002d8d1a95d88f9da04019371f5f2efc88a822bfb0000205fa012000000000000000000000000000000000000000000000000000000f2a600000000000019000000000000000f6d756c7479466f724164647265737300060126744e554c536542614d746b7a51317448384a5742475a44436d5248436d79536576453466724d01093430303030303030300126744e554c536542614d684b614c7a68516831416868656355716831355a4b773938706567323901093930303030303030300126744e554c536542614d7638713370577a5337624870515757387979704e476f386175526f506601093830303030303030308c0117020001f7ec6473df12e751d64cf20a8baa7edd50810f810200010042f470a01200000000000000000000000000000000000000000000000000000008941d0c4e98c19cf0000117020002d8d1a95d88f9da04019371f5f2efc88a822bfb000200010000205fa012000000000000000000000000000000000000000000000000000000000000000000000000",
+    "hash" : "b8db1792fbfb6630a5106a1a92ee182aaa694aa1142454e81e4d8286e19ffc11"
+  }
+}
+```
 
 4.20 离线 - 删除合约
 ==============
@@ -2391,10 +2634,26 @@ _**详细描述: 离线 - 删除合约**_
 | hash  | string | 交易hash   |
 | txHex | string | 交易序列化字符串 |
 ### Example request data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "method" : "contractDeleteOffline",
+  "params" : [ 2, "tNULSeBaMvEtDfvZuukDf2mVyfGo3DdiN8KLRG", "tNULSeBaNArLxGor3mgwjKNyVSCFtK3Wj4cXJi", "delete-contract-remark" ],
+  "id" : 1234
+}
+```
 
 ### Example response data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "id" : "1234",
+  "result" : {
+    "txHex" : "11003ea02d5d1664656c6574652d636f6e74726163742d72656d61726b2e020001f7ec6473df12e751d64cf20a8baa7edd50810f81020002e58a299dcc3804b460c7f58f4dc14662f78bea1f480117020001f7ec6473df12e751d64cf20a8baa7edd50810f8102000100a08601000000000000000000000000000000000000000000000000000000000008557b2813d2bb301b000000",
+    "hash" : "defb05ba70a701446521dbaa4ef27a6bcbb47f472041f4661a5df7f2c52793f1"
+  }
+}
+```
 
 4.21 离线 - 合约token转账
 ===================
@@ -2420,10 +2679,26 @@ _**详细描述: 离线 - 合约token转账**_
 | hash  | string | 交易hash   |
 | txHex | string | 交易序列化字符串 |
 ### Example request data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "method" : "tokentransferOffline",
+  "params" : [ 2, "tNULSeBaMvEtDfvZuukDf2mVyfGo3DdiN8KLRG", "tNULSeBaMnrs6JKrCy6TQdzYJZkMZJDng7QAsD", "tNULSeBaMvkanBqyWF1h7MuQ22Pq3JkL8FTfsL", 90, "9个" ],
+  "id" : 1234
+}
+```
 
 ### Example response data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "id" : "1234",
+  "result" : {
+    "txHex" : "1000fea02d5d0439e4b8aa95020001f7ec6473df12e751d64cf20a8baa7edd50810f8102000200402cea2a777d98033cc184db84d0b16ea2ed140000000000000000000000000000000000000000000000000000000000000000da340000000000001900000000000000087472616e7366657200020126744e554c536542614d6e7273364a4b724379365451647a594a5a6b4d5a4a446e67375141734401023930480117020001f7ec6473df12e751d64cf20a8baa7edd50810f8102000100eaaf060000000000000000000000000000000000000000000000000000000000083b25f434047254a9000000",
+    "hash" : "b81a689c92d25a55d269400541a631b95211a0736ad73899f6f0dda3ab1dcda9"
+  }
+}
+```
 
 4.22 离线 - 从账户地址向合约地址转账(主链资产)的合约交易
 =================================
@@ -2448,10 +2723,26 @@ _**详细描述: 离线 - 从账户地址向合约地址转账(主链资产)的�
 | hash  | string | 交易hash   |
 | txHex | string | 交易序列化字符串 |
 ### Example request data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "method" : "transfer2contractOffline",
+  "params" : [ 2, "tNULSeBaMvEtDfvZuukDf2mVyfGo3DdiN8KLRG", "tNULSeBaNA4yaXmfaQVXpX3QWPcUaHRRryoXHa", "800000000", "向合约转账" ],
+  "id" : 1234
+}
+```
 
 ### Example response data: 
-略
+```json
+{
+  "jsonrpc" : "2.0",
+  "id" : "1234",
+  "result" : {
+    "txHex" : "10005ca12d5d0fe59091e59088e7baa6e8bdace8b4a677020001f7ec6473df12e751d64cf20a8baa7edd50810f81020002d8d1a95d88f9da04019371f5f2efc88a822bfb000008af2f000000000000000000000000000000000000000000000000000000009f0d0000000000001900000000000000085f70617961626c650e28292072657475726e20766f6964008c0117020001f7ec6473df12e751d64cf20a8baa7edd50810f810200010027e3b12f00000000000000000000000000000000000000000000000000000000083b25f434047254a9000117020002d8d1a95d88f9da04019371f5f2efc88a822bfb00020001000008af2f00000000000000000000000000000000000000000000000000000000000000000000000000",
+    "hash" : "305a5fb96db5cb763bfee647e64ee24585d1c69c090d5d419dba9bc8ff6766f9"
+  }
+}
+```
 
 5.1 创建共识节点
 ==========
