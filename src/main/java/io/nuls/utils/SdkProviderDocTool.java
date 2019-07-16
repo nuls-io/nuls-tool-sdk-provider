@@ -6,6 +6,7 @@ import io.nuls.base.api.provider.ServiceManager;
 import io.nuls.core.core.annotation.RpcMethod;
 import io.nuls.core.core.config.ConfigurationLoader;
 import io.nuls.core.core.ioc.SpringLiteContext;
+import io.nuls.core.io.IoUtils;
 import io.nuls.core.log.Log;
 import io.nuls.core.model.StringUtils;
 import io.nuls.core.parse.JSONUtils;
@@ -27,6 +28,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -618,7 +620,7 @@ public class SdkProviderDocTool {
                     try {
                         StringWriter stringWriter = new StringWriter();
                         try (BufferedWriter sbw = new BufferedWriter(stringWriter)) {
-                            writeMarkdown(cmd, sbw, null);
+                            writeMarkdown(cmd, sbw, null, null);
                             sbw.flush();
                             cmd.md = stringWriter.toString();
                         }
@@ -673,6 +675,16 @@ public class SdkProviderDocTool {
                 throw new RuntimeException("模板文件不存在");
             }
 
+            Map<String, Object> egMap = null;
+            if(ApiType.JSONRPC.equals(apiType)) {
+                File egJsonrpcFile = new File(file.getParentFile().getAbsolutePath() + File.separator + "documents" + File.separator + "eg_jsonrpc.json");
+                String jsonrpcStr = IoUtils.readCharsToString(egJsonrpcFile, StandardCharsets.UTF_8.name());
+                egMap = JSONUtils.json2map(jsonrpcStr);
+            } else if(ApiType.RESTFUL.equals(apiType)) {
+                File egJsonrpcFile = new File(file.getParentFile().getAbsolutePath() + File.separator + "documents" + File.separator + "eg_restful.json");
+                String restfulStr = IoUtils.readCharsToString(egJsonrpcFile, StandardCharsets.UTF_8.name());
+                egMap = JSONUtils.json2map(restfulStr);
+            }
             File mdFile = new File(file.getParentFile().getAbsolutePath() + File.separator + "documents" + File.separator + appName + "_" + apiType.name() + ".md");
             if (mdFile.exists()) {
                 mdFile.delete();
@@ -685,14 +697,14 @@ public class SdkProviderDocTool {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(mdFile, true))) {
                 writer.newLine();
                 AtomicInteger i = new AtomicInteger(0);
-                cmdDesList.forEach(cmd -> {
-                    writeMarkdown(cmd, writer, i);
-                });
+                for(CmdDes cmd : cmdDesList) {
+                    writeMarkdown(cmd, writer, i, egMap);
+                }
             }
             return mdFile.getAbsolutePath();
         }
 
-        private static void writeMarkdown(CmdDes cmd, BufferedWriter writer, AtomicInteger i) {
+        private static void writeMarkdown(CmdDes cmd, BufferedWriter writer, AtomicInteger i, Map<String, Object> egMap) {
             try {
                 String order = "";
                 if(i != null) {
@@ -724,6 +736,27 @@ public class SdkProviderDocTool {
                 }
                 buildParam(writer, cmd.parameters, jsonrpc);
                 buildResult(writer, cmd.result);
+
+                // 增加示例
+                String egDesc = "略";
+                if(egMap != null) {
+                    Object eg = egMap.get(cmd.cmdName);
+                    if(eg != null) {
+                        egDesc = JSONUtils.obj2PrettyJson(eg);
+                    }
+                }
+                writer.newLine();
+                writer.write(new Heading("Example response data: ", 3).toString());
+                writer.newLine();
+                if("略".equals(egDesc)) {
+                    writer.write(new Text(egDesc).toString());
+                } else {
+                    writer.write(new Text("```json").toString());
+                    writer.newLine();
+                    writer.write(new Text(egDesc).toString());
+                    writer.newLine();
+                    writer.write(new Text("```").toString());
+                }
                 writer.newLine();
                 writer.newLine();
             } catch (IOException e) {

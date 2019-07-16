@@ -45,11 +45,12 @@
 [RESTFUL 接口调试-POSTMAN导入文件](https://github.com/nuls-io/nuls-sdk-provider/blob/master/documents/nuls-sdk-provider_Postman_RESTFUL.json)
 
 
-0.1 获取本链相关信息
-============
+
+0.1 获取本链相关信息,其中共识资产为本链创建共识节点交易和创建委托共识交易时，需要用到的资产
+================================================
 Cmd: info
 ---------
-_**详细描述: 获取本链相关信息**_
+_**详细描述: 获取本链相关信息,其中共识资产为本链创建共识节点交易和创建委托共识交易时，需要用到的资产**_
 
 参数列表
 ----
@@ -57,13 +58,15 @@ _**详细描述: 获取本链相关信息**_
 
 返回值
 ---
-| 字段名             |  字段类型  | 参数描述        |
-| --------------- |:------:| ----------- |
-| chainId         | string | 本链的ID       |
-| assetId         | string | 本链默认主资产的ID  |
-| inflationAmount | string | 本链默认主资的初始数量 |
-| agentChainId    | string | 本链共识资产的链ID  |
-| agentAssetId    | string | 本链共识资产的ID   |
+| 字段名             |  字段类型  | 参数描述         |
+| --------------- |:------:| ------------ |
+| chainId         | string | 本链的ID        |
+| assetId         | string | 本链默认主资产的ID   |
+| inflationAmount | string | 本链默认主资产的初始数量 |
+| agentChainId    | string | 本链共识资产的链ID   |
+| agentAssetId    | string | 本链共识资产的ID    |
+### Example response data: 
+略
 
 1.1 批量创建账户
 ==========
@@ -84,6 +87,8 @@ _**详细描述: 创建的账户存在于本地钱包内**_
 | 字段名 |      字段类型       | 参数描述     |
 | --- |:---------------:| -------- |
 | 返回值 | list&lt;string> | 返回账户地址集合 |
+### Example response data: 
+略
 
 1.2 修改账户密码
 ==========
@@ -105,12 +110,14 @@ _**详细描述: 修改账户密码**_
 | 字段名   |  字段类型   | 参数描述   |
 | ----- |:-------:| ------ |
 | value | boolean | 是否修改成功 |
+### Example response data: 
+略
 
 1.3 导出账户私钥
 ==========
 Cmd: getPriKey
 --------------
-_**详细描述: 只能导出本地钱包创建或导入的账户**_
+_**详细描述: 只能导出本地钱包已存在账户的私钥**_
 
 参数列表
 ----
@@ -125,12 +132,14 @@ _**详细描述: 只能导出本地钱包创建或导入的账户**_
 | 字段名   |  字段类型  | 参数描述 |
 | ----- |:------:| ---- |
 | value | string | 私钥   |
+### Example response data: 
+略
 
 1.4 根据私钥导入账户
 ============
 Cmd: importPriKey
 -----------------
-_**详细描述: 导入私钥时，需要输入密码给私钥加密**_
+_**详细描述: 导入私钥时，需要输入密码给明文私钥加密**_
 
 参数列表
 ----
@@ -145,6 +154,8 @@ _**详细描述: 导入私钥时，需要输入密码给私钥加密**_
 | 字段名   |  字段类型  | 参数描述 |
 | ----- |:------:| ---- |
 | value | string | 账户地址 |
+### Example response data: 
+略
 
 1.5 根据keystore导入账户
 ==================
@@ -165,6 +176,8 @@ _**详细描述: 根据keystore导入账户**_
 | 字段名   |  字段类型  | 参数描述 |
 | ----- |:------:| ---- |
 | value | string | 账户地址 |
+### Example response data: 
+略
 
 1.6 账户备份，导出账户keystore信息
 =======================
@@ -185,6 +198,8 @@ _**详细描述: 账户备份，导出账户keystore信息**_
 | 字段名    |  字段类型  | 参数描述     |
 | ------ |:------:| -------- |
 | result | string | keystore |
+### Example response data: 
+略
 
 1.7 查询账户余额
 ==========
@@ -212,9 +227,83 @@ _**详细描述: 根据资产链ID和资产ID，查询本链账户对应资产�
 | consensusLock | string |  共识锁定金额                   |
 | nonce         | string | 账户资产nonce值                |
 | nonceType     |  int   | 1：已确认的nonce值,0：未确认的nonce值 |
+### Example response data: 
+略
 
-1.8 多账户摘要签名
-===========
+1.8 离线 - 批量创建账户
+===============
+Cmd: createAccountOffline
+-------------------------
+_**详细描述: 创建的账户不会保存到钱包中,接口直接返回账户的keystore信息**_
+
+参数列表
+----
+| 参数名      |  参数类型  | 参数描述 | 是否必填 |
+| -------- |:------:| ---- |:----:|
+| chainId  |  int   | 链ID  |  是   |
+| count    |  int   | 创建数量 |  是   |
+| password | string | 密码   |  是   |
+
+返回值
+---
+| 字段名                 |  字段类型  | 参数描述   |
+| ------------------- |:------:| ------ |
+| address             | string | 账户地址   |
+| pubKey              | string | 公钥     |
+| prikey              | string | 明文私钥   |
+| encryptedPrivateKey | string | 加密后的私钥 |
+### Example response data: 
+略
+
+1.9 离线获取账户明文私钥
+==============
+Cmd: getPriKeyOffline
+---------------------
+_**详细描述: 离线获取账户明文私钥**_
+
+参数列表
+----
+| 参数名                 |  参数类型  | 参数描述   | 是否必填 |
+| ------------------- |:------:| ------ |:----:|
+| chainId             |  int   | 链ID    |  是   |
+| address             | string | 账户地址   |  是   |
+| encryptedPrivateKey | string | 账户密文私钥 |  是   |
+| password            | string | 密码     |  是   |
+
+返回值
+---
+| 字段名   |  字段类型  | 参数描述 |
+| ----- |:------:| ---- |
+| value | string | 明文私钥 |
+### Example response data: 
+略
+
+1.10 离线修改账户密码
+=============
+Cmd: resetPasswordOffline
+-------------------------
+_**详细描述: 离线修改账户密码**_
+
+参数列表
+----
+| 参数名                 |  参数类型  | 参数描述   | 是否必填 |
+| ------------------- |:------:| ------ |:----:|
+| chainId             |  int   | 链ID    |  是   |
+| address             | string | 账户地址   |  是   |
+| encryptedPrivateKey | string | 账户密文私钥 |  是   |
+| oldPassword         | string | 原密码    |  是   |
+| newPassword         | string | 新密码    |  是   |
+
+返回值
+---
+| 字段名   |  字段类型  | 参数描述       |
+| ----- |:------:| ---------- |
+| value | string | 重置密码后的加密私钥 |
+### Example response data: 
+略
+
+1.11 多账户摘要签名
+============
 Cmd: multiSign
 --------------
 _**详细描述: 用于签名离线组装的多账户转账交易,调用接口时，参数可以传地址和私钥，或者传地址和加密私钥和加密密码**_
@@ -237,9 +326,11 @@ _**详细描述: 用于签名离线组装的多账户转账交易,调用接口�
 | ----- |:------:| ------------- |
 | hash  | string | 交易hash        |
 | txHex | string | 签名后的交易16进制字符串 |
+### Example response data: 
+略
 
-1.9 明文私钥摘要签名
-============
+1.12 明文私钥摘要签名
+=============
 Cmd: priKeySign
 ---------------
 _**详细描述: 明文私钥摘要签名**_
@@ -259,8 +350,10 @@ _**详细描述: 明文私钥摘要签名**_
 | ----- |:------:| ------------- |
 | hash  | string | 交易hash        |
 | txHex | string | 签名后的交易16进制字符串 |
+### Example response data: 
+略
 
-1.10 密文私钥摘要签名
+1.13 密文私钥摘要签名
 =============
 Cmd: encryptedPriKeySign
 ------------------------
@@ -282,72 +375,8 @@ _**详细描述: 密文私钥摘要签名**_
 | ----- |:------:| ------------- |
 | hash  | string | 交易hash        |
 | txHex | string | 签名后的交易16进制字符串 |
-
-1.11 离线 - 批量创建账户
-================
-Cmd: createAccountOffline
--------------------------
-_**详细描述: 创建的账户不会保存到钱包中,接口直接返回账户的keystore信息**_
-
-参数列表
-----
-| 参数名      |  参数类型  | 参数描述 | 是否必填 |
-| -------- |:------:| ---- |:----:|
-| chainId  |  int   | 链ID  |  是   |
-| count    |  int   | 创建数量 |  是   |
-| password | string | 密码   |  是   |
-
-返回值
----
-| 字段名                 |  字段类型  | 参数描述   |
-| ------------------- |:------:| ------ |
-| address             | string | 账户地址   |
-| pubKey              | string | 公钥     |
-| prikey              | string | 明文私钥   |
-| encryptedPrivateKey | string | 加密后的私钥 |
-
-1.12 离线获取账户明文私钥
-===============
-Cmd: getPriKeyOffline
----------------------
-_**详细描述: 离线获取账户明文私钥**_
-
-参数列表
-----
-| 参数名                 |  参数类型  | 参数描述   | 是否必填 |
-| ------------------- |:------:| ------ |:----:|
-| chainId             |  int   | 链ID    |  是   |
-| address             | string | 账户地址   |  是   |
-| encryptedPrivateKey | string | 账户密文私钥 |  是   |
-| password            | string | 密码     |  是   |
-
-返回值
----
-| 字段名   |  字段类型  | 参数描述 |
-| ----- |:------:| ---- |
-| value | string | 明文私钥 |
-
-1.13 离线修改账户密码
-=============
-Cmd: resetPasswordOffline
--------------------------
-_**详细描述: 离线修改账户密码**_
-
-参数列表
-----
-| 参数名                 |  参数类型  | 参数描述   | 是否必填 |
-| ------------------- |:------:| ------ |:----:|
-| chainId             |  int   | 链ID    |  是   |
-| address             | string | 账户地址   |  是   |
-| encryptedPrivateKey | string | 账户密文私钥 |  是   |
-| oldPassword         | string | 原密码    |  是   |
-| newPassword         | string | 新密码    |  是   |
-
-返回值
----
-| 字段名   |  字段类型  | 参数描述       |
-| ----- |:------:| ---------- |
-| value | string | 重置密码后的加密私钥 |
+### Example response data: 
+略
 
 2.1 根据区块高度查询区块头
 ===============
@@ -382,6 +411,8 @@ _**详细描述: 根据区块高度查询区块头**_
 | mainVersion          | short  | 主网当前生效的版本            |
 | blockVersion         | short  | 区块的版本，可以理解为本地钱包的版本   |
 | stateRoot            | string | 智能合约世界状态根            |
+### Example response data: 
+略
 
 2.2 根据区块hash查询区块头
 =================
@@ -416,6 +447,8 @@ _**详细描述: 根据区块hash查询区块头**_
 | mainVersion          | short  | 主网当前生效的版本            |
 | blockVersion         | short  | 区块的版本，可以理解为本地钱包的版本   |
 | stateRoot            | string | 智能合约世界状态根            |
+### Example response data: 
+略
 
 2.3 查询最新区块头信息
 =============
@@ -449,6 +482,8 @@ _**详细描述: 查询最新区块头信息**_
 | mainVersion          | short  | 主网当前生效的版本            |
 | blockVersion         | short  | 区块的版本，可以理解为本地钱包的版本   |
 | stateRoot            | string | 智能合约世界状态根            |
+### Example response data: 
+略
 
 2.4 查询最新区块
 ==========
@@ -506,6 +541,8 @@ _**详细描述: 包含区块打包的所有交易信息，此接口返回数据
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetsId      |       int       | 资产id                                      |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount        |     string      | 数量                                        |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lockTime      |      long       | 解锁时间，-1为永久锁定                              |
+### Example response data: 
+略
 
 2.5 根据区块高度查询区块
 ==============
@@ -564,6 +601,8 @@ _**详细描述: 包含区块打包的所有交易信息，此接口返回数据
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetsId      |       int       | 资产id                                      |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount        |     string      | 数量                                        |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lockTime      |      long       | 解锁时间，-1为永久锁定                              |
+### Example response data: 
+略
 
 2.6 根据区块hash查询区块
 ================
@@ -622,12 +661,14 @@ _**详细描述: 包含区块打包的所有交易信息，此接口返回数据
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetsId      |       int       | 资产id                                      |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount        |     string      | 数量                                        |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lockTime      |      long       | 解锁时间，-1为永久锁定                              |
+### Example response data: 
+略
 
-3.1 根据hash获取交易，只查已确认交易
-======================
+3.1 根据hash获取交易
+==============
 Cmd: getTx
 ----------
-_**详细描述: 根据hash获取交易，只查已确认交易**_
+_**详细描述: 根据hash获取交易**_
 
 参数列表
 ----
@@ -662,52 +703,14 @@ _**详细描述: 根据hash获取交易，只查已确认交易**_
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetsId      |       int       | 资产id                                      |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount        |     string      | 数量                                        |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lockTime      |      long       | 解锁时间，-1为永久锁定                              |
+### Example response data: 
+略
 
-3.2 根据hash获取交易，先查未确认，查不到再查已确认
-=============================
-Cmd: getTxImmediately
----------------------
-_**详细描述: 根据hash获取交易，先查未确认，查不到再查已确认**_
-
-参数列表
-----
-| 参数名     |  参数类型  | 参数描述   | 是否必填 |
-| ------- |:------:| ------ |:----:|
-| chainId |  int   | 链id    |  是   |
-| hash    | string | 交易hash |  是   |
-
-返回值
----
-| 字段名                                                           |      字段类型       | 参数描述                                      |
-| ------------------------------------------------------------- |:---------------:| ----------------------------------------- |
-| hash                                                          |     string      | 交易的hash值                                  |
-| type                                                          |       int       | 交易类型                                      |
-| time                                                          |     string      | 交易时间                                      |
-| blockHeight                                                   |      long       | 区块高度                                      |
-| remark                                                        |     string      | 交易备注                                      |
-| transactionSignature                                          |     string      | 交易签名                                      |
-| status                                                        |       int       | 交易状态 0:unConfirm(待确认), 1:confirm(已确认)     |
-| size                                                          |       int       | 交易大小                                      |
-| inBlockIndex                                                  |       int       | 在区块中的顺序，存储在rocksDB中是无序的，保存区块时赋值，取出后根据此值排序 |
-| form                                                          | list&lt;object> | 输入                                        |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address       |     string      | 账户地址                                      |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetsChainId |       int       | 资产发行链的id                                  |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetsId      |       int       | 资产id                                      |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount        |     string      | 数量                                        |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nonce         |     string      | 账户nonce值的Hex字符串，防止双花交易，取上一笔交易hash的最后8个字节  |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;locked        |      byte       | 0普通交易，-1解锁金额交易（退出共识，退出委托）                 |
-| to                                                            | list&lt;object> | 输出                                        |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address       |     string      | 账户地址                                      |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetsChainId |       int       | 资产发行链的id                                  |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetsId      |       int       | 资产id                                      |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount        |     string      | 数量                                        |
-| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lockTime      |      long       | 解锁时间，-1为永久锁定                              |
-
-3.3 验证交易
+3.2 验证交易
 ========
 Cmd: validateTx
 ---------------
-_**详细描述: 验证交易**_
+_**详细描述: 验证离线组装的交易,验证成功返回交易hash值,失败返回错误提示信息**_
 
 参数列表
 ----
@@ -721,19 +724,21 @@ _**详细描述: 验证交易**_
 | 字段名   |  字段类型  | 参数描述   |
 | ----- |:------:| ------ |
 | value | string | 交易hash |
+### Example response data: 
+略
 
-3.4 广播交易
+3.3 广播交易
 ========
 Cmd: broadcastTx
 ----------------
-_**详细描述: 广播交易**_
+_**详细描述: 广播离线组装的交易,成功返回true,失败返回错误提示信息**_
 
 参数列表
 ----
-| 参数名     |  参数类型  | 参数描述     | 是否必填 |
-| ------- |:------:| -------- |:----:|
-| chainId |  int   | 链id      |  是   |
-| tx      | string | 交易序列化字符串 |  是   |
+| 参数名     |  参数类型  | 参数描述         | 是否必填 |
+| ------- |:------:| ------------ |:----:|
+| chainId |  int   | 链id          |  是   |
+| tx      | string | 交易序列化16进制字符串 |  是   |
 
 返回值
 ---
@@ -741,12 +746,14 @@ _**详细描述: 广播交易**_
 | ----- |:-------:| ------ |
 | value | boolean | 是否成功   |
 | hash  | string  | 交易hash |
+### Example response data: 
+略
 
-3.5 单笔转账
+3.4 单笔转账
 ========
 Cmd: transfer
 -------------
-_**详细描述: 单笔转账**_
+_**详细描述: 发起单账户单资产的转账交易**_
 
 参数列表
 ----
@@ -765,12 +772,14 @@ _**详细描述: 单笔转账**_
 | 字段名  |  字段类型  | 参数描述   |
 | ---- |:------:| ------ |
 | hash | string | 交易hash |
+### Example response data: 
+略
 
-3.6 离线组装转账交易
+3.5 离线组装转账交易
 ============
 Cmd: createTransferTxOffline
 ----------------------------
-_**详细描述: 离线组装转账交易**_
+_**详细描述: 根据inputs和outputs离线组装转账交易，用于单账户或多账户的转账交易。交易手续费为inputs里本链主资产金额总和，减去outputs里本链主资产总和**_
 
 参数列表
 ----
@@ -797,6 +806,33 @@ _**详细描述: 离线组装转账交易**_
 | ----- |:------:| ------------ |
 | hash  | string | 交易hash       |
 | txHex | string | 交易序列化16进制字符串 |
+### Example response data: 
+略
+
+3.6 计算离线创建转账交易所需手续费
+===================
+Cmd: calcTransferTxFee
+----------------------
+_**详细描述: 计算离线创建转账交易所需手续费**_
+
+参数列表
+----
+| 参数名                                                          |       参数类型       | 参数描述    | 是否必填 |
+| ------------------------------------------------------------ |:----------------:| ------- |:----:|
+| TransferTxFeeDto                                             | transfertxfeedto | 转账交易手续费 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;addressCount |       int        | 转账地址数量  |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fromLength   |       int        | 转账输入长度  |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;toLength     |       int        | 转账输出长度  |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark       |      string      | 交易备注    |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price        |    biginteger    | 手续费单价   |  否   |
+
+返回值
+---
+| 字段名   |  字段类型  | 参数描述  |
+| ----- |:------:| ----- |
+| value | string | 交易手续费 |
+### Example response data: 
+略
 
 4.1 发布合约
 ========
@@ -824,6 +860,8 @@ _**详细描述: 发布合约**_
 | --------------- |:------:| ----------- |
 | txHash          | string | 发布合约的交易hash |
 | contractAddress | string | 生成的合约地址     |
+### Example response data: 
+略
 
 4.2 调用合约
 ========
@@ -852,6 +890,8 @@ _**详细描述: 调用合约**_
 | 字段名    |  字段类型  | 参数描述        |
 | ------ |:------:| ----------- |
 | txHash | string | 调用合约的交易hash |
+### Example response data: 
+略
 
 4.3 删除合约
 ========
@@ -874,6 +914,8 @@ _**详细描述: 删除合约**_
 | 字段名    |  字段类型  | 参数描述        |
 | ------ |:------:| ----------- |
 | txHash | string | 删除合约的交易hash |
+### Example response data: 
+略
 
 4.4 token转账
 ===========
@@ -898,6 +940,8 @@ _**详细描述: token转账**_
 | 字段名    |  字段类型  | 参数描述   |
 | ------ |:------:| ------ |
 | txHash | string | 交易hash |
+### Example response data: 
+略
 
 4.5 从账户地址向合约地址转账(主链资产)的合约交易
 ===========================
@@ -921,6 +965,8 @@ _**详细描述: 从账户地址向合约地址转账(主链资产)的合约交�
 | 字段名    |  字段类型  | 参数描述   |
 | ------ |:------:| ------ |
 | txHash | string | 交易hash |
+### Example response data: 
+略
 
 4.6 获取账户地址的指定token余额
 ====================
@@ -947,6 +993,8 @@ _**详细描述: 获取账户地址的指定token余额**_
 | decimals        |  long  | token支持的小数位数            |
 | blockHeight     |  long  | 合约创建时的区块高度              |
 | status          |  int   | 合约状态(0-不存在, 1-正常, 2-终止) |
+### Example response data: 
+略
 
 4.7 获取智能合约详细信息
 ==============
@@ -989,6 +1037,237 @@ _**详细描述: 获取智能合约详细信息**_
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;view                                                     |     boolean     | 是否视图方法（调用此方法数据不上链）            |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;event                                                    |     boolean     | 是否是事件                         |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;payable                                                  |     boolean     | 是否是可接受主链资产转账的方法               |
+### Example response data: 
+```json
+{
+  "jsonrpc" : "2.0",
+  "id" : "1234",
+  "result" : {
+    "createTxHash" : "ec11dfb9202090276fcde3d5c615caaa406ae6a5826a479878f560758db27bd9",
+    "address" : "tNULSeBaNCP8xykvLm4CaVrGtkiybQwPx6LrSD",
+    "creater" : "tNULSeBaMvEtDfvZuukDf2mVyfGo3DdiN8KLRG",
+    "alias" : "kqb",
+    "createTime" : 1563170044,
+    "blockHeight" : 27048,
+    "directPayable" : false,
+    "nrc20" : true,
+    "nrc20TokenName" : "KQB",
+    "nrc20TokenSymbol" : "KongQiBi",
+    "decimals" : 2,
+    "totalSupply" : "1000000000000",
+    "status" : "normal",
+    "method" : [ {
+      "name" : "name",
+      "desc" : "() return String",
+      "args" : [ ],
+      "returnArg" : "String",
+      "view" : true,
+      "event" : false,
+      "payable" : false
+    }, {
+      "name" : "symbol",
+      "desc" : "() return String",
+      "args" : [ ],
+      "returnArg" : "String",
+      "view" : true,
+      "event" : false,
+      "payable" : false
+    }, {
+      "name" : "decimals",
+      "desc" : "() return int",
+      "args" : [ ],
+      "returnArg" : "int",
+      "view" : true,
+      "event" : false,
+      "payable" : false
+    }, {
+      "name" : "totalSupply",
+      "desc" : "() return BigInteger",
+      "args" : [ ],
+      "returnArg" : "BigInteger",
+      "view" : true,
+      "event" : false,
+      "payable" : false
+    }, {
+      "name" : "<init>",
+      "desc" : "(String name, String symbol, BigInteger initialAmount, int decimals) return void",
+      "args" : [ {
+        "type" : "String",
+        "name" : "name",
+        "required" : true
+      }, {
+        "type" : "String",
+        "name" : "symbol",
+        "required" : true
+      }, {
+        "type" : "BigInteger",
+        "name" : "initialAmount",
+        "required" : true
+      }, {
+        "type" : "int",
+        "name" : "decimals",
+        "required" : true
+      } ],
+      "returnArg" : "void",
+      "view" : false,
+      "event" : false,
+      "payable" : false
+    }, {
+      "name" : "allowance",
+      "desc" : "(Address owner, Address spender) return BigInteger",
+      "args" : [ {
+        "type" : "Address",
+        "name" : "owner",
+        "required" : true
+      }, {
+        "type" : "Address",
+        "name" : "spender",
+        "required" : true
+      } ],
+      "returnArg" : "BigInteger",
+      "view" : true,
+      "event" : false,
+      "payable" : false
+    }, {
+      "name" : "transferFrom",
+      "desc" : "(Address from, Address to, BigInteger value) return boolean",
+      "args" : [ {
+        "type" : "Address",
+        "name" : "from",
+        "required" : true
+      }, {
+        "type" : "Address",
+        "name" : "to",
+        "required" : true
+      }, {
+        "type" : "BigInteger",
+        "name" : "value",
+        "required" : true
+      } ],
+      "returnArg" : "boolean",
+      "view" : false,
+      "event" : false,
+      "payable" : false
+    }, {
+      "name" : "balanceOf",
+      "desc" : "(Address owner) return BigInteger",
+      "args" : [ {
+        "type" : "Address",
+        "name" : "owner",
+        "required" : true
+      } ],
+      "returnArg" : "BigInteger",
+      "view" : true,
+      "event" : false,
+      "payable" : false
+    }, {
+      "name" : "transfer",
+      "desc" : "(Address to, BigInteger value) return boolean",
+      "args" : [ {
+        "type" : "Address",
+        "name" : "to",
+        "required" : true
+      }, {
+        "type" : "BigInteger",
+        "name" : "value",
+        "required" : true
+      } ],
+      "returnArg" : "boolean",
+      "view" : false,
+      "event" : false,
+      "payable" : false
+    }, {
+      "name" : "approve",
+      "desc" : "(Address spender, BigInteger value) return boolean",
+      "args" : [ {
+        "type" : "Address",
+        "name" : "spender",
+        "required" : true
+      }, {
+        "type" : "BigInteger",
+        "name" : "value",
+        "required" : true
+      } ],
+      "returnArg" : "boolean",
+      "view" : false,
+      "event" : false,
+      "payable" : false
+    }, {
+      "name" : "increaseApproval",
+      "desc" : "(Address spender, BigInteger addedValue) return boolean",
+      "args" : [ {
+        "type" : "Address",
+        "name" : "spender",
+        "required" : true
+      }, {
+        "type" : "BigInteger",
+        "name" : "addedValue",
+        "required" : true
+      } ],
+      "returnArg" : "boolean",
+      "view" : false,
+      "event" : false,
+      "payable" : false
+    }, {
+      "name" : "decreaseApproval",
+      "desc" : "(Address spender, BigInteger subtractedValue) return boolean",
+      "args" : [ {
+        "type" : "Address",
+        "name" : "spender",
+        "required" : true
+      }, {
+        "type" : "BigInteger",
+        "name" : "subtractedValue",
+        "required" : true
+      } ],
+      "returnArg" : "boolean",
+      "view" : false,
+      "event" : false,
+      "payable" : false
+    }, {
+      "name" : "TransferEvent",
+      "desc" : "(Address from, Address to, BigInteger value) return void",
+      "args" : [ {
+        "type" : "Address",
+        "name" : "from",
+        "required" : false
+      }, {
+        "type" : "Address",
+        "name" : "to",
+        "required" : true
+      }, {
+        "type" : "BigInteger",
+        "name" : "value",
+        "required" : true
+      } ],
+      "returnArg" : "void",
+      "view" : false,
+      "event" : true,
+      "payable" : false
+    }, {
+      "name" : "ApprovalEvent",
+      "desc" : "(Address owner, Address spender, BigInteger value) return void",
+      "args" : [ {
+        "type" : "Address",
+        "name" : "owner",
+        "required" : true
+      }, {
+        "type" : "Address",
+        "name" : "spender",
+        "required" : true
+      }, {
+        "type" : "BigInteger",
+        "name" : "value",
+        "required" : true
+      } ],
+      "returnArg" : "void",
+      "view" : false,
+      "event" : true,
+      "payable" : false
+    } ]
+  }
+}
+```
 
 4.8 获取智能合约执行结果
 ==============
@@ -1044,6 +1323,42 @@ _**详细描述: 获取智能合约执行结果**_
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;newTxHash                                             |     string      | 生成的交易hash（当调用的命令模式是 NEW\_TX 时，会生成交易）        |
 | contractTxList                                                                                        | list&lt;string> | 合约生成交易的序列化字符串列表                             |
 | remark                                                                                                |     string      | 备注                                          |
+### Example response data: 
+```json
+{
+  "jsonrpc" : "2.0",
+  "id" : "1234",
+  "result" : {
+    "success" : true,
+    "errorMessage" : null,
+    "contractAddress" : "tNULSeBaNCP8xykvLm4CaVrGtkiybQwPx6LrSD",
+    "result" : null,
+    "gasLimit" : 200000,
+    "gasUsed" : 15794,
+    "price" : 25,
+    "totalFee" : "5700000",
+    "txSizeFee" : "700000",
+    "actualContractFee" : "394850",
+    "refundFee" : "4605150",
+    "value" : "0",
+    "stackTrace" : null,
+    "transfers" : [ ],
+    "events" : [ "{\"contractAddress\":\"tNULSeBaNCP8xykvLm4CaVrGtkiybQwPx6LrSD\",\"blockNumber\":27048,\"event\":\"TransferEvent\",\"payload\":{\"from\":null,\"to\":\"tNULSeBaMvEtDfvZuukDf2mVyfGo3DdiN8KLRG\",\"value\":\"1000000000000\"}}" ],
+    "tokenTransfers" : [ {
+      "contractAddress" : "tNULSeBaNCP8xykvLm4CaVrGtkiybQwPx6LrSD",
+      "from" : null,
+      "to" : "tNULSeBaMvEtDfvZuukDf2mVyfGo3DdiN8KLRG",
+      "value" : "1000000000000",
+      "name" : "KQB",
+      "symbol" : "KongQiBi",
+      "decimals" : 2
+    } ],
+    "invokeRegisterCmds" : [ ],
+    "contractTxList" : [ ],
+    "remark" : "create"
+  }
+}
+```
 
 4.9 获取合约代码构造函数
 ==============
@@ -1074,6 +1389,8 @@ _**详细描述: 获取合约代码构造函数**_
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;event                                                    |     boolean     | 是否是事件              |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;payable                                                  |     boolean     | 是否是可接受主链资产转账的方法    |
 | isNrc20                                                                                                  |     boolean     | 是否是NRC20合约         |
+### Example response data: 
+略
 
 4.10 获取合约方法信息
 =============
@@ -1104,6 +1421,8 @@ _**详细描述: 获取合约方法信息**_
 | view                                                     |     boolean     | 是否视图方法（调用此方法数据不上链） |
 | event                                                    |     boolean     | 是否是事件              |
 | payable                                                  |     boolean     | 是否是可接受主链资产转账的方法    |
+### Example response data: 
+略
 
 4.11 获取合约方法参数类型
 ===============
@@ -1125,6 +1444,8 @@ _**详细描述: 获取合约方法参数类型**_
 | 字段名 |      字段类型       | 参数描述 |
 | --- |:---------------:| ---- |
 | 返回值 | list&lt;string> |      |
+### Example response data: 
+略
 
 4.12 验证发布合约
 ===========
@@ -1150,6 +1471,8 @@ _**详细描述: 验证发布合约**_
 | success | boolean | 验证成功与否    |
 | code    | string  | 验证失败的错误码  |
 | msg     | string  | 验证失败的错误信息 |
+### Example response data: 
+略
 
 4.13 验证调用合约
 ===========
@@ -1178,6 +1501,8 @@ _**详细描述: 验证调用合约**_
 | success | boolean | 验证成功与否    |
 | code    | string  | 验证失败的错误码  |
 | msg     | string  | 验证失败的错误信息 |
+### Example response data: 
+略
 
 4.14 验证删除合约
 ===========
@@ -1200,6 +1525,8 @@ _**详细描述: 验证删除合约**_
 | success | boolean | 验证成功与否    |
 | code    | string  | 验证失败的错误码  |
 | msg     | string  | 验证失败的错误信息 |
+### Example response data: 
+略
 
 4.15 估算发布合约交易的GAS
 =================
@@ -1221,6 +1548,8 @@ _**详细描述: 估算发布合约交易的GAS**_
 | 字段名      | 字段类型 | 参数描述              |
 | -------- |:----:| ----------------- |
 | gasLimit | long | 消耗的gas值，执行失败返回数值1 |
+### Example response data: 
+略
 
 4.16 估算调用合约交易的GAS
 =================
@@ -1245,6 +1574,8 @@ _**详细描述: 估算调用合约交易的GAS**_
 | 字段名      | 字段类型 | 参数描述              |
 | -------- |:----:| ----------------- |
 | gasLimit | long | 消耗的gas值，执行失败返回数值1 |
+### Example response data: 
+略
 
 4.17 调用合约不上链方法
 ==============
@@ -1267,6 +1598,8 @@ _**详细描述: 调用合约不上链方法**_
 | 字段名    |  字段类型  | 参数描述      |
 | ------ |:------:| --------- |
 | result | string | 视图方法的调用结果 |
+### Example response data: 
+略
 
 4.18 离线 - 发布合约交易
 ================
@@ -1292,6 +1625,8 @@ _**详细描述: 离线 - 发布合约交易**_
 | hash            | string | 交易hash   |
 | txHex           | string | 交易序列化字符串 |
 | contractAddress | string | 生成的合约地址  |
+### Example response data: 
+略
 
 4.19 离线 - 调用合约
 ==============
@@ -1318,6 +1653,8 @@ _**详细描述: 离线 - 调用合约**_
 | ----- |:------:| -------- |
 | hash  | string | 交易hash   |
 | txHex | string | 交易序列化字符串 |
+### Example response data: 
+略
 
 4.20 离线 - 删除合约
 ==============
@@ -1340,6 +1677,8 @@ _**详细描述: 离线 - 删除合约**_
 | ----- |:------:| -------- |
 | hash  | string | 交易hash   |
 | txHex | string | 交易序列化字符串 |
+### Example response data: 
+略
 
 4.21 离线 - token转账
 =================
@@ -1364,6 +1703,8 @@ _**详细描述: 离线 - token转账**_
 | ----- |:------:| -------- |
 | hash  | string | 交易hash   |
 | txHex | string | 交易序列化字符串 |
+### Example response data: 
+略
 
 4.22 离线 - 从账户地址向合约地址转账(主链资产)的合约交易
 =================================
@@ -1387,6 +1728,8 @@ _**详细描述: 离线 - 从账户地址向合约地址转账(主链资产)的�
 | ----- |:------:| -------- |
 | hash  | string | 交易hash   |
 | txHex | string | 交易序列化字符串 |
+### Example response data: 
+略
 
 5.1 创建共识节点
 ==========
@@ -1412,6 +1755,8 @@ _**详细描述: 创建共识节点**_
 | 字段名   |  字段类型  | 参数描述   |
 | ----- |:------:| ------ |
 | value | string | 交易hash |
+### Example response data: 
+略
 
 5.2 注销共识节点
 ==========
@@ -1433,19 +1778,21 @@ _**详细描述: 注销共识节点**_
 | 字段名   |  字段类型  | 参数描述   |
 | ----- |:------:| ------ |
 | value | string | 交易hash |
+### Example response data: 
+略
 
-5.3 申请参与共识
+5.3 委托参与共识
 ==========
 Cmd: depositToAgent
 -------------------
-_**详细描述: 申请参与共识**_
+_**详细描述: 委托参与共识**_
 
 参数列表
 ----
 | 参数名                                                       |    参数类型     | 参数描述     | 是否必填 |
 | --------------------------------------------------------- |:-----------:| -------- |:----:|
 | chainId                                                   |     int     | 链ID      |  是   |
-| 申请参与共识                                                    | depositform | 申请参与共识表单 |  是   |
+| 委托参与共识                                                    | depositform | 委托参与共识表单 |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address   |   string    | 参与共识账户地址 |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;agentHash |   string    | 共识节点hash |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deposit   |   string    | 参与共识的金额  |  是   |
@@ -1456,6 +1803,8 @@ _**详细描述: 申请参与共识**_
 | 字段名   |  字段类型  | 参数描述   |
 | ----- |:------:| ------ |
 | value | string | 交易hash |
+### Example response data: 
+略
 
 5.4 退出共识
 ========
@@ -1478,6 +1827,8 @@ _**详细描述: 退出共识**_
 | 字段名   |  字段类型  | 参数描述   |
 | ----- |:------:| ------ |
 | value | string | 交易hash |
+### Example response data: 
+略
 
 5.5 查询节点的委托共识列表
 ===============
@@ -1503,12 +1854,14 @@ _**详细描述: 查询节点的委托共识列表**_
 | txHash      | string | 委托交易hash  |
 | blockHeight |  long  | 委托时的区块高度  |
 | delHeight   |  long  | 退出委托的区块高度 |
+### Example response data: 
+略
 
 5.6 离线组装 - 创建共识节点
 =================
 Cmd: createAgentOffline
 -----------------------
-_**详细描述: 离线组装 - 创建共识节点**_
+_**详细描述: 参与共识所需资产可通过查询链信息接口获取(agentChainId和agentAssetId)**_
 
 参数列表
 ----
@@ -1534,6 +1887,8 @@ _**详细描述: 离线组装 - 创建共识节点**_
 | ----- |:------:| -------- |
 | hash  | string | 交易hash   |
 | txHex | string | 交易序列化字符串 |
+### Example response data: 
+略
 
 5.7 离线组装 - 注销共识节点
 =================
@@ -1566,19 +1921,21 @@ _**详细描述: 组装交易的StopDepositDto信息，可通过查询节点的�
 | ----- |:------:| -------- |
 | hash  | string | 交易hash   |
 | txHex | string | 交易序列化字符串 |
+### Example response data: 
+略
 
-5.8 离线组装 - 申请参与共识
+5.8 离线组装 - 委托参与共识
 =================
 Cmd: depositToAgentOffline
 --------------------------
-_**详细描述: 离线组装 - 申请参与共识**_
+_**详细描述: 参与共识所需资产可通过查询链信息接口获取(agentChainId和agentAssetId)**_
 
 参数列表
 ----
 | 参数名                                                                                                          |    参数类型    | 参数描述       | 是否必填 |
 | ------------------------------------------------------------------------------------------------------------ |:----------:| ---------- |:----:|
 | chainId                                                                                                      |    int     | 链ID        |  是   |
-| 离线申请参与共识                                                                                                     | depositdto | 离线申请参与共识表单 |  是   |
+| 离线委托参与共识                                                                                                     | depositdto | 离线委托参与共识表单 |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address                                                      |   string   | 账户地址       |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deposit                                                      | biginteger | 委托金额       |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;agentHash                                                    |   string   | 共识节点hash   |  是   |
@@ -1595,6 +1952,8 @@ _**详细描述: 离线组装 - 申请参与共识**_
 | ----- |:------:| -------- |
 | hash  | string | 交易hash   |
 | txHex | string | 交易序列化字符串 |
+### Example response data: 
+略
 
 5.9 离线组装 - 退出共识
 ===============
@@ -1624,4 +1983,6 @@ _**详细描述: 离线组装 - 退出共识**_
 | ----- |:------:| -------- |
 | hash  | string | 交易hash   |
 | txHex | string | 交易序列化字符串 |
+### Example response data: 
+略
 
