@@ -1,6 +1,17 @@
 #!/bin/bash
 cd `dirname $0`
 . build/func
+echo $1
+BASE_MODULES="$(pwd)/.base_modules"
+if [ -n "$1" ]; then
+    if [ -f "$BASE_MODULES" ]; then
+        rm -f "$BASE_MODULES"
+    fi
+    IFS=',' read -ra ddm <<< "$1"
+    for i in "${ddm[@]}"; do
+        echo $i >> "$BASE_MODULES"
+    done
+fi
 ROOT_PATH=`pwd`
 BUILD_PATH="${ROOT_PATH}/build"
 OUT_PATH="${ROOT_PATH}/outer"
@@ -51,10 +62,42 @@ do
 		if [ "${cfgDomain}" != "[JAVA]" ]; then
 			echo $line >> $moduleNcf
 		fi
-done < ./module.ncf
+done < ./module.ncfCD
+
+
+hasPackageModule(){
+    while read line
+	do
+		if [ "${line}" == $1 ]; then
+			echo '1';
+		fi
+	done < $BASE_MODULES
+}
+
+moduleDynamicDependent=`getModuleItem ./module.ncf "moduleDynamicDependent"`;  #模块动态依赖
+dependent=
+if [ -n "${moduleDynamicDependent}" ]; then
+    IFS=',' read -ra ddm <<< "${moduleDynamicDependent}"
+    for i in "${ddm[@]}"; do
+        isPackage=`hasPackageModule $i`
+        if [ "${isPackage}" == "1" ]; then
+            if [ -n "$dependent" ]; then
+                dependent="${dependent},"
+            fi
+            dependent="${dependent}${i}"
+        fi
+    done
+    if [ -n "$dependent" ];
+    then
+        echo "dynamic dependent : $dependent"
+        echo "dependent=$dependent" >> $moduleNcf
+    fi
+fi
+
+${ROOT_PATH}/build/merge-ncf "${ROOT_PATH}/build/module-prod.ncf" $moduleNcf $moduleName
+
 cfgDomain=""
 sedCommand="sed "
-${ROOT_PATH}/build/merge-ncf "${ROOT_PATH}/build/module-prod.ncf" $moduleNcf $moduleName
 #rm $moduleNcf
 sedCommand+=" -e 's/%APP_NAME%/${moduleName}/g' "
 sedCommand+=" -e 's/%VERSION%/${version}/g' "
