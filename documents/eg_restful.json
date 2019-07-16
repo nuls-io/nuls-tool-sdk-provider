@@ -1,12 +1,12 @@
 {
   "/api/contract/create": {
     "request": {},
-    "requestPath": "http://localhost:9898/api/contract/create",
+    "requestPath": "",
     "response" : {"success":true,"data":{"txHash":"0e770f75b0daca9b5ad2132cbc81d12b622cb3827778088ed32f2485bcda651d","contractAddress":"tNULSeBaN77MT2aLDi45CYP6mbSbnEgBa7Mdpo"}}
   },
   "/api/contract/call": {
     "request": {},
-    "requestPath": "http://localhost:9898/api/contract/call",
+    "requestPath": "",
     "response" : {"success":true,"data":{"txHash":"f0a5fc5d20c39355e35f1fe8011b1a28e7c65d8566ae8d76b297a22d1110851d"}}
   },
   "/api/contract/result/{hash}": {

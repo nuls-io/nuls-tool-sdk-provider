@@ -276,7 +276,7 @@ public class ContractController {
 
 
     @RpcMethod("tokentransfer")
-    @ApiOperation(description = "token转账", order = 404)
+    @ApiOperation(description = "合约token转账", order = 404)
     @Parameters(value = {
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链id"),
             @Parameter(parameterName = "fromAddress", parameterDes = "交易创建者账户地址"),
@@ -407,7 +407,7 @@ public class ContractController {
 
 
     @RpcMethod("getTokenBalance")
-    @ApiOperation(description = "获取账户地址的指定token余额", order = 406)
+    @ApiOperation(description = "获取账户地址的指定合约的token余额", order = 406)
     @Parameters({
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链id"),
             @Parameter(parameterName = "contractAddress", parameterDes = "合约地址"),
@@ -1031,7 +1031,7 @@ public class ContractController {
 
 
     @RpcMethod("tokentransferOffline")
-    @ApiOperation(description = "离线 - token转账", order = 453)
+    @ApiOperation(description = "离线 - 合约token转账", order = 453)
     @Parameters(value = {
         @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链id"),
         @Parameter(parameterName = "fromAddress", parameterDes = "交易创建者账户地址"),

@@ -178,7 +178,7 @@ public class ContractResource {
     @POST
     @Path("/tokentransfer")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "token转账", order = 404)
+    @ApiOperation(description = "合约token转账", order = 404)
     @Parameters({
             @Parameter(parameterName = "token转账", parameterDes = "token转账表单", requestType = @TypeDescriptor(value = ContractTokenTransfer.class))
     })
@@ -244,7 +244,7 @@ public class ContractResource {
     @GET
     @Path("/balance/token/{contractAddress}/{address}")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "获取账户地址的指定token余额", order = 406)
+    @ApiOperation(description = "获取账户地址的指定合约的token余额", order = 406)
     @Parameters({
             @Parameter(parameterName = "contractAddress", parameterDes = "合约地址"),
             @Parameter(parameterName = "address", parameterDes = "账户地址")
@@ -619,7 +619,7 @@ public class ContractResource {
     @POST
     @Path("/tokentransfer/offline")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "离线组装 - token转账交易", order = 453)
+    @ApiOperation(description = "离线组装 - 合约token转账交易", order = 453)
     @Parameters(value = {
         @Parameter(parameterName = "token转账离线交易", parameterDes = "token转账离线交易表单", requestType = @TypeDescriptor(value = ContractTokenTransferOffline.class))
     })
