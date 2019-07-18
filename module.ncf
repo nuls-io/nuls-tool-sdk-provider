@@ -10,5 +10,5 @@ VERSION=1.0.0
 Managed=1
 
 [nuls-sdk-provider]
-#moduleDynamicDependent=smart-contract,cross-chain
-dependent=smart-contract,cross-chain
+moduleDynamicDependent=smart-contract,cross-chain
+#dependent=smart-contract,cross-chain
