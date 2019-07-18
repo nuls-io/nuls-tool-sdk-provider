@@ -8,13 +8,15 @@ import io.nuls.core.core.annotation.Configuration;
 import io.nuls.core.core.annotation.Value;
 import io.nuls.core.exception.NulsException;
 
+import static io.nuls.api.constant.SdkConstant.SDK_PROVIDER_DOMAIN;
+
 /**
  * @Author: zhoulijun
  * @Time: 2019-03-07 16:56
  * @Description:
  */
 @Component
-@Configuration(domain = "sdk_provider")
+@Configuration(domain = SDK_PROVIDER_DOMAIN)
 public class Config implements ModuleConfig {
 
     private String providerType;

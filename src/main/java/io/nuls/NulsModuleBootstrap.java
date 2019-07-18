@@ -16,6 +16,10 @@ import io.nuls.core.rpc.modulebootstrap.RpcModuleState;
 import io.nuls.v2.NulsSDKBootStrap;
 import io.nuls.v2.SDKContext;
 
+import java.util.Map;
+
+import static io.nuls.api.constant.SdkConstant.SDK_PROVIDER_DOMAIN;
+
 /**
  * @Author: zhoulijun
  * @Time: 2019-06-10 19:27
@@ -33,17 +37,34 @@ public abstract class NulsModuleBootstrap extends RpcModule {
     public static void main(String[] args) {
         if (args == null || args.length == 0) {
             args = new String[]{"ws://" + HostInfo.getLocalIP() + ":7771"};
-            //args = new String[]{"ws://192.168.1.40:7771"};
         }
         ConfigurationLoader configurationLoader = new ConfigurationLoader();
         configurationLoader.load();
         Provider.ProviderType providerType = Provider.ProviderType.valueOf(configurationLoader.getValue("providerType"));
         int defaultChainId = Integer.parseInt(configurationLoader.getValue("chainId"));
         ServiceManager.init(defaultChainId, providerType);
-        NulsRpcModuleBootstrap.run("io.nuls",args);
-        RpcServerManager.getInstance().startServer("0.0.0.0", 9898);
+        NulsRpcModuleBootstrap.run("io.nuls", args);
+
+        initRpcServer(configurationLoader);
         NulsSDKBootStrap.init(defaultChainId);
         SDKContext.nuls_chain_id = defaultChainId;
+    }
+
+    private static void initRpcServer(ConfigurationLoader configurationLoader) {
+        String server_ip = "0.0.0.0";
+        int server_port = 9898;
+        Map<String, ConfigurationLoader.ConfigItem> configItemMap = configurationLoader.getConfigData().get(SDK_PROVIDER_DOMAIN);
+        if (configItemMap != null) {
+            ConfigurationLoader.ConfigItem serverIp = configItemMap.get("server_ip");
+            if (serverIp != null) {
+                server_ip = serverIp.getValue();
+            }
+            ConfigurationLoader.ConfigItem serverPort = configItemMap.get("server_port");
+            if (serverPort != null) {
+                server_port = Integer.parseInt(serverPort.getValue());
+            }
+        }
+        RpcServerManager.getInstance().startServer(server_ip, server_port);
     }
 
 
@@ -60,7 +81,7 @@ public abstract class NulsModuleBootstrap extends RpcModule {
 
     @Override
     public Module moduleInfo() {
-        return new Module(moduleName,ROLE);
+        return new Module(moduleName, ROLE);
     }
 
     @Override
