@@ -10,6 +10,10 @@
      
      HttpMethod: POST
      
+     URL: http://${ip}:${port}/jsonrpc 
+     
+        示例: http://127.0.0.1:9898/jsonrpc
+     
      请求数据格式: 
      
      ```json
@@ -26,6 +30,32 @@
      添加请求头 Content-Type: application/json;charset=UTF-8
      
      其余请参考 [RESTFUL 接口文档](https://github.com/nuls-io/nuls-sdk-provider/blob/master/documents/nuls-sdk-provider_RESTFUL.md)
+
+## HttpServer默认IP和Port
+
+- 默认值
+
+    `ip: 0.0.0.0`
+    
+    `port : 9898`
+
+- 如何更改
+
+    编辑项目根路径下的module.ncf文件 `${project}/module.ncf`
+    
+    找到组`[sdk-provider]`
+    
+    更改`server_ip`和`server_port`
+    
+    ```ncf
+    [sdk-provider]
+    moduleDynamicDependent=smart-contract,cross-chain
+    #dependent=smart-contract,cross-chain
+    # httpServer的启动ip
+    server_ip=0.0.0.0
+    # httpServer的启动port
+    server_port=9898
+    ```
 
 
 ## 接口文档
