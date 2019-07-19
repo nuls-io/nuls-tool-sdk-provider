@@ -29,5 +29,5 @@ package io.nuls.api.constant;
  * @date: 2019-07-18
  */
 public interface SdkConstant {
-    String SDK_PROVIDER_DOMAIN = "sdk-provider";
+    String SDK_PROVIDER_DOMAIN = "nuls-sdk-provider";
 }
