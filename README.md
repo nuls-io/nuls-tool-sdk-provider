@@ -43,14 +43,14 @@
 
     编辑项目根路径下的module.ncf文件 `${project}/module.ncf`
     
-    找到组`[sdk-provider]`
+    找到组`[nuls-sdk-provider]`
     
     更改`server_ip`和`server_port`
     
     ```ncf
-    [sdk-provider]
-    moduleDynamicDependent=smart-contract,cross-chain
+    [nuls-sdk-provider]
     #dependent=smart-contract,cross-chain
+    moduleDynamicDependent=smart-contract,cross-chain
     # httpServer的启动ip
     server_ip=0.0.0.0
     # httpServer的启动port
