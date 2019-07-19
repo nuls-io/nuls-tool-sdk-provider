@@ -51,9 +51,9 @@
     [nuls-sdk-provider]
     #dependent=smart-contract,cross-chain
     moduleDynamicDependent=smart-contract,cross-chain
-    # httpServer的启动ip
+    #httpServer的启动ip
     server_ip=0.0.0.0
-    # httpServer的启动port
+    #httpServer的启动port
     server_port=9898
     ```
 
