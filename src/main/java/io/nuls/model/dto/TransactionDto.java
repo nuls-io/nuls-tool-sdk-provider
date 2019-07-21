@@ -62,6 +62,8 @@ public class TransactionDto {
     private String remark;
     @ApiModelProperty(description = "交易签名")
     private String transactionSignature;
+    @ApiModelProperty(description = "交易业务数据序列化字符串")
+    private String txDataHex;
     @ApiModelProperty(description = "交易状态 0:unConfirm(待确认), 1:confirm(已确认)")
     private int status = 0;
     @ApiModelProperty(description = "交易大小")
@@ -82,6 +84,7 @@ public class TransactionDto {
         this.size = transaction.getSize();
         this.time = DateUtils.timeStamp2DateStr(transaction.getTime()*1000);
         this.transactionSignature = RPCUtil.encode(transaction.getTransactionSignature());
+        this.txDataHex = RPCUtil.encode(transaction.getTxData());
         this.type = transaction.getType();
         CoinData coinData = transaction.getCoinDataInstance();
         this.form = coinData.getFrom().stream().map(from -> new CoinFromDto(from)).collect(Collectors.toList());

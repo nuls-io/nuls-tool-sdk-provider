@@ -40,7 +40,7 @@ public class DepthTest {
 
     @Test
     public void test() {
-        System.out.println(Utils.getDepth(Depth5.class));
+        System.out.println(Utils.getDepth(Depth2.class));
     }
 
     static class Depth5 {
@@ -48,12 +48,12 @@ public class DepthTest {
     }
 
     static class Depth4 {
-        TestDepth testDepth;
-        List<TestDepth> testDepths;
-        Map<TestDepth, TestDepth> testDepthMap;
+        Depth3 testDepth;
+        List<Depth3> testDepths;
+        Map<Depth3, Depth3> testDepthMap;
     }
 
-    static class TestDepth {
+    static class Depth3 {
         private List<ContractMergedTransferDto> transfers;
         private List<String> events;
         private List<String> events1;
@@ -62,6 +62,14 @@ public class DepthTest {
         private List<String> contractTxList;
         private List<ProgramMethod> methods;
         private Map<String, ProgramMethod> map;
+        private Set<ProgramMethodArg> set;
+        private String password;
+        private BigInteger amount;
+        private Integer a;
+        private int b;
+    }
+
+    static class Depth2 {
         private Set<ProgramMethodArg> set;
         private String password;
         private BigInteger amount;

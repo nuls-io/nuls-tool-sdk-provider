@@ -77,6 +77,7 @@ public class Utils {
     private static int getDepth(Class cls, int depth) {
         if(depth > 3) {
             throw new RuntimeException("exceed depth");
+            //return depth;
         }
         if (SdkProviderDocTool.baseType.contains(cls)) {
             return depth;
