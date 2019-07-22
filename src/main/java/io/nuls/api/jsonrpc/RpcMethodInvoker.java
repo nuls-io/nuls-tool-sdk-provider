@@ -60,12 +60,12 @@ public class RpcMethodInvoker {
 
                 result.setError(new RpcResultError(nulsException.getErrorCode()));
             } else {
-                Log.error(e.getCause());
+                Log.error(e);
                 result = new RpcResult();
                 RpcResultError error = new RpcResultError();
                 error.setMessage("system error");
                 error.setCode("-32603");
-                error.setData(e.getCause().getMessage());
+                error.setData(e.getMessage());
                 result.setError(error);
             }
         }
