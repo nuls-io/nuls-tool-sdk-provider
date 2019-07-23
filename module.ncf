@@ -15,4 +15,4 @@ moduleDynamicDependent=smart-contract,cross-chain
 #httpServer的启动ip
 server_ip=0.0.0.0
 #httpServer的启动port
-server_port=9898
+server_port=18004
