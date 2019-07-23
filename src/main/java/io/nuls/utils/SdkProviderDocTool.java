@@ -63,6 +63,7 @@ public class SdkProviderDocTool {
         baseType.add(byte.class);
         baseType.add(String.class);
         baseType.add(Object[].class);
+        baseType.add(String[].class);
         baseType.add(BigInteger.class);
         baseType.add(BigDecimal.class);
     }

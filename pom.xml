@@ -34,7 +34,7 @@
         <dependency>
             <groupId>io.nuls.v2</groupId>
             <artifactId>sdk4j</artifactId>
-            <version>${nuls.v2.version}</version>
+            <version>1.0.0-beta1.1</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>

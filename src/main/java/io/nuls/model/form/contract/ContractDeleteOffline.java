@@ -30,6 +30,8 @@ import io.nuls.model.form.Base;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigInteger;
+
 /**
  * @author: PierreLuo
  * @date: 2019-07-04
@@ -41,6 +43,10 @@ public class ContractDeleteOffline extends Base {
 
     @ApiModelProperty(description = "交易创建者", required = true)
     private String sender;
+    @ApiModelProperty(description = "账户余额")
+    private BigInteger senderBalance;
+    @ApiModelProperty(description = "账户nonce值")
+    private String nonce;
     @ApiModelProperty(description = "智能合约地址", required = true)
     private String contractAddress;
     @ApiModelProperty(description = "备注", required = false)

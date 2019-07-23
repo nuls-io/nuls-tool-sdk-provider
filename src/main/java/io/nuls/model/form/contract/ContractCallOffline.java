@@ -45,8 +45,14 @@ public class ContractCallOffline extends Base {
 
     @ApiModelProperty(description = "交易创建者")
     private String sender;
+    @ApiModelProperty(description = "账户余额")
+    private BigInteger senderBalance;
+    @ApiModelProperty(description = "账户nonce值")
+    private String nonce;
     @ApiModelProperty(description = "智能合约地址", required = true)
     private String contractAddress;
+    @ApiModelProperty(description = "GAS限制")
+    private long gasLimit;
     @ApiModelProperty(description = "调用者向合约地址转入的主网资产金额，没有此业务时填0")
     private BigInteger value;
     @ApiModelProperty(description = "方法名", required = true)
@@ -55,6 +61,8 @@ public class ContractCallOffline extends Base {
     private String methodDesc;
     @ApiModelProperty(description = "参数列表", required = false)
     private Object[] args;
+    @ApiModelProperty(description = "参数类型列表", required = false)
+    private String[] argsType;
     @ApiModelProperty(description = "备注", required = false)
     private String remark;
 

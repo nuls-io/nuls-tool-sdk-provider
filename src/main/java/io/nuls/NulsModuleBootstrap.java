@@ -46,8 +46,7 @@ public abstract class NulsModuleBootstrap extends RpcModule {
         NulsRpcModuleBootstrap.run("io.nuls", args);
 
         initRpcServer(configurationLoader);
-        NulsSDKBootStrap.init(defaultChainId);
-        SDKContext.nuls_chain_id = defaultChainId;
+        NulsSDKBootStrap.init(defaultChainId, null);
     }
 
     private static void initRpcServer(ConfigurationLoader configurationLoader) {

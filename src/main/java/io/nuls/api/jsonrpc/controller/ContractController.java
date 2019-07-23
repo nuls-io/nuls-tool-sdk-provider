@@ -279,11 +279,11 @@ public class ContractController {
     @ApiOperation(description = "合约token转账", order = 404)
     @Parameters(value = {
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链id"),
-            @Parameter(parameterName = "fromAddress", parameterDes = "交易创建者账户地址"),
-            @Parameter(parameterName = "password", parameterDes = "调用者账户密码"),
-            @Parameter(parameterName = "toAddress", parameterDes = "调用者向合约地址转入的主网资产金额，没有此业务时填BigInteger.ZERO"),
-            @Parameter(parameterName = "contractAddress", parameterDes = "合约地址"),
-            @Parameter(parameterName = "amount", requestType = @TypeDescriptor(value = BigInteger.class), parameterDes = "合约方法"),
+            @Parameter(parameterName = "fromAddress", parameterDes = "转出者账户地址"),
+            @Parameter(parameterName = "password", parameterDes = "转出者账户密码"),
+            @Parameter(parameterName = "toAddress", parameterDes = "转入者账户地址"),
+            @Parameter(parameterName = "contractAddress", parameterDes = "token合约地址"),
+            @Parameter(parameterName = "amount", requestType = @TypeDescriptor(value = BigInteger.class), parameterDes = "转出的token资产金额"),
             @Parameter(parameterName = "remark",  parameterDes = "交易备注", canNull = true)
     })
     @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
@@ -347,10 +347,10 @@ public class ContractController {
     @ApiOperation(description = "从账户地址向合约地址转账(主链资产)的合约交易", order = 405)
     @Parameters(value = {
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链id"),
-            @Parameter(parameterName = "fromAddress", parameterDes = "交易创建者账户地址"),
-            @Parameter(parameterName = "password", parameterDes = "调用者账户密码"),
-            @Parameter(parameterName = "toAddress", parameterDes = "调用者向合约地址转入的主网资产金额，没有此业务时填BigInteger.ZERO"),
-            @Parameter(parameterName = "amount", requestType = @TypeDescriptor(value = BigInteger.class), parameterDes = "合约方法"),
+            @Parameter(parameterName = "fromAddress", parameterDes = "转出者账户地址"),
+            @Parameter(parameterName = "password", parameterDes = "转出者账户密码"),
+            @Parameter(parameterName = "toAddress", parameterDes = "转入者账户地址"),
+            @Parameter(parameterName = "amount", requestType = @TypeDescriptor(value = BigInteger.class), parameterDes = "转出的主链资产金额"),
             @Parameter(parameterName = "remark",  parameterDes = "交易备注", canNull = true)
     })
     @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
@@ -873,9 +873,13 @@ public class ContractController {
     @Parameters(value = {
         @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链id"),
         @Parameter(parameterName = "sender",  parameterDes = "交易创建者账户地址"),
+        @Parameter(parameterName = "senderBalance", requestType = @TypeDescriptor(value = BigInteger.class), parameterDes = "账户余额"),
+        @Parameter(parameterName = "nonce", parameterDes = "账户nonce值"),
         @Parameter(parameterName = "alias",  parameterDes = "合约别名"),
         @Parameter(parameterName = "contractCode",  parameterDes = "智能合约代码(字节码的Hex编码字符串)"),
+        @Parameter(parameterName = "gasLimit", requestType = @TypeDescriptor(value = long.class), parameterDes = "设置合约执行消耗的gas上限"),
         @Parameter(parameterName = "args", requestType = @TypeDescriptor(value = Object[].class), parameterDes = "参数列表", canNull = true),
+        @Parameter(parameterName = "argsType", requestType = @TypeDescriptor(value = String[].class), parameterDes = "参数类型列表", canNull = true),
         @Parameter(parameterName = "remark",  parameterDes = "交易备注", canNull = true)
     })
     @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
@@ -889,10 +893,19 @@ public class ContractController {
             int i = 0;
             Integer chainId = (Integer) params.get(i++);
             String sender = (String) params.get(i++);
+            BigInteger senderBalance = new BigInteger(params.get(i++).toString());
+            String nonce = (String) params.get(i++);
             String alias = (String) params.get(i++);
             String contractCode = (String) params.get(i++);
+            long gasLimit = Long.parseLong(params.get(i++).toString());
             List argsList = (List) params.get(i++);
             Object[] args = argsList != null ? argsList.toArray() : null;
+            List<String> argsTypeList = (List) params.get(i++);
+            String[] argsType = null;
+            if(argsTypeList != null) {
+                argsType = new String[argsTypeList.size()];
+                argsTypeList.toArray(argsType);
+            }
             String remark = (String) params.get(i++);
 
             if (!Context.isChainExist(chainId)) {
@@ -912,9 +925,13 @@ public class ContractController {
             }
             io.nuls.core.basic.Result<Map> result = NulsSDKTool.createContractTxOffline(
                     sender,
+                    senderBalance,
+                    nonce,
                     alias,
                     contractCode,
+                    gasLimit,
                     args,
+                    argsType,
                     remark);
             return ResultUtil.getJsonRpcResult(result);
         } catch (Exception e) {
@@ -928,11 +945,15 @@ public class ContractController {
     @Parameters(value = {
         @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链id"),
         @Parameter(parameterName = "sender",  parameterDes = "交易创建者账户地址"),
+        @Parameter(parameterName = "senderBalance", requestType = @TypeDescriptor(value = BigInteger.class), parameterDes = "账户余额"),
+        @Parameter(parameterName = "nonce", parameterDes = "账户nonce值"),
         @Parameter(parameterName = "value", requestType = @TypeDescriptor(value = BigInteger.class), parameterDes = "调用者向合约地址转入的主网资产金额，没有此业务时填BigInteger.ZERO"),
         @Parameter(parameterName = "contractAddress",  parameterDes = "合约地址"),
+        @Parameter(parameterName = "gasLimit", requestType = @TypeDescriptor(value = long.class), parameterDes = "设置合约执行消耗的gas上限"),
         @Parameter(parameterName = "methodName",  parameterDes = "合约方法"),
         @Parameter(parameterName = "methodDesc",  parameterDes = "合约方法描述，若合约内方法没有重载，则此参数可以为空", canNull = true),
         @Parameter(parameterName = "args", requestType = @TypeDescriptor(value = Object[].class), parameterDes = "参数列表", canNull = true),
+        @Parameter(parameterName = "argsType", requestType = @TypeDescriptor(value = String[].class), parameterDes = "参数类型列表", canNull = true),
         @Parameter(parameterName = "remark",  parameterDes = "交易备注", canNull = true)
     })
     @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
@@ -945,6 +966,8 @@ public class ContractController {
             int i = 0;
             Integer chainId = (Integer) params.get(i++);
             String sender = (String) params.get(i++);
+            BigInteger senderBalance = new BigInteger(params.get(i++).toString());
+            String nonce = (String) params.get(i++);
             Object valueObj = params.get(i++);
             if(valueObj == null) {
                 valueObj = "0";
@@ -954,10 +977,17 @@ public class ContractController {
                 return RpcResult.paramError(String.format("value [%s] is invalid", value.toString()));
             }
             String contractAddress = (String) params.get(i++);
+            long gasLimit = Long.parseLong(params.get(i++).toString());
             String methodName = (String) params.get(i++);
             String methodDesc = (String) params.get(i++);
             List argsList = (List) params.get(i++);
             Object[] args = argsList != null ? argsList.toArray() : null;
+            List<String> argsTypeList = (List) params.get(i++);
+            String[] argsType = null;
+            if(argsTypeList != null) {
+                argsType = new String[argsTypeList.size()];
+                argsTypeList.toArray(argsType);
+            }
             String remark = (String) params.get(i++);
 
             if (!Context.isChainExist(chainId)) {
@@ -975,11 +1005,15 @@ public class ContractController {
 
             io.nuls.core.basic.Result<Map> result = NulsSDKTool.callContractTxOffline(
                     sender,
+                    senderBalance,
+                    nonce,
                     value,
                     contractAddress,
+                    gasLimit,
                     methodName,
                     methodDesc,
                     args,
+                    argsType,
                     remark);
             return ResultUtil.getJsonRpcResult(result);
         } catch (Exception e) {
@@ -994,6 +1028,8 @@ public class ContractController {
     @Parameters(value = {
         @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链id"),
         @Parameter(parameterName = "sender", parameterDes = "交易创建者账户地址"),
+        @Parameter(parameterName = "senderBalance", requestType = @TypeDescriptor(value = BigInteger.class), parameterDes = "账户余额"),
+        @Parameter(parameterName = "nonce", parameterDes = "账户nonce值"),
         @Parameter(parameterName = "contractAddress", parameterDes = "合约地址"),
         @Parameter(parameterName = "remark", parameterDes = "交易备注", canNull = true)
     })
@@ -1007,6 +1043,8 @@ public class ContractController {
             int i = 0;
             Integer chainId = (Integer) params.get(i++);
             String sender = (String) params.get(i++);
+            BigInteger senderBalance = new BigInteger(params.get(i++).toString());
+            String nonce = (String) params.get(i++);
             String contractAddress = (String) params.get(i++);
             String remark = (String) params.get(i++);
             if (!Context.isChainExist(chainId)) {
@@ -1020,6 +1058,8 @@ public class ContractController {
             }
             io.nuls.core.basic.Result<Map> result = NulsSDKTool.deleteContractTxOffline(
                     sender,
+                    senderBalance,
+                    nonce,
                     contractAddress,
                     remark);
             return ResultUtil.getJsonRpcResult(result);
@@ -1034,11 +1074,14 @@ public class ContractController {
     @ApiOperation(description = "离线 - 合约token转账", order = 453)
     @Parameters(value = {
         @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链id"),
-        @Parameter(parameterName = "fromAddress", parameterDes = "交易创建者账户地址"),
-        @Parameter(parameterName = "toAddress", parameterDes = "调用者向合约地址转入的主网资产金额，没有此业务时填BigInteger.ZERO"),
-        @Parameter(parameterName = "contractAddress", parameterDes = "合约地址"),
-        @Parameter(parameterName = "amount", requestType = @TypeDescriptor(value = BigInteger.class), parameterDes = "合约方法"),
-        @Parameter(parameterName = "remark",  parameterDes = "交易备注", canNull = true)
+        @Parameter(parameterName = "fromAddress", parameterDes = "转出者账户地址"),
+        @Parameter(parameterName = "senderBalance", requestType = @TypeDescriptor(value = BigInteger.class), parameterDes = "转出者账户余额"),
+        @Parameter(parameterName = "nonce", parameterDes = "转出者账户nonce值"),
+        @Parameter(parameterName = "toAddress", parameterDes = "转入者账户地址"),
+        @Parameter(parameterName = "contractAddress", parameterDes = "token合约地址"),
+        @Parameter(parameterName = "gasLimit", requestType = @TypeDescriptor(value = long.class), parameterDes = "设置合约执行消耗的gas上限"),
+        @Parameter(parameterName = "amount", requestType = @TypeDescriptor(value = BigInteger.class), parameterDes = "转出的token资产金额"),
+        @Parameter(parameterName = "remark", parameterDes = "交易备注", canNull = true)
     })
     @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
         @Key(name = "hash", description = "交易hash"),
@@ -1050,8 +1093,11 @@ public class ContractController {
             int i = 0;
             Integer chainId = (Integer) params.get(i++);
             String fromAddress = (String) params.get(i++);
+            BigInteger senderBalance = new BigInteger(params.get(i++).toString());
+            String nonce = (String) params.get(i++);
             String toAddress = (String) params.get(i++);
             String contractAddress = (String) params.get(i++);
+            long gasLimit = Long.parseLong(params.get(i++).toString());
             Object amountObj = params.get(i++);
             if(amountObj == null) {
                 return RpcResult.paramError("amount is empty");
@@ -1077,8 +1123,11 @@ public class ContractController {
 
             io.nuls.core.basic.Result<Map> result = NulsSDKTool.tokenTransferTxOffline(
                     fromAddress,
+                    senderBalance,
+                    nonce,
                     toAddress,
                     contractAddress,
+                    gasLimit,
                     amount,
                     remark);
             return ResultUtil.getJsonRpcResult(result);
@@ -1093,10 +1142,13 @@ public class ContractController {
     @ApiOperation(description = "离线 - 从账户地址向合约地址转账(主链资产)的合约交易", order = 454)
     @Parameters(value = {
         @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链id"),
-        @Parameter(parameterName = "fromAddress", parameterDes = "交易创建者账户地址"),
-        @Parameter(parameterName = "toAddress", parameterDes = "调用者向合约地址转入的主网资产金额，没有此业务时填BigInteger.ZERO"),
-        @Parameter(parameterName = "amount", requestType = @TypeDescriptor(value = BigInteger.class), parameterDes = "合约方法"),
-        @Parameter(parameterName = "remark",  parameterDes = "交易备注", canNull = true)
+        @Parameter(parameterName = "fromAddress", parameterDes = "转出者账户地址"),
+        @Parameter(parameterName = "senderBalance", requestType = @TypeDescriptor(value = BigInteger.class), parameterDes = "转出者账户余额"),
+        @Parameter(parameterName = "nonce", parameterDes = "转出者账户nonce值"),
+        @Parameter(parameterName = "toAddress", parameterDes = "转入的合约地址"),
+        @Parameter(parameterName = "gasLimit", requestType = @TypeDescriptor(value = long.class), parameterDes = "设置合约执行消耗的gas上限"),
+        @Parameter(parameterName = "amount", requestType = @TypeDescriptor(value = BigInteger.class), parameterDes = "转出的主链资产金额"),
+        @Parameter(parameterName = "remark", parameterDes = "交易备注", canNull = true)
     })
     @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
         @Key(name = "hash", description = "交易hash"),
@@ -1111,7 +1163,10 @@ public class ContractController {
                 return RpcResult.paramError(String.format("chainId [%s] is invalid", chainId));
             }
             String fromAddress = (String) params.get(i++);
+            BigInteger senderBalance = new BigInteger(params.get(i++).toString());
+            String nonce = (String) params.get(i++);
             String toAddress = (String) params.get(i++);
+            long gasLimit = Long.parseLong(params.get(i++).toString());
             Object amountObj = params.get(i++);
             if(amountObj == null) {
                 return RpcResult.paramError("amount is empty");
@@ -1134,7 +1189,10 @@ public class ContractController {
 
             io.nuls.core.basic.Result<Map> result = NulsSDKTool.transferToContractTxOffline(
                     fromAddress,
+                    senderBalance,
+                    nonce,
                     toAddress,
+                    gasLimit,
                     amount,
                     remark);
             return ResultUtil.getJsonRpcResult(result);

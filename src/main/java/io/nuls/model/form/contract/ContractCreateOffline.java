@@ -32,6 +32,8 @@ import io.nuls.v2.util.ContractUtil;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigInteger;
+
 /**
  * @author: PierreLuo
  * @date: 2019-07-04
@@ -43,12 +45,20 @@ public class ContractCreateOffline extends Base {
 
     @ApiModelProperty(description = "交易创建者")
     private String sender;
+    @ApiModelProperty(description = "账户余额")
+    private BigInteger senderBalance;
+    @ApiModelProperty(description = "账户nonce值")
+    private String nonce;
     @ApiModelProperty(description = "合约别名")
     private String alias;
     @ApiModelProperty(description = "智能合约代码(字节码的Hex编码字符串)")
     private String contractCode;
+    @ApiModelProperty(description = "GAS限制")
+    private long gasLimit;
     @ApiModelProperty(description = "参数列表", required = false)
     private Object[] args;
+    @ApiModelProperty(description = "参数类型列表", required = false)
+    private String[] argsType;
     @ApiModelProperty(description = "备注", required = false)
     private String remark;
 

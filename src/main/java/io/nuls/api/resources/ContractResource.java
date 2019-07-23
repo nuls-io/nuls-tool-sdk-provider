@@ -566,9 +566,13 @@ public class ContractResource {
     public RpcClientResult createTxOffline(ContractCreateOffline form) {
         io.nuls.core.basic.Result<Map> result = NulsSDKTool.createContractTxOffline(
                 form.getSender(),
+                form.getSenderBalance(),
+                form.getNonce(),
                 form.getAlias(),
                 form.getContractCode(),
+                form.getGasLimit(),
                 form.getArgs(),
+                form.getArgsType(),
                 form.getRemark());
         return ResultUtil.getRpcClientResult(result);
     }
@@ -587,11 +591,15 @@ public class ContractResource {
     public RpcClientResult callTxOffline(ContractCallOffline form) {
         io.nuls.core.basic.Result<Map> result = NulsSDKTool.callContractTxOffline(
                 form.getSender(),
+                form.getSenderBalance(),
+                form.getNonce(),
                 form.getValue(),
                 form.getContractAddress(),
+                form.getGasLimit(),
                 form.getMethodName(),
                 form.getMethodDesc(),
                 form.getArgs(),
+                form.getArgsType(),
                 form.getRemark());
         return ResultUtil.getRpcClientResult(result);
     }
@@ -611,6 +619,8 @@ public class ContractResource {
     public RpcClientResult deleteTxOffline(ContractDeleteOffline form) {
         io.nuls.core.basic.Result<Map> result = NulsSDKTool.deleteContractTxOffline(
                 form.getSender(),
+                form.getSenderBalance(),
+                form.getNonce(),
                 form.getContractAddress(),
                 form.getRemark());
         return ResultUtil.getRpcClientResult(result);
@@ -630,8 +640,11 @@ public class ContractResource {
     public RpcClientResult tokenTransferOffline(ContractTokenTransferOffline form) {
         io.nuls.core.basic.Result<Map> result = NulsSDKTool.tokenTransferTxOffline(
                 form.getFromAddress(),
+                form.getSenderBalance(),
+                form.getNonce(),
                 form.getToAddress(),
                 form.getContractAddress(),
+                form.getGasLimit(),
                 form.getAmount(),
                 form.getRemark());
         return ResultUtil.getRpcClientResult(result);
@@ -651,7 +664,10 @@ public class ContractResource {
     public RpcClientResult transferToContractOffline(ContractTransferOffline form) {
         io.nuls.core.basic.Result<Map> result = NulsSDKTool.transferToContractTxOffline(
                 form.getFromAddress(),
+                form.getSenderBalance(),
+                form.getNonce(),
                 form.getToAddress(),
+                form.getGasLimit(),
                 form.getAmount(),
                 form.getRemark());
         return ResultUtil.getRpcClientResult(result);
