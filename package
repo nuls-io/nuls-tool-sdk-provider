@@ -1,7 +1,7 @@
 #!/bin/bash
 cd `dirname $0`
 . build/func
-echo $1
+echo "$1 ======="
 BASE_MODULES="$(pwd)/.base_modules"
 if [ -n "$1" ]; then
     if [ -f "$BASE_MODULES" ]; then
@@ -136,5 +136,8 @@ echo "copy ${moduleBuildPath}/module.temp.ncf to ${OUT_PATH}/Module.ncf"
 cd $ROOT_PATH
 mvn package -Dmaven.test.skip=true
 mv "target/${APP_NAME}.jar" ${OUT_PATH}/${APP_NAME}-${version}.jar
+if [ -d "${OUT_PATH}/lib" ]; then 
+    rm -rf "${OUT_PATH}/lib";
+fi
 cp -r "target/libs" "${OUT_PATH}/lib"
 echo "============ PACKAGE FINISH 🍺🍺🍺🎉🎉🎉 ==============="
