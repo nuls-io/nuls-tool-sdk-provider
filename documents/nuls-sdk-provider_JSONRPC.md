@@ -86,7 +86,7 @@ int VERIFIER_CHANGE = 24;				// 验证人变更
      
      URL: http://${ip}:${port}/jsonrpc 
      
-        示例: http://127.0.0.1:9898/jsonrpc
+        示例: http://127.0.0.1:18004/jsonrpc
      
      请求数据格式: 
      
