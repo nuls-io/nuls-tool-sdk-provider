@@ -1031,14 +1031,14 @@ public class SdkProviderDocTool {
                 this.protocol = "http";
                 this.host = new ArrayList<>();
                 this.host.add("localhost");
-                this.port = "9898";
+                this.port = "18004";
                 this.path = new ArrayList<>();
             }
 
             public static Url jsonrpcInstance() {
                 Url url = new Url();
                 url.path.add("jsonrpc");
-                url.raw = "http://localhost:9898/jsonrpc";
+                url.raw = "http://localhost:18004/jsonrpc";
                 return url;
             }
         }
