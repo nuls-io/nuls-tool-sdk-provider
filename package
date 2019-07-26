@@ -134,7 +134,7 @@ echo "copy ${moduleBuildPath}/module.temp.ncf to ${OUT_PATH}/Module.ncf"
 
 
 cd $ROOT_PATH
-mvn package -Dmaven.test.skip=true
+mvn package -Dmaven.test.skip=true -Dskip.assembly.plugin=true
 mv "target/${APP_NAME}.jar" ${OUT_PATH}/${APP_NAME}-${version}.jar
 if [ -d "${OUT_PATH}/lib" ]; then 
     rm -rf "${OUT_PATH}/lib";
