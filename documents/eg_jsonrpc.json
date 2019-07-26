@@ -32,7 +32,7 @@
     "response" : {"jsonrpc":"2.0","id":"1234","result":{"totalBalance":"0","balance":"0","timeLock":"0","consensusLock":"0","freeze":"0","nonce":"0000000000000000","nonceType":1}}
   },
   "createAccountOffline": {
-    "request": {"jsonrpc":"2.0","method":"createAccountOffline","params":[2,1,"abcd1234"],"id":1234},
+    "request": {"jsonrpc":"2.0","method":"createAccountOffline","params":[2,1,"tNULS","abcd1234"],"id":1234},
     "response" : {"jsonrpc":"2.0","id":"1234","result":[{"address":"tNULSeBaMnS7et6FdFMMMLyK8Wvy1daVVeohfu","pubKey":"02756e0d0827df60f5806bc00c44f97a9f5c234f78502a314aa40bb0a0156cd9f0","prikey":"","encryptedPrivateKey":"720e9f7ac1ab2ee997bad249d1c42212a5c5c744358a7bc65f472a1fe61a87a8f0bc841fdc74c8313fe6c94f496f3676"}]}
   },
   "getPriKeyOffline": {

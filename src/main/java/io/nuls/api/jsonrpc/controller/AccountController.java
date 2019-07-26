@@ -416,13 +416,14 @@ public class AccountController {
     @Parameters(value = {
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
             @Parameter(parameterName = "count", requestType = @TypeDescriptor(value = int.class), parameterDes = "创建数量"),
+            @Parameter(parameterName = "prefix", requestType = @TypeDescriptor(value = String.class), parameterDes = "地址前缀", canNull = true),
             @Parameter(parameterName = "password", requestType = @TypeDescriptor(value = String.class), parameterDes = "密码")
     })
     @ResponseData(name = "返回值", description = "返回账户信息集合", responseType = @TypeDescriptor(value = List.class, collectionElement = AccountDto.class))
     public RpcResult createAccountOffline(List<Object> params) {
         VerifyUtils.verifyParams(params, 3);
         int chainId, count;
-        String password;
+        String prefix, password;
         try {
             chainId = (int) params.get(0);
         } catch (Exception e) {
@@ -434,7 +435,12 @@ public class AccountController {
             return RpcResult.paramError("[count] is inValid");
         }
         try {
-            password = (String) params.get(2);
+            prefix = (String) params.get(2);
+        } catch (Exception e) {
+            return RpcResult.paramError("[prefix] is inValid");
+        }
+        try {
+            password = (String) params.get(3);
         } catch (Exception e) {
             return RpcResult.paramError("[password] is inValid");
         }
@@ -444,7 +450,12 @@ public class AccountController {
         if (!Context.isChainExist(chainId)) {
             return RpcResult.paramError(String.format("chainId [%s] is invalid", chainId));
         }
-        io.nuls.core.basic.Result<List<AccountDto>> result = NulsSDKTool.createOffLineAccount(count, password);
+        io.nuls.core.basic.Result<List<AccountDto>> result;
+        if (StringUtils.isBlank(prefix)) {
+            result = NulsSDKTool.createOffLineAccount(count, password);
+        } else {
+            result = NulsSDKTool.createOffLineAccount(count, prefix, password);
+        }
         return ResultUtil.getJsonRpcResult(result);
     }
 

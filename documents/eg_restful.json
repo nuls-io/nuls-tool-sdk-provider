@@ -40,7 +40,7 @@
     "response" : {"success":true,"data":{"total":"10000000000000","freeze":"0","available":"10000000000000","timeLock":"0","consensusLock":"0","nonce":"0000000000000000","nonceType":1}}
   },
   "/api/account/offline": {
-    "request": {"count":1,"password":"abcd1234"},
+    "request": {"count":1,"prefix":"tNULS","password":"abcd1234"},
     "requestPath": "",
     "response" : {"success":true,"data":[{"address":"tNULSeBaMoS1x2VryPZGyaVSfbaqcLfhqhbXit","pubKey":"03a299ec3c3bbb3da290a10c1deafae08f1f630e5edab89cde65f4dc0c42537c42","prikey":"","encryptedPrivateKey":"56070f74ebbcbf0097d5ceca5fc075b76f5f59bd3851be02cab08d953330c327267a2406bc6173e3093520744219c491"}]}
   },
