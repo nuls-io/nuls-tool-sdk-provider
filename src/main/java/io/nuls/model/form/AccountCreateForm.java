@@ -38,6 +38,9 @@ public class AccountCreateForm extends Base{
     @ApiModelProperty(description = "新建账户数量")
     private int count;
 
+    @ApiModelProperty(description = "地址前缀", required = false)
+    private String prefix;
+
     @ApiModelProperty(description = "账户密码")
     private String password;
 
@@ -56,4 +59,13 @@ public class AccountCreateForm extends Base{
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public String getPrefix() {
+        return prefix;
+    }
+
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
+    }
+
 }

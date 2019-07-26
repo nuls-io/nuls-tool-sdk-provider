@@ -35,6 +35,7 @@ import io.nuls.core.core.annotation.Autowired;
 import io.nuls.core.core.annotation.Component;
 import io.nuls.core.crypto.HexUtil;
 import io.nuls.core.model.FormatValidUtils;
+import io.nuls.core.model.StringUtils;
 import io.nuls.core.parse.JSONUtils;
 import io.nuls.core.rpc.model.*;
 import io.nuls.model.ErrorData;
@@ -359,7 +360,12 @@ public class AccountResource {
         if (form == null) {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
         }
-        io.nuls.core.basic.Result<List<AccountDto>> result = NulsSDKTool.createOffLineAccount(form.getCount(), form.getPassword());
+        io.nuls.core.basic.Result<List<AccountDto>> result;
+        if(StringUtils.isBlank(form.getPrefix())){
+            result = NulsSDKTool.createOffLineAccount(form.getCount(), form.getPassword());
+        }else {
+            result = NulsSDKTool.createOffLineAccount(form.getCount(),form.getPrefix() ,form.getPassword());
+        }
         return ResultUtil.getRpcClientResult(result);
     }
 
