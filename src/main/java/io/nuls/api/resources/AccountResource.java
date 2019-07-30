@@ -346,6 +346,33 @@ public class AccountResource {
         }
     }
 
+
+    @POST
+    @Path("/multiSign/create")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "创建多签账户", order = 109, detailDesc = "根据多个账户的公钥创建多签账户，minSigns为多签账户创建交易时需要的最小签名数")
+    @Parameters({
+            @Parameter(parameterName = "创建多签账户", parameterDes = "创建多签账户表单", requestType = @TypeDescriptor(value = MultiSignAccountCreateForm.class))
+    })
+    public RpcClientResult createMultiSignAccount(MultiSignAccountCreateForm form) {
+        if(form.getPubKeys() == null || form.getPubKeys().isEmpty()) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "pubKeys is empty"));
+        }
+        if(form.getMinSigns() < 1 || form.getMinSigns() > form.getPubKeys().size()) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "[minSigns] is invalid"));
+        }
+        GenerateMultiSignAccountReq req = new GenerateMultiSignAccountReq();
+        req.setPubKeys(form.getPubKeys());
+        req.setMinSigns(form.getMinSigns());
+
+        Result<String> result = accountService.createMultiSignAccount(req);
+        RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
+        if (clientResult.isSuccess()) {
+            return clientResult.resultMap().map("value", clientResult.getData()).mapToData();
+        }
+        return clientResult;
+    }
+
     @POST
     @Path("/offline")
     @Produces(MediaType.APPLICATION_JSON)
