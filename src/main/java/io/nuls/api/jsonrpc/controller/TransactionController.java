@@ -310,7 +310,7 @@ public class TransactionController {
                 new TransferReq.TransferReqBuilder(chainId, assetId)
                         .addForm(address, password, new BigInteger(amount))
                         .addTo(toAddress, new BigInteger(amount)).setRemark(remark);
-        Result<String> result = transferService.transfer(builder.build());
+        Result<String> result = transferService.transfer(builder.build(new TransferReq()));
         if (result.isSuccess()) {
             Map resultMap = new HashMap(2);
             resultMap.put("hash", result.getData());

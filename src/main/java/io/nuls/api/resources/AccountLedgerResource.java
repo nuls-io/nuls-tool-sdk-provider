@@ -233,7 +233,7 @@ public class AccountLedgerResource {
                 new TransferReq.TransferReqBuilder(config.getChainId(), config.getAssetsId())
                         .addForm(form.getAddress(), form.getPassword(), form.getAmount())
                         .addTo(form.getToAddress(), form.getAmount());
-        Result<String> result = transferService.transfer(builder.build());
+        Result<String> result = transferService.transfer(builder.build(new TransferReq()));
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
         if (clientResult.isSuccess()) {
             return clientResult.resultMap().map("value", clientResult.getData()).mapToData();
