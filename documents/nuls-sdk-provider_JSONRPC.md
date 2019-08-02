@@ -461,7 +461,33 @@ _**详细描述: 根据资产链ID和资产ID，查询本链账户对应资产�
 }
 ```
 
-1.8 离线 - 批量创建账户
+1.8 设置账户别名
+==========
+Cmd: setAlias
+-------------
+_**详细描述: 别名格式为1-20位小写字母和数字的组合，设置别名会销毁1个NULS**_
+
+参数列表
+----
+| 参数名      |  参数类型  | 参数描述 | 是否必填 |
+| -------- |:------:| ---- |:----:|
+| chainId  |  int   | 链ID  |  是   |
+| address  | string | 账户地址 |  是   |
+| alias    | string | 别名   |  是   |
+| password | string | 账户密码 |  是   |
+
+返回值
+---
+| 字段名   |  字段类型  | 参数描述        |
+| ----- |:------:| ----------- |
+| value | string | 设置别名交易的hash |
+### Example request data: 
+无
+
+### Example response data: 
+略
+
+1.9 离线 - 批量创建账户
 ===============
 Cmd: createAccountOffline
 -------------------------
@@ -473,6 +499,7 @@ _**详细描述: 创建的账户不会保存到钱包中,接口直接返回账�
 | -------- |:------:| ---- |:----:|
 | chainId  |  int   | 链ID  |  是   |
 | count    |  int   | 创建数量 |  是   |
+| prefix   | string | 地址前缀 |  否   |
 | password | string | 密码   |  是   |
 
 返回值
@@ -488,7 +515,7 @@ _**详细描述: 创建的账户不会保存到钱包中,接口直接返回账�
 {
   "jsonrpc" : "2.0",
   "method" : "createAccountOffline",
-  "params" : [ 2, 1, "abcd1234" ],
+  "params" : [ 2, 1, "tNULS", "abcd1234" ],
   "id" : 1234
 }
 ```
@@ -507,8 +534,8 @@ _**详细描述: 创建的账户不会保存到钱包中,接口直接返回账�
 }
 ```
 
-1.9 离线获取账户明文私钥
-==============
+1.10 离线获取账户明文私钥
+===============
 Cmd: getPriKeyOffline
 ---------------------
 _**详细描述: 离线获取账户明文私钥**_
@@ -548,7 +575,7 @@ _**详细描述: 离线获取账户明文私钥**_
 }
 ```
 
-1.10 离线修改账户密码
+1.11 离线修改账户密码
 =============
 Cmd: resetPasswordOffline
 -------------------------
@@ -590,7 +617,7 @@ _**详细描述: 离线修改账户密码**_
 }
 ```
 
-1.11 多账户摘要签名
+1.12 多账户摘要签名
 ============
 Cmd: multiSign
 --------------
@@ -643,7 +670,7 @@ _**详细描述: 用于签名离线组装的多账户转账交易,调用接口�
 }
 ```
 
-1.12 明文私钥摘要签名
+1.13 明文私钥摘要签名
 =============
 Cmd: priKeySign
 ---------------
@@ -686,7 +713,7 @@ _**详细描述: 明文私钥摘要签名**_
 }
 ```
 
-1.13 密文私钥摘要签名
+1.14 密文私钥摘要签名
 =============
 Cmd: encryptedPriKeySign
 ------------------------
@@ -729,6 +756,89 @@ _**详细描述: 密文私钥摘要签名**_
   }
 }
 ```
+
+1.15 创建多签账户
+===========
+Cmd: createMultiSignAccount
+---------------------------
+_**详细描述: 根据多个账户的公钥创建多签账户，minSigns为多签账户创建交易时需要的最小签名数**_
+
+参数列表
+----
+| 参数名                                                     |      参数类型       | 参数描述   | 是否必填 |
+| ------------------------------------------------------- |:---------------:| ------ |:----:|
+| pubKeys                                                 |      list       | 账户公钥集合 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pubKeys | list&lt;string> | 账户公钥集合 |  是   |
+| minSigns                                                |       int       | 最小签名数  |  是   |
+
+返回值
+---
+| 字段名   |  字段类型  | 参数描述  |
+| ----- |:------:| ----- |
+| value | string | 账户的地址 |
+### Example request data: 
+无
+
+### Example response data: 
+略
+
+1.16 离线创建设置别名交易
+===============
+Cmd: createAliasTx
+------------------
+_**详细描述: 离线创建设置别名交易**_
+
+参数列表
+----
+| 参数名                                                     |   参数类型   | 参数描述     | 是否必填 |
+| ------------------------------------------------------- |:--------:| -------- |:----:|
+| AliasDto                                                | aliasdto | 创建别名交易表单 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address |  string  | 账户地址     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;alias   |  string  | 别名       |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nonce   |  string  | 资产nonce值 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark  |  string  | 交易备注     |  否   |
+
+返回值
+---
+| 字段名   |  字段类型  | 参数描述         |
+| ----- |:------:| ------------ |
+| hash  | string | 交易hash       |
+| txHex | string | 交易序列化16进制字符串 |
+### Example request data: 
+无
+
+### Example response data: 
+略
+
+1.17 多签账户离线创建设置别名交易
+===================
+Cmd: createMultiSignAliasTx
+---------------------------
+_**详细描述: 多签账户离线创建设置别名交易**_
+
+参数列表
+----
+| 参数名                                                      |       参数类型        | 参数描述     | 是否必填 |
+| -------------------------------------------------------- |:-----------------:| -------- |:----:|
+| 多签账户离线创建设置别名交易                                           | multisignaliasdto | 创建别名交易表单 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address  |      string       | 账户地址     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;alias    |      string       | 别名       |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nonce    |      string       | 资产nonce值 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark   |      string       | 交易备注     |  否   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pubKeys  |  list&lt;string>  | 公钥集合     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;minSigns |        int        | 最小签名数    |  是   |
+
+返回值
+---
+| 字段名   |  字段类型  | 参数描述         |
+| ----- |:------:| ------------ |
+| hash  | string | 交易hash       |
+| txHex | string | 交易序列化16进制字符串 |
+### Example request data: 
+无
+
+### Example response data: 
+略
 
 2.1 根据区块高度查询区块头
 ===============
@@ -1604,6 +1714,73 @@ _**详细描述: 计算离线创建转账交易所需手续费**_
   }
 }
 ```
+
+3.7 离线组装转账交易
+============
+Cmd: createMultiSignTransferTxOffline
+-------------------------------------
+_**详细描述: 根据inputs和outputs离线组装转账交易，用于单账户或多账户的转账交易。交易手续费为inputs里本链主资产金额总和，减去outputs里本链主资产总和**_
+
+参数列表
+----
+| 参数名                                                                                                          |         参数类型         | 参数描述     | 是否必填 |
+| ------------------------------------------------------------------------------------------------------------ |:--------------------:| -------- |:----:|
+| transferDto                                                                                                  | multisigntransferdto | 转账交易表单   |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pubKeys                                                      |   list&lt;string>    | 公钥集合     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;minSigns                                                     |         int          | 最小签名数    |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inputs                                                       |   list&lt;object>    | 转账交易输入列表 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address      |        string        | 账户地址     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetChainId |         int          | 资产的链id   |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetId      |         int          | 资产id     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount       |      biginteger      | 资产金额     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nonce        |        string        | 资产nonce值 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;outputs                                                      |   list&lt;object>    | 转账交易输出列表 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address      |        string        | 账户地址     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetChainId |         int          | 资产的链id   |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetId      |         int          | 资产id     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount       |      biginteger      | 资产金额     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;lockTime     |         long         | 锁定时间     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark                                                       |        string        | 交易备注     |  是   |
+
+返回值
+---
+| 字段名   |  字段类型  | 参数描述         |
+| ----- |:------:| ------------ |
+| hash  | string | 交易hash       |
+| txHex | string | 交易序列化16进制字符串 |
+### Example request data: 
+无
+
+### Example response data: 
+略
+
+3.8 计算离线创建转账交易所需手续费
+===================
+Cmd: calcMultiSignTransferTxFee
+-------------------------------
+_**详细描述: 计算离线创建转账交易所需手续费**_
+
+参数列表
+----
+| 参数名                                                         |           参数类型            | 参数描述       | 是否必填 |
+| ----------------------------------------------------------- |:-------------------------:| ---------- |:----:|
+| MultiSignTransferTxFeeDto                                   | multisigntransfertxfeedto | 转账交易手续费    |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pubKeyCount |            int            | 多签地址对应公钥数量 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fromLength  |            int            | 转账输入长度     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;toLength    |            int            | 转账输出长度     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remark      |          string           | 交易备注       |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price       |        biginteger         | 手续费单价      |  否   |
+
+返回值
+---
+| 字段名   |  字段类型  | 参数描述  |
+| ----- |:------:| ----- |
+| value | string | 交易手续费 |
+### Example request data: 
+无
+
+### Example response data: 
+略
 
 4.1 发布合约
 ========
@@ -2890,7 +3067,7 @@ _**详细描述: 创建共识节点**_
 | 参数名                                                            |      参数类型       | 参数描述        | 是否必填 |
 | -------------------------------------------------------------- |:---------------:| ----------- |:----:|
 | chainId                                                        |       int       | 链ID         |  是   |
-| 创建共识节点                                                         | createagentform | 创建共识节点表单    |  是   |
+| CreateAgentForm                                                | createagentform | 创建共识节点表单    |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;agentAddress   |     string      | 节点地址        |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;packingAddress |     string      | 节点出块地址      |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rewardAddress  |     string      | 奖励地址，默认节点地址 |  否   |
@@ -2933,7 +3110,7 @@ _**详细描述: 注销共识节点**_
 | 参数名                                                      |     参数类型      | 参数描述     | 是否必填 |
 | -------------------------------------------------------- |:-------------:| -------- |:----:|
 | chainId                                                  |      int      | 链ID      |  是   |
-| 注销共识节点                                                   | stopagentform | 注销共识节点表单 |  是   |
+| StopAgentForm                                            | stopagentform | 注销共识节点表单 |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address  |    string     | 共识节点地址   |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password |    string     | 密码       |  是   |
 
@@ -2972,7 +3149,7 @@ _**详细描述: 委托参与共识**_
 | 参数名                                                       |    参数类型     | 参数描述     | 是否必填 |
 | --------------------------------------------------------- |:-----------:| -------- |:----:|
 | chainId                                                   |     int     | 链ID      |  是   |
-| 委托参与共识                                                    | depositform | 委托参与共识表单 |  是   |
+| DepositForm                                               | depositform | 委托参与共识表单 |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address   |   string    | 参与共识账户地址 |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;agentHash |   string    | 共识节点hash |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deposit   |   string    | 参与共识的金额  |  是   |
@@ -3013,7 +3190,7 @@ _**详细描述: 退出共识**_
 | 参数名                                                      |     参数类型     | 参数描述         | 是否必填 |
 | -------------------------------------------------------- |:------------:| ------------ |:----:|
 | chainId                                                  |     int      | 链ID          |  是   |
-| 退出共识                                                     | withdrawform | 退出共识表单       |  是   |
+| WithdrawForm                                             | withdrawform | 退出共识表单       |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address  |    string    | 节点地址         |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;txHash   |    string    | 加入共识时的交易hash |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;password |    string    | 密码           |  是   |
@@ -3112,7 +3289,7 @@ _**详细描述: 参与共识所需资产可通过查询链信息接口获取(ag
 | 参数名                                                                                                          |     参数类型     | 参数描述       | 是否必填 |
 | ------------------------------------------------------------------------------------------------------------ |:------------:| ---------- |:----:|
 | chainId                                                                                                      |     int      | 链ID        |  是   |
-| 离线创建共识节点                                                                                                     | consensusdto | 离线创建共识节点表单 |  是   |
+| ConsensusDto                                                                                                 | consensusdto | 离线创建共识节点表单 |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;agentAddress                                                 |    string    | 节点创建地址     |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;packingAddress                                               |    string    | 节点出块地址     |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rewardAddress                                                |    string    | 获取共识奖励地址   |  是   |
@@ -3170,7 +3347,7 @@ _**详细描述: 组装交易的StopDepositDto信息，可通过查询节点的�
 | 参数名                                                                                                                                                          |       参数类型       | 参数描述        | 是否必填 |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |:----------------:| ----------- |:----:|
 | chainId                                                                                                                                                      |       int        | 链ID         |  是   |
-| 离线注销共识节点                                                                                                                                                     | stopconsensusdto | 离线注销共识节点表单  |  是   |
+| StopConsensusDto                                                                                                                                             | stopconsensusdto | 离线注销共识节点表单  |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;agentHash                                                                                                    |      string      | 创建节点的交易hash |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;agentAddress                                                                                                 |      string      | 节点地址        |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deposit                                                                                                      |    biginteger    | 创建节点的保证金    |  是   |
@@ -3241,7 +3418,7 @@ _**详细描述: 参与共识所需资产可通过查询链信息接口获取(ag
 | 参数名                                                                                                          |    参数类型    | 参数描述       | 是否必填 |
 | ------------------------------------------------------------------------------------------------------------ |:----------:| ---------- |:----:|
 | chainId                                                                                                      |    int     | 链ID        |  是   |
-| 离线委托参与共识                                                                                                     | depositdto | 离线委托参与共识表单 |  是   |
+| DepositDto                                                                                                   | depositdto | 离线委托参与共识表单 |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address                                                      |   string   | 账户地址       |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deposit                                                      | biginteger | 委托金额       |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;agentHash                                                    |   string   | 共识节点hash   |  是   |
@@ -3297,7 +3474,7 @@ _**详细描述: 离线组装 - 退出共识**_
 | 参数名                                                                                                          |    参数类型     | 参数描述        | 是否必填 |
 | ------------------------------------------------------------------------------------------------------------ |:-----------:| ----------- |:----:|
 | chainId                                                                                                      |     int     | 链ID         |  是   |
-| 离线退出共识                                                                                                       | withdrawdto | 离线退出共识表单    |  是   |
+| WithDrawDto                                                                                                  | withdrawdto | 离线退出共识表单    |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address                                                      |   string    | 地址          |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;depositHash                                                  |   string    | 委托共识交易的hash |  是   |
 | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price                                                        | biginteger  | 手续费单价       |  否   |
@@ -3341,4 +3518,153 @@ _**详细描述: 离线组装 - 退出共识**_
   }
 }
 ```
+
+5.10 离线组装 - 多签账户创建共识节点
+======================
+Cmd: multiSignCreateAgentOffline
+--------------------------------
+_**详细描述: 参与共识所需资产可通过查询链信息接口获取(agentChainId和agentAssetId)**_
+
+参数列表
+----
+| 参数名                                                                                                          |         参数类型          | 参数描述           | 是否必填 |
+| ------------------------------------------------------------------------------------------------------------ |:---------------------:| -------------- |:----:|
+| chainId                                                                                                      |          int          | 链ID            |  是   |
+| MultiSignConsensusDto                                                                                        | multisignconsensusdto | 多签账户离线创建共识节点表单 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;agentAddress                                                 |        string         | 节点创建地址         |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;packingAddress                                               |        string         | 节点出块地址         |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rewardAddress                                                |        string         | 获取共识奖励地址       |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;commissionRate                                               |          int          | 节点佣金比例         |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deposit                                                      |      biginteger       | 创建节点保证金        |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;input                                                        |        object         | 交易输入信息         |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address      |        string         | 账户地址           |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetChainId |          int          | 资产的链id         |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetId      |          int          | 资产id           |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount       |      biginteger       | 资产金额           |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nonce        |        string         | 资产nonce值       |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pubKeys                                                      |    list&lt;string>    | 公钥集合           |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;minSigns                                                     |          int          | 最小签名数          |  是   |
+
+返回值
+---
+| 字段名   |  字段类型  | 参数描述     |
+| ----- |:------:| -------- |
+| hash  | string | 交易hash   |
+| txHex | string | 交易序列化字符串 |
+### Example request data: 
+无
+
+### Example response data: 
+略
+
+5.11 离线组装 - 多签账户注销共识节点
+======================
+Cmd: multiSignStopAgentOffline
+------------------------------
+_**详细描述: 组装交易的StopDepositDto信息，可通过查询节点的委托共识列表获取，input的nonce值可为空**_
+
+参数列表
+----
+| 参数名                                                                                                                                                          |           参数类型            | 参数描述           | 是否必填 |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------ |:-------------------------:| -------------- |:----:|
+| chainId                                                                                                                                                      |            int            | 链ID            |  是   |
+| MultiSignStopConsensusDto                                                                                                                                    | multisignstopconsensusdto | 多签账户离线注销共识节点表单 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;agentHash                                                                                                    |          string           | 创建节点的交易hash    |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;agentAddress                                                                                                 |          string           | 节点地址           |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deposit                                                                                                      |        biginteger         | 创建节点的保证金       |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price                                                                                                        |        biginteger         | 手续费单价          |  否   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;depositList                                                                                                  |      list&lt;object>      | 停止委托列表         |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;depositHash                                                  |          string           | 委托共识的交易hash    |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;input                                                        |          object           | 交易输入信息         |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address      |          string           | 账户地址           |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetChainId |            int            | 资产的链id         |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetId      |            int            | 资产id           |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount       |        biginteger         | 资产金额           |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nonce        |          string           | 资产nonce值       |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pubKeys                                                                                                      |      list&lt;string>      | 公钥集合           |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;minSigns                                                                                                     |            int            | 最小签名数          |  是   |
+
+返回值
+---
+| 字段名   |  字段类型  | 参数描述     |
+| ----- |:------:| -------- |
+| hash  | string | 交易hash   |
+| txHex | string | 交易序列化字符串 |
+### Example request data: 
+无
+
+### Example response data: 
+略
+
+5.12 离线组装 - 多签账户委托参与共识
+======================
+Cmd: multiSignDepositToAgentOffline
+-----------------------------------
+_**详细描述: 参与共识所需资产可通过查询链信息接口获取(agentChainId和agentAssetId)**_
+
+参数列表
+----
+| 参数名                                                                                                          |        参数类型         | 参数描述           | 是否必填 |
+| ------------------------------------------------------------------------------------------------------------ |:-------------------:| -------------- |:----:|
+| chainId                                                                                                      |         int         | 链ID            |  是   |
+| MultiSignDepositDto                                                                                          | multisigndepositdto | 多签账户离线委托参与共识表单 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address                                                      |       string        | 账户地址           |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;deposit                                                      |     biginteger      | 委托金额           |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;agentHash                                                    |       string        | 共识节点hash       |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;input                                                        |       object        | 交易输入信息         |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address      |       string        | 账户地址           |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetChainId |         int         | 资产的链id         |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetId      |         int         | 资产id           |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount       |     biginteger      | 资产金额           |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nonce        |       string        | 资产nonce值       |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pubKeys                                                      |   list&lt;string>   | 公钥集合           |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;minSigns                                                     |         int         | 最小签名数          |  是   |
+
+返回值
+---
+| 字段名   |  字段类型  | 参数描述     |
+| ----- |:------:| -------- |
+| hash  | string | 交易hash   |
+| txHex | string | 交易序列化字符串 |
+### Example request data: 
+无
+
+### Example response data: 
+略
+
+5.13 离线组装 - 多签账户退出共识
+====================
+Cmd: multiSignWithdrawOffline
+-----------------------------
+_**详细描述: 离线组装 - 多签账户退出共识**_
+
+参数列表
+----
+| 参数名                                                                                                          |         参数类型         | 参数描述         | 是否必填 |
+| ------------------------------------------------------------------------------------------------------------ |:--------------------:| ------------ |:----:|
+| chainId                                                                                                      |         int          | 链ID          |  是   |
+| MultiSignWithDrawDto                                                                                         | multisignwithdrawdto | 多签账户离线退出共识表单 |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address                                                      |        string        | 地址           |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;depositHash                                                  |        string        | 委托共识交易的hash  |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;price                                                        |      biginteger      | 手续费单价        |  否   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;input                                                        |        object        | 交易输入信息       |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;address      |        string        | 账户地址         |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetChainId |         int          | 资产的链id       |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assetId      |         int          | 资产id         |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;amount       |      biginteger      | 资产金额         |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nonce        |        string        | 资产nonce值     |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pubKeys                                                      |   list&lt;string>    | 公钥集合         |  是   |
+| &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;minSigns                                                     |         int          | 最小签名数        |  是   |
+
+返回值
+---
+| 字段名   |  字段类型  | 参数描述     |
+| ----- |:------:| -------- |
+| hash  | string | 交易hash   |
+| txHex | string | 交易序列化字符串 |
+### Example request data: 
+无
+
+### Example response data: 
+略
 
