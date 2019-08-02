@@ -435,7 +435,7 @@ public class TransactionController {
     @ApiOperation(description = "离线组装转账交易", order = 352, detailDesc = "根据inputs和outputs离线组装转账交易，用于单账户或多账户的转账交易。" +
             "交易手续费为inputs里本链主资产金额总和，减去outputs里本链主资产总和")
     @Parameters({
-            @Parameter(parameterName = "transferDto", parameterDes = "转账交易表单", requestType = @TypeDescriptor(value = TransferDto.class))
+            @Parameter(parameterName = "transferDto", parameterDes = "转账交易表单", requestType = @TypeDescriptor(value = MultiSignTransferDto.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "hash", description = "交易hash"),
