@@ -48,10 +48,7 @@ import io.nuls.model.form.consensus.DepositForm;
 import io.nuls.model.form.consensus.StopAgentForm;
 import io.nuls.model.form.consensus.WithdrawForm;
 import io.nuls.utils.ResultUtil;
-import io.nuls.v2.model.dto.ConsensusDto;
-import io.nuls.v2.model.dto.DepositDto;
-import io.nuls.v2.model.dto.StopConsensusDto;
-import io.nuls.v2.model.dto.WithDrawDto;
+import io.nuls.v2.model.dto.*;
 import io.nuls.v2.util.NulsSDKTool;
 import io.nuls.v2.util.ValidateUtil;
 
@@ -81,7 +78,7 @@ public class ConsensusResource {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(description = "创建共识节点", order = 501)
     @Parameters({
-            @Parameter(parameterName = "创建共识节点", parameterDes = "创建共识节点表单", requestType = @TypeDescriptor(value = CreateAgentForm.class))
+            @Parameter(parameterName = "CreateAgentForm", parameterDes = "创建共识节点表单", requestType = @TypeDescriptor(value = CreateAgentForm.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "value", description = "交易hash")
@@ -111,7 +108,7 @@ public class ConsensusResource {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(description = "注销共识节点", order = 502)
     @Parameters({
-            @Parameter(parameterName = "注销共识节点", parameterDes = "注销共识节点表单", requestType = @TypeDescriptor(value = StopAgentForm.class))
+            @Parameter(parameterName = "StopAgentForm", parameterDes = "注销共识节点表单", requestType = @TypeDescriptor(value = StopAgentForm.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "value", description = "交易hash")
@@ -137,7 +134,7 @@ public class ConsensusResource {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(description = "委托参与共识", order = 503)
     @Parameters({
-            @Parameter(parameterName = "委托参与共识", parameterDes = "委托参与共识表单", requestType = @TypeDescriptor(value = DepositForm.class))
+            @Parameter(parameterName = "DepositForm", parameterDes = "委托参与共识表单", requestType = @TypeDescriptor(value = DepositForm.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "value", description = "交易hash")
@@ -226,7 +223,7 @@ public class ConsensusResource {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(description = "离线组装 - 创建共识节点交易", order = 550, detailDesc = "参与共识所需资产可通过查询链信息接口获取(agentChainId和agentAssetId)")
     @Parameters({
-            @Parameter(parameterName = "离线创建共识节点", parameterDes = "离线创建共识节点表单", requestType = @TypeDescriptor(value = ConsensusDto.class))
+            @Parameter(parameterName = "ConsensusDto", parameterDes = "离线创建共识节点表单", requestType = @TypeDescriptor(value = ConsensusDto.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "hash", description = "交易hash"),
@@ -240,13 +237,12 @@ public class ConsensusResource {
         return ResultUtil.getRpcClientResult(result);
     }
 
-
     @POST
     @Path("/agent/stop/offline")
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(description = "离线组装 - 注销共识节点交易", order = 551, detailDesc = "组装交易的StopDepositDto信息，可通过查询节点的委托共识列表获取，input的nonce值可为空")
     @Parameters({
-            @Parameter(parameterName = "离线注销共识节点", parameterDes = "离线注销共识节点表单", requestType = @TypeDescriptor(value = StopConsensusDto.class))
+            @Parameter(parameterName = "StopConsensusDto", parameterDes = "离线注销共识节点表单", requestType = @TypeDescriptor(value = StopConsensusDto.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "hash", description = "交易hash"),
@@ -265,7 +261,7 @@ public class ConsensusResource {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(description = "离线组装 - 委托参与共识交易", order = 552, detailDesc = "参与共识所需资产可通过查询链信息接口获取(agentChainId和agentAssetId)")
     @Parameters({
-            @Parameter(parameterName = "离线委托参与共识", parameterDes = "离线委托参与共识表单", requestType = @TypeDescriptor(value = DepositDto.class))
+            @Parameter(parameterName = "DepositDto", parameterDes = "离线委托参与共识表单", requestType = @TypeDescriptor(value = DepositDto.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "hash", description = "交易hash"),
@@ -284,7 +280,7 @@ public class ConsensusResource {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(description = "离线组装 - 退出共识交易", order = 553, detailDesc = "接口的input数据，则是委托共识交易的output数据，nonce值可为空")
     @Parameters({
-            @Parameter(parameterName = "离线退出共识", parameterDes = "离线退出共识表单", requestType = @TypeDescriptor(value = WithDrawDto.class))
+            @Parameter(parameterName = "WithDrawDto", parameterDes = "离线退出共识表单", requestType = @TypeDescriptor(value = WithDrawDto.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "hash", description = "交易hash"),
@@ -295,6 +291,82 @@ public class ConsensusResource {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
         }
         io.nuls.core.basic.Result result = NulsSDKTool.createWithdrawDepositTxOffline(form);
+        return ResultUtil.getRpcClientResult(result);
+    }
+
+    @POST
+    @Path("/multiSign/agent/offline")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "多签账户离线组装 - 创建共识节点交易", order = 554, detailDesc = "参与共识所需资产可通过查询链信息接口获取(agentChainId和agentAssetId)")
+    @Parameters({
+            @Parameter(parameterName = "MultiSignConsensusDto", parameterDes = "多签账户离线创建共识节点表单", requestType = @TypeDescriptor(value = MultiSignConsensusDto.class))
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "hash", description = "交易hash"),
+            @Key(name = "txHex", description = "交易序列化字符串")
+    }))
+    public RpcClientResult createMultiSignAgentOffline(MultiSignConsensusDto form) {
+        if (form == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
+        }
+        io.nuls.core.basic.Result result = NulsSDKTool.createMultiSignConsensusTx(form);
+        return ResultUtil.getRpcClientResult(result);
+    }
+
+    @POST
+    @Path("/multiSign/deposit/offline")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "离线组装 - 多签账户委托参与共识交易", order = 555, detailDesc = "参与共识所需资产可通过查询链信息接口获取(agentChainId和agentAssetId)")
+    @Parameters({
+            @Parameter(parameterName = "MultiSignDepositDto", parameterDes = "多签账户离线委托参与共识表单", requestType = @TypeDescriptor(value = MultiSignDepositDto.class))
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "hash", description = "交易hash"),
+            @Key(name = "txHex", description = "交易序列化字符串")
+    }))
+    public RpcClientResult multiSignDepositToAgentOffline(MultiSignDepositDto form) {
+        if (form == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
+        }
+        io.nuls.core.basic.Result result = NulsSDKTool.createMultiSignDepositTxOffline(form);
+        return ResultUtil.getRpcClientResult(result);
+    }
+
+    @POST
+    @Path("/multiSign/withdraw/offline")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "离线组装 - 多签账户退出共识交易", order = 556, detailDesc = "接口的input数据，则是委托共识交易的output数据，nonce值可为空")
+    @Parameters({
+            @Parameter(parameterName = "WithDrawDto", parameterDes = "多签账户离线退出共识表单", requestType = @TypeDescriptor(value = MultiSignWithDrawDto.class))
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "hash", description = "交易hash"),
+            @Key(name = "txHex", description = "交易序列化字符串")
+    }))
+    public RpcClientResult MultiSignWithdrawOffline(MultiSignWithDrawDto form) {
+        if (form == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
+        }
+        io.nuls.core.basic.Result result = NulsSDKTool.createMultiSignWithdrawDepositTxOffline(form);
+        return ResultUtil.getRpcClientResult(result);
+    }
+
+    @POST
+    @Path("/multiSign/agent/stop/offline")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "离线组装 - 多签账户注销共识节点交易", order = 557, detailDesc = "组装交易的StopDepositDto信息，可通过查询节点的委托共识列表获取，input的nonce值可为空")
+    @Parameters({
+            @Parameter(parameterName = "StopConsensusDto", parameterDes = "多签账户离线注销共识节点表单", requestType = @TypeDescriptor(value = MultiSignStopConsensusDto.class))
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "hash", description = "交易hash"),
+            @Key(name = "txHex", description = "交易序列化字符串")
+    }))
+    public RpcClientResult multiSignStopAgentOffline(MultiSignStopConsensusDto form) {
+        if (form == null) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
+        }
+        io.nuls.core.basic.Result result = NulsSDKTool.createMultiSignStopConsensusTx(form);
         return ResultUtil.getRpcClientResult(result);
     }
 }

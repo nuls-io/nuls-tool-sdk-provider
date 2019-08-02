@@ -55,10 +55,7 @@ import io.nuls.utils.VerifyUtils;
 import io.nuls.v2.model.annotation.Api;
 import io.nuls.v2.model.annotation.ApiOperation;
 import io.nuls.v2.model.annotation.ApiType;
-import io.nuls.v2.model.dto.CoinFromDto;
-import io.nuls.v2.model.dto.CoinToDto;
-import io.nuls.v2.model.dto.TransferDto;
-import io.nuls.v2.model.dto.TransferTxFeeDto;
+import io.nuls.v2.model.dto.*;
 import io.nuls.v2.util.CommonValidator;
 import io.nuls.v2.util.NulsSDKTool;
 import io.nuls.v2.util.ValidateUtil;
@@ -428,6 +425,135 @@ public class TransactionController {
         dto.setRemark(remark);
         dto.setPrice(new BigInteger(price));
         BigInteger fee = NulsSDKTool.calcTransferTxFee(dto);
+        Map map = new HashMap();
+        map.put("value", fee);
+
+        return RpcResult.success(map);
+    }
+
+    @RpcMethod("createMultiSignTransferTxOffline")
+    @ApiOperation(description = "离线组装转账交易", order = 352, detailDesc = "根据inputs和outputs离线组装转账交易，用于单账户或多账户的转账交易。" +
+            "交易手续费为inputs里本链主资产金额总和，减去outputs里本链主资产总和")
+    @Parameters({
+            @Parameter(parameterName = "transferDto", parameterDes = "转账交易表单", requestType = @TypeDescriptor(value = TransferDto.class))
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "hash", description = "交易hash"),
+            @Key(name = "txHex", description = "交易序列化16进制字符串")
+    }))
+    public RpcResult createMultiSignTransferTxOffline(List<Object> params) {
+        List<String> pubKeys;
+        int minSigns;
+        List<Map> inputList, outputList;
+        String remark;
+        List<CoinFromDto> froms = new ArrayList<>();
+        List<CoinToDto> tos = new ArrayList<>();
+
+        try {
+            pubKeys = (List<String>) params.get(0);
+        } catch (Exception e) {
+            return RpcResult.paramError("[pubKeys] is inValid");
+        }
+        try {
+            minSigns = (int) params.get(1);
+        } catch (Exception e) {
+            return RpcResult.paramError("[minSigns] is inValid");
+        }
+
+        try {
+            inputList = (List<Map>) params.get(2);
+            for (Map map : inputList) {
+                String amount = map.get("amount").toString();
+                map.put("amount", new BigInteger(amount));
+                CoinFromDto fromDto = JSONUtils.map2pojo(map, CoinFromDto.class);
+                froms.add(fromDto);
+            }
+        } catch (Exception e) {
+            return RpcResult.paramError("[inputList] is inValid");
+        }
+        try {
+            outputList = (List<Map>) params.get(3);
+            for (Map map : outputList) {
+                String amount = map.get("amount").toString();
+                map.put("amount", new BigInteger(amount));
+                CoinToDto toDto = JSONUtils.map2pojo(map, CoinToDto.class);
+                tos.add(toDto);
+            }
+        } catch (Exception e) {
+            return RpcResult.paramError("[outputList] is inValid");
+        }
+        try {
+            remark = (String) params.get(4);
+        } catch (Exception e) {
+            return RpcResult.paramError("[remark] is inValid");
+        }
+
+        try {
+            MultiSignTransferDto transferDto = new MultiSignTransferDto();
+            transferDto.setPubKeys(pubKeys);
+            transferDto.setMinSigns(minSigns);
+            transferDto.setInputs(froms);
+            transferDto.setOutputs(tos);
+            transferDto.setRemark(remark);
+            CommonValidator.checkMultiSignTransferDto(transferDto);
+            io.nuls.core.basic.Result result = NulsSDKTool.createMultiSignTransferTxOffline(transferDto);
+            if (result.isSuccess()) {
+                return RpcResult.success(result.getData());
+            } else {
+                return RpcResult.failed(result.getErrorCode(), result.getMsg());
+            }
+        } catch (NulsException e) {
+            return RpcResult.failed(e.getErrorCode(), e.format());
+        }
+    }
+
+    @RpcMethod("calcMultiSignTransferTxFee")
+    @ApiOperation(description = "计算离线创建转账交易所需手续费", order = 353)
+    @Parameters({
+            @Parameter(parameterName = "MultiSignTransferTxFeeDto", parameterDes = "转账交易手续费", requestType = @TypeDescriptor(value = MultiSignTransferTxFeeDto.class))
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "value", description = "交易手续费"),
+    }))
+    public RpcResult calcMultiSignTransferTxFee(List<Object> params) {
+        int pubKeyCount, fromLength, toLength;
+        String remark, price;
+        try {
+            pubKeyCount = (int) params.get(0);
+        } catch (Exception e) {
+            return RpcResult.paramError("[addressCount] is inValid");
+        }
+        try {
+            fromLength = (int) params.get(1);
+        } catch (Exception e) {
+            return RpcResult.paramError("[fromLength] is inValid");
+        }
+        try {
+            toLength = (int) params.get(2);
+        } catch (Exception e) {
+            return RpcResult.paramError("[toLength] is inValid");
+        }
+        try {
+            remark = (String) params.get(3);
+        } catch (Exception e) {
+            return RpcResult.paramError("[remark] is inValid");
+        }
+        try {
+            price = (String) params.get(4);
+        } catch (Exception e) {
+            return RpcResult.paramError("[price] is inValid");
+        }
+        if (!ValidateUtil.validateBigInteger(price)) {
+            return RpcResult.paramError("[price] is inValid");
+        }
+
+        MultiSignTransferTxFeeDto dto = new MultiSignTransferTxFeeDto();
+        dto.setPubKeyCount(pubKeyCount);
+        dto.setFromLength(fromLength);
+        dto.setToLength(toLength);
+        dto.setRemark(remark);
+        dto.setPrice(new BigInteger(price));
+        BigInteger fee = NulsSDKTool.calcMultiSignTransferTxFee(dto);
         Map map = new HashMap();
         map.put("value", fee);
 

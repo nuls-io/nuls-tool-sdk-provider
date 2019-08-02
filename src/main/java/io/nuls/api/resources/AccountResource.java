@@ -30,16 +30,19 @@ import io.nuls.base.api.provider.ServiceManager;
 import io.nuls.base.api.provider.account.AccountService;
 import io.nuls.base.api.provider.account.facade.*;
 import io.nuls.base.basic.AddressTool;
+import io.nuls.base.data.MultiSigAccount;
 import io.nuls.core.constant.CommonCodeConstanst;
 import io.nuls.core.core.annotation.Autowired;
 import io.nuls.core.core.annotation.Component;
 import io.nuls.core.crypto.HexUtil;
+import io.nuls.core.exception.NulsException;
 import io.nuls.core.model.FormatValidUtils;
 import io.nuls.core.model.StringUtils;
 import io.nuls.core.parse.JSONUtils;
 import io.nuls.core.rpc.model.*;
 import io.nuls.model.ErrorData;
 import io.nuls.model.RpcClientResult;
+import io.nuls.rpctools.AccountTools;
 import io.nuls.v2.model.annotation.Api;
 import io.nuls.v2.model.annotation.ApiOperation;
 import io.nuls.model.dto.AccountKeyStoreDto;
@@ -47,6 +50,8 @@ import io.nuls.model.form.*;
 import io.nuls.utils.Log;
 import io.nuls.utils.ResultUtil;
 import io.nuls.v2.model.dto.AccountDto;
+import io.nuls.v2.model.dto.AliasDto;
+import io.nuls.v2.model.dto.MultiSignAliasDto;
 import io.nuls.v2.util.NulsSDKTool;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 
@@ -72,6 +77,9 @@ public class AccountResource {
     Config config;
 
     AccountService accountService = ServiceManager.get(AccountService.class);
+    @Autowired
+    private AccountTools accountTools;
+
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -346,26 +354,28 @@ public class AccountResource {
         }
     }
 
-
     @POST
-    @Path("/multiSign/create")
+    @Path("/alias")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(description = "创建多签账户", order = 109, detailDesc = "根据多个账户的公钥创建多签账户，minSigns为多签账户创建交易时需要的最小签名数")
+    @ApiOperation(description = "账户设置别名", order = 109, detailDesc = "别名格式为1-20位小写字母和数字的组合，设置别名会销毁1个NULS")
     @Parameters({
-            @Parameter(parameterName = "创建多签账户", parameterDes = "创建多签账户表单", requestType = @TypeDescriptor(value = MultiSignAccountCreateForm.class))
+            @Parameter(parameterName = "账户设置别名", parameterDes = "账户设置别名表单", requestType = @TypeDescriptor(value = SetAliasForm.class))
     })
-    public RpcClientResult createMultiSignAccount(MultiSignAccountCreateForm form) {
-        if(form.getPubKeys() == null || form.getPubKeys().isEmpty()) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "pubKeys is empty"));
+    @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "value", description = "设置别名交易的hash")
+    }))
+    public RpcClientResult setAlias(SetAliasForm form) {
+        if (!AddressTool.validAddress(config.getChainId(), form.getAddress())) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "address is invalid"));
         }
-        if(form.getMinSigns() < 1 || form.getMinSigns() > form.getPubKeys().size()) {
-            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "[minSigns] is invalid"));
+        if (!FormatValidUtils.validAlias(form.getAlias())) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "alias is invalid"));
         }
-        GenerateMultiSignAccountReq req = new GenerateMultiSignAccountReq();
-        req.setPubKeys(form.getPubKeys());
-        req.setMinSigns(form.getMinSigns());
-
-        Result<String> result = accountService.createMultiSignAccount(req);
+        if (StringUtils.isBlank(form.getPassword())) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "password is invalid"));
+        }
+        SetAccountAliasReq aliasReq = new SetAccountAliasReq(form.getPassword(), form.getAddress(), form.getAlias());
+        Result<String> result = accountService.setAccountAlias(aliasReq);
         RpcClientResult clientResult = ResultUtil.getRpcClientResult(result);
         if (clientResult.isSuccess()) {
             return clientResult.resultMap().map("value", clientResult.getData()).mapToData();
@@ -388,10 +398,10 @@ public class AccountResource {
             return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "form is empty"));
         }
         io.nuls.core.basic.Result<List<AccountDto>> result;
-        if(StringUtils.isBlank(form.getPrefix())){
+        if (StringUtils.isBlank(form.getPrefix())) {
             result = NulsSDKTool.createOffLineAccount(form.getCount(), form.getPassword());
-        }else {
-            result = NulsSDKTool.createOffLineAccount(form.getCount(),form.getPrefix() ,form.getPassword());
+        } else {
+            result = NulsSDKTool.createOffLineAccount(form.getCount(), form.getPrefix(), form.getPassword());
         }
         return ResultUtil.getRpcClientResult(result);
     }
@@ -471,6 +481,59 @@ public class AccountResource {
     }))
     public RpcClientResult encryptedPriKeySign(EncryptedPriKeySignForm form) {
         io.nuls.core.basic.Result result = NulsSDKTool.sign(form.getTxHex(), form.getAddress(), form.getEncryptedPriKey(), form.getPassword());
+        return ResultUtil.getRpcClientResult(result);
+    }
+
+    @POST
+    @Path("/multiSign/create")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "创建多签账户", order = 157, detailDesc = "根据多个账户的公钥创建多签账户，minSigns为多签账户创建交易时需要的最小签名数")
+    @Parameters({
+            @Parameter(parameterName = "创建多签账户", parameterDes = "创建多签账户表单", requestType = @TypeDescriptor(value = MultiSignAccountCreateForm.class))
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "value", description = "账户的地址")
+    }))
+    public RpcClientResult createMultiSignAccount(MultiSignAccountCreateForm form) {
+        if (form.getPubKeys() == null || form.getPubKeys().isEmpty()) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "pubKeys is empty"));
+        }
+        if (form.getMinSigns() < 1 || form.getMinSigns() > form.getPubKeys().size()) {
+            return RpcClientResult.getFailed(new ErrorData(CommonCodeConstanst.PARAMETER_ERROR.getCode(), "[minSigns] is invalid"));
+        }
+        io.nuls.core.basic.Result result = NulsSDKTool.createMultiSignAccount(form.getPubKeys(), form.getMinSigns());
+        return ResultUtil.getRpcClientResult(result);
+    }
+
+    @POST
+    @Path("/aliasTx/create")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "离线创建设置别名交易", order = 158, detailDesc = "根据多个账户的公钥创建多签账户，minSigns为多签账户创建交易时需要的最小签名数")
+    @Parameters({
+            @Parameter(parameterName = "创建多签账户", parameterDes = "创建多签账户表单", requestType = @TypeDescriptor(value = AliasDto.class))
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "hash", description = "交易hash"),
+            @Key(name = "txHex", description = "交易序列化16进制字符串")
+    }))
+    public RpcClientResult createAliasTxOffLine(AliasDto dto) {
+        io.nuls.core.basic.Result result = NulsSDKTool.createAliasTxOffline(dto);
+        return ResultUtil.getRpcClientResult(result);
+    }
+
+    @POST
+    @Path("/multiSign/aliasTx/create")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(description = "多签账户离线创建设置别名交易", order = 159)
+    @Parameters({
+            @Parameter(parameterName = "多签账户离线创建设置别名交易", parameterDes = "创建别名交易表单", requestType = @TypeDescriptor(value = MultiSignAliasDto.class))
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "hash", description = "交易hash"),
+            @Key(name = "txHex", description = "交易序列化16进制字符串")
+    }))
+    public RpcClientResult createMultiSignAliasTxOffLine(MultiSignAliasDto dto) {
+        io.nuls.core.basic.Result result = NulsSDKTool.createMultiSignAliasTxOffline(dto);
         return ResultUtil.getRpcClientResult(result);
     }
 }

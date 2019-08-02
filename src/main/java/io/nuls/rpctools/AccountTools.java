@@ -1,15 +1,25 @@
 package io.nuls.rpctools;
 
+import com.google.common.primitives.UnsignedBytes;
+import io.nuls.base.basic.AddressTool;
+import io.nuls.base.data.Address;
+import io.nuls.base.data.MultiSigAccount;
+import io.nuls.core.constant.BaseConstant;
 import io.nuls.core.core.annotation.Component;
 import io.nuls.core.core.annotation.Value;
+import io.nuls.core.crypto.HexUtil;
 import io.nuls.core.exception.NulsException;
+import io.nuls.core.exception.NulsRuntimeException;
 import io.nuls.core.parse.MapUtils;
+import io.nuls.core.parse.SerializeUtils;
 import io.nuls.core.rpc.info.Constants;
 import io.nuls.core.rpc.model.ModuleE;
 import io.nuls.rpctools.vo.Account;
+import io.nuls.v2.error.AccountErrorCode;
+import io.nuls.v2.util.AccountTool;
+import org.bouncycastle.util.encoders.Hex;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 /**
@@ -73,6 +83,37 @@ public class AccountTools implements CallRpc {
         callParams.put("address", address);
         callParams.put("password", password);
         return callRpc(ModuleE.AC.abbr, "ac_getPriKeyByAddress", callParams, (Function<Map<String, Object>, T>) res -> (T) res.get(key));
+    }
+
+
+    public MultiSigAccount createMultiSigAccount(int chainId, List<String> pubKeys, int minSigns) throws NulsException {
+        //验证公钥是否重复
+        Set<String> pubkeySet = new HashSet<>(pubKeys);
+        if(pubkeySet.size() < pubKeys.size()){
+            throw new NulsException(AccountErrorCode.PUBKEY_REPEAT);
+        }
+        //公钥排序, 按固定的顺序来生成多签账户地址
+        pubKeys = new ArrayList<String>(pubKeys);
+        Collections.sort(pubKeys, new Comparator<String>() {
+            private Comparator<byte[]> comparator = UnsignedBytes.lexicographicalComparator();
+            @Override
+            public int compare(String k1, String k2) {
+                return comparator.compare(Hex.decode(k1), Hex.decode(k2));
+            }
+        });
+        Address address = new Address(chainId, BaseConstant.P2SH_ADDRESS_TYPE, SerializeUtils.sha256hash160(AccountTool.createMultiSigAccountOriginBytes(chainId, minSigns, pubKeys)));
+
+        MultiSigAccount multiSigAccount = new MultiSigAccount();
+        multiSigAccount.setChainId(chainId);
+        multiSigAccount.setAddress(address);
+        multiSigAccount.setM((byte) minSigns);
+
+        List<byte[]> list = new ArrayList<>();
+        for (String pubKey : pubKeys) {
+            list.add(HexUtil.decode(pubKey));
+        }
+        multiSigAccount.setPubKeyList(list);
+        return multiSigAccount;
     }
 
 }

@@ -26,15 +26,19 @@ import io.nuls.base.api.provider.ServiceManager;
 import io.nuls.base.api.provider.account.AccountService;
 import io.nuls.base.api.provider.account.facade.*;
 import io.nuls.base.basic.AddressTool;
+import io.nuls.base.data.MultiSigAccount;
 import io.nuls.core.constant.CommonCodeConstanst;
 import io.nuls.core.core.annotation.Autowired;
 import io.nuls.core.core.annotation.Controller;
 import io.nuls.core.core.annotation.RpcMethod;
 import io.nuls.core.crypto.HexUtil;
+import io.nuls.core.exception.NulsException;
 import io.nuls.core.model.FormatValidUtils;
 import io.nuls.core.model.StringUtils;
 import io.nuls.core.parse.JSONUtils;
 import io.nuls.core.rpc.model.*;
+import io.nuls.model.ErrorData;
+import io.nuls.model.RpcClientResult;
 import io.nuls.model.dto.AccountBalanceDto;
 import io.nuls.model.dto.AccountKeyStoreDto;
 import io.nuls.model.jsonrpc.RpcResult;
@@ -48,11 +52,19 @@ import io.nuls.v2.model.annotation.Api;
 import io.nuls.v2.model.annotation.ApiOperation;
 import io.nuls.v2.model.annotation.ApiType;
 import io.nuls.v2.model.dto.AccountDto;
+import io.nuls.v2.model.dto.AliasDto;
+import io.nuls.v2.model.dto.MultiSignAliasDto;
 import io.nuls.v2.model.dto.SignDto;
 import io.nuls.v2.util.NulsSDKTool;
+import org.checkerframework.checker.units.qual.A;
 
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -411,6 +423,64 @@ public class AccountController {
         return rpcResult.setResult(balanceResult.getData());
     }
 
+    @RpcMethod("setAlias")
+    @ApiOperation(description = "设置账户别名", order = 108, detailDesc = "别名格式为1-20位小写字母和数字的组合，设置别名会销毁1个NULS")
+    @Parameters({
+            @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
+            @Parameter(parameterName = "address", requestType = @TypeDescriptor(value = String.class), parameterDes = "账户地址"),
+            @Parameter(parameterName = "alias", requestType = @TypeDescriptor(value = String.class), parameterDes = "别名"),
+            @Parameter(parameterName = "password", requestType = @TypeDescriptor(value = String.class), parameterDes = "账户密码")
+    })
+    @ResponseData(name = "返回值", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "value", description = "设置别名交易的hash")
+    }))
+    public RpcResult setAlias(List<Object> params) {
+        int chainId;
+        String address, alias, password;
+        try {
+            chainId = (int) params.get(0);
+        } catch (Exception e) {
+            return RpcResult.paramError("[chainId] is inValid");
+        }
+        try {
+            address = (String) params.get(1);
+        } catch (Exception e) {
+            return RpcResult.paramError("[address] is inValid");
+        }
+        try {
+            alias = (String) params.get(2);
+        } catch (Exception e) {
+            return RpcResult.paramError("[alias] is inValid");
+        }
+        try {
+            password = (String) params.get(3);
+        } catch (Exception e) {
+            return RpcResult.paramError("[password] is inValid");
+        }
+        if (!Context.isChainExist(chainId)) {
+            return RpcResult.dataNotFound();
+        }
+
+        if (!AddressTool.validAddress(chainId, address)) {
+            return RpcResult.paramError("[address] is inValid");
+        }
+        if (!FormatValidUtils.validAlias(alias)) {
+            return RpcResult.paramError("[alias] is inValid");
+        }
+        if (StringUtils.isBlank(password)) {
+            return RpcResult.paramError("[password] is inValid");
+        }
+        SetAccountAliasReq aliasReq = new SetAccountAliasReq(password, address, alias);
+        Result<String> result = accountService.setAccountAlias(aliasReq);
+        RpcResult rpcResult = new RpcResult();
+        if (result.isSuccess()) {
+            rpcResult.setResult(result.getData());
+        } else {
+            rpcResult.setError(new RpcResultError(result.getStatus(), result.getMessage(), null));
+        }
+        return rpcResult;
+    }
+
     @RpcMethod("createAccountOffline")
     @ApiOperation(description = "离线 - 批量创建账户", order = 151, detailDesc = "创建的账户不会保存到钱包中,接口直接返回账户的keystore信息")
     @Parameters(value = {
@@ -688,4 +758,122 @@ public class AccountController {
         return ResultUtil.getJsonRpcResult(result);
     }
 
+    @RpcMethod("createMultiSignAccount")
+    @ApiOperation(description = "创建多签账户", order = 157, detailDesc = "根据多个账户的公钥创建多签账户，minSigns为多签账户创建交易时需要的最小签名数")
+    @Parameters(value = {
+            @Parameter(parameterName = "pubKeys", requestType = @TypeDescriptor(value = List.class), parameterDes = "账户公钥集合"),
+            @Parameter(parameterName = "minSigns", requestType = @TypeDescriptor(value = int.class), parameterDes = "最小签名数")
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "value", description = "账户的地址")
+    }))
+    public RpcResult createMultiSignAccount(List<Object> params) {
+        VerifyUtils.verifyParams(params, 2);
+        int minSigns;
+        List<String> pubKeys;
+
+        try {
+            pubKeys = (List<String>) params.get(0);
+        } catch (Exception e) {
+            return RpcResult.paramError("[pubKeys] is inValid");
+        }
+        try {
+            minSigns = (int) params.get(1);
+        } catch (Exception e) {
+            return RpcResult.paramError("[minSigns] is inValid");
+        }
+        if (pubKeys.isEmpty()) {
+            return RpcResult.paramError("[pubKeys] is empty");
+        }
+        if (minSigns < 1 || minSigns > pubKeys.size()) {
+            return RpcResult.paramError("[minSigns] is inValid");
+        }
+
+        io.nuls.core.basic.Result result = NulsSDKTool.createMultiSignAccount(pubKeys, minSigns);
+        return ResultUtil.getJsonRpcResult(result);
+    }
+
+    @RpcMethod("createAliasTx")
+    @ApiOperation(description = "离线创建设置别名交易", order = 158)
+    @Parameters({
+            @Parameter(parameterName = "AliasDto", parameterDes = "创建别名交易表单", requestType = @TypeDescriptor(value = AliasDto.class))
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "hash", description = "交易hash"),
+            @Key(name = "txHex", description = "交易序列化16进制字符串")
+    }))
+    public RpcResult createAliasTx(List<Object> params) {
+        VerifyUtils.verifyParams(params, 3);
+        String address, alias, nonce;
+        try {
+            address = (String) params.get(0);
+        } catch (Exception e) {
+            return RpcResult.paramError("[address] is inValid");
+        }
+        try {
+            alias = (String) params.get(1);
+        } catch (Exception e) {
+            return RpcResult.paramError("[alias] is inValid");
+        }
+        try {
+            nonce = (String) params.get(2);
+        } catch (Exception e) {
+            return RpcResult.paramError("[nonce] is inValid");
+        }
+
+        AliasDto dto = new AliasDto();
+        dto.setAddress(address);
+        dto.setAlias(alias);
+        dto.setNonce(nonce);
+        io.nuls.core.basic.Result result = NulsSDKTool.createAliasTxOffline(dto);
+        return ResultUtil.getJsonRpcResult(result);
+    }
+
+    @RpcMethod("createMultiSignAliasTx")
+    @ApiOperation(description = "多签账户离线创建设置别名交易", order = 159)
+    @Parameters({
+            @Parameter(parameterName = "多签账户离线创建设置别名交易", parameterDes = "创建别名交易表单", requestType = @TypeDescriptor(value = MultiSignAliasDto.class))
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map对象", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "hash", description = "交易hash"),
+            @Key(name = "txHex", description = "交易序列化16进制字符串")
+    }))
+    public RpcResult createMultiSignAliasTx(List<Object> params) {
+        String address, alias, nonce;
+        List<String> pubKeys;
+        int minSigns;
+        try {
+            address = (String) params.get(0);
+        } catch (Exception e) {
+            return RpcResult.paramError("[address] is inValid");
+        }
+        try {
+            alias = (String) params.get(1);
+        } catch (Exception e) {
+            return RpcResult.paramError("[alias] is inValid");
+        }
+        try {
+            nonce = (String) params.get(2);
+        } catch (Exception e) {
+            return RpcResult.paramError("[nonce] is inValid");
+        }
+        try {
+            pubKeys = (List<String>) params.get(3);
+        } catch (Exception e) {
+            return RpcResult.paramError("[pubKeys] is inValid");
+        }
+        try {
+            minSigns = (int) params.get(4);
+        } catch (Exception e) {
+            return RpcResult.paramError("[minSigns] is inValid");
+        }
+        MultiSignAliasDto dto = new MultiSignAliasDto();
+        dto.setAddress(address);
+        dto.setAlias(alias);
+        dto.setNonce(nonce);
+        dto.setPubKeys(pubKeys);
+        dto.setMinSigns(minSigns);
+        io.nuls.core.basic.Result result = NulsSDKTool.createMultiSignAliasTxOffline(dto);
+        return ResultUtil.getJsonRpcResult(result);
+    }
 }

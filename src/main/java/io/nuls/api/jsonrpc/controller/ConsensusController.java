@@ -67,7 +67,7 @@ public class ConsensusController {
     @ApiOperation(description = "创建共识节点", order = 501)
     @Parameters({
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
-            @Parameter(parameterName = "创建共识节点", parameterDes = "创建共识节点表单", requestType = @TypeDescriptor(value = CreateAgentForm.class))
+            @Parameter(parameterName = "CreateAgentForm", parameterDes = "创建共识节点表单", requestType = @TypeDescriptor(value = CreateAgentForm.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "value", description = "交易hash")
@@ -136,7 +136,7 @@ public class ConsensusController {
     @ApiOperation(description = "注销共识节点", order = 502)
     @Parameters({
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
-            @Parameter(parameterName = "注销共识节点", parameterDes = "注销共识节点表单", requestType = @TypeDescriptor(value = StopAgentForm.class))
+            @Parameter(parameterName = "StopAgentForm", parameterDes = "注销共识节点表单", requestType = @TypeDescriptor(value = StopAgentForm.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "value", description = "交易hash")
@@ -177,7 +177,7 @@ public class ConsensusController {
     @ApiOperation(description = "委托参与共识", order = 503)
     @Parameters({
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
-            @Parameter(parameterName = "委托参与共识", parameterDes = "委托参与共识表单", requestType = @TypeDescriptor(value = DepositForm.class))
+            @Parameter(parameterName = "DepositForm", parameterDes = "委托参与共识表单", requestType = @TypeDescriptor(value = DepositForm.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "value", description = "交易hash")
@@ -233,7 +233,7 @@ public class ConsensusController {
     @ApiOperation(description = "退出共识", order = 504)
     @Parameters({
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
-            @Parameter(parameterName = "退出共识", parameterDes = "退出共识表单", requestType = @TypeDescriptor(value = WithdrawForm.class))
+            @Parameter(parameterName = "WithdrawForm", parameterDes = "退出共识表单", requestType = @TypeDescriptor(value = WithdrawForm.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "value", description = "交易hash")
@@ -328,7 +328,7 @@ public class ConsensusController {
     @ApiOperation(description = "离线组装 - 创建共识节点", order = 550, detailDesc = "参与共识所需资产可通过查询链信息接口获取(agentChainId和agentAssetId)")
     @Parameters({
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
-            @Parameter(parameterName = "离线创建共识节点", parameterDes = "离线创建共识节点表单", requestType = @TypeDescriptor(value = ConsensusDto.class))
+            @Parameter(parameterName = "ConsensusDto", parameterDes = "离线创建共识节点表单", requestType = @TypeDescriptor(value = ConsensusDto.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "hash", description = "交易hash"),
@@ -409,7 +409,7 @@ public class ConsensusController {
     @ApiOperation(description = "离线组装 - 注销共识节点", order = 551, detailDesc = "组装交易的StopDepositDto信息，可通过查询节点的委托共识列表获取，input的nonce值可为空")
     @Parameters({
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
-            @Parameter(parameterName = "离线注销共识节点", parameterDes = "离线注销共识节点表单", requestType = @TypeDescriptor(value = StopConsensusDto.class))
+            @Parameter(parameterName = "StopConsensusDto", parameterDes = "离线注销共识节点表单", requestType = @TypeDescriptor(value = StopConsensusDto.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "hash", description = "交易hash"),
@@ -488,7 +488,7 @@ public class ConsensusController {
     @ApiOperation(description = "离线组装 - 委托参与共识", order = 552, detailDesc = "参与共识所需资产可通过查询链信息接口获取(agentChainId和agentAssetId)")
     @Parameters({
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
-            @Parameter(parameterName = "离线委托参与共识", parameterDes = "离线委托参与共识表单", requestType = @TypeDescriptor(value = DepositDto.class))
+            @Parameter(parameterName = "DepositDto", parameterDes = "离线委托参与共识表单", requestType = @TypeDescriptor(value = DepositDto.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "hash", description = "交易hash"),
@@ -551,7 +551,7 @@ public class ConsensusController {
     @ApiOperation(description = "离线组装 - 退出共识", order = 553)
     @Parameters({
             @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
-            @Parameter(parameterName = "离线退出共识", parameterDes = "离线退出共识表单", requestType = @TypeDescriptor(value = WithDrawDto.class))
+            @Parameter(parameterName = "WithDrawDto", parameterDes = "离线退出共识表单", requestType = @TypeDescriptor(value = WithDrawDto.class))
     })
     @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
             @Key(name = "hash", description = "交易hash"),
@@ -611,4 +611,347 @@ public class ConsensusController {
         return ResultUtil.getJsonRpcResult(result);
     }
 
+    @RpcMethod("multiSignCreateAgentOffline")
+    @ApiOperation(description = "离线组装 - 多签账户创建共识节点", order = 554, detailDesc = "参与共识所需资产可通过查询链信息接口获取(agentChainId和agentAssetId)")
+    @Parameters({
+            @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
+            @Parameter(parameterName = "MultiSignConsensusDto", parameterDes = "多签账户离线创建共识节点表单", requestType = @TypeDescriptor(value = MultiSignConsensusDto.class))
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "hash", description = "交易hash"),
+            @Key(name = "txHex", description = "交易序列化字符串")
+    }))
+    public RpcResult multiSignCreateAgentOffline(List<Object> params) {
+        List<String> pubKeys;
+        String agentAddress, packingAddress, rewardAddress, deposit;
+        int chainId, commissionRate, minSigns;
+        Map map;
+        CoinFromDto fromDto;
+        try {
+            chainId = (int) params.get(0);
+        } catch (Exception e) {
+            return RpcResult.paramError("[chainId] is inValid");
+        }
+        try {
+            agentAddress = (String) params.get(1);
+        } catch (Exception e) {
+            return RpcResult.paramError("[agentAddress] is inValid");
+        }
+        try {
+            packingAddress = (String) params.get(2);
+        } catch (Exception e) {
+            return RpcResult.paramError("[packingAddress] is inValid");
+        }
+        try {
+            rewardAddress = (String) params.get(3);
+        } catch (Exception e) {
+            return RpcResult.paramError("[rewardAddress] is inValid");
+        }
+        try {
+            commissionRate = (int) params.get(4);
+        } catch (Exception e) {
+            return RpcResult.paramError("[commissionRate] is inValid");
+        }
+        try {
+            deposit = params.get(5).toString();
+        } catch (Exception e) {
+            return RpcResult.paramError("[deposit] is inValid");
+        }
+        try {
+            map = (Map) params.get(6);
+            String amount = map.get("amount").toString();
+            map.put("amount", new BigInteger(amount));
+            fromDto = JSONUtils.map2pojo(map, CoinFromDto.class);
+        } catch (Exception e) {
+            return RpcResult.paramError("[input] is inValid");
+        }
+        try {
+            pubKeys = (List<String>) params.get(7);
+        } catch (Exception e) {
+            return RpcResult.paramError("[pubKeys] is inValid");
+        }
+        try {
+            minSigns = (int) params.get(8);
+        } catch (Exception e) {
+            return RpcResult.paramError("[minSigns] is inValid");
+        }
+
+        if (!Context.isChainExist(chainId)) {
+            return RpcResult.paramError(String.format("chainId [%s] is invalid", chainId));
+        }
+        if (!AddressTool.validAddress(chainId, agentAddress)) {
+            return RpcResult.paramError("[agentAddress] is inValid");
+        }
+        if (!AddressTool.validAddress(chainId, packingAddress)) {
+            return RpcResult.paramError("[packingAddress] is inValid");
+        }
+        if (!AddressTool.validAddress(chainId, rewardAddress)) {
+            return RpcResult.paramError("[rewardAddress] is inValid");
+        }
+        if (!ValidateUtil.validateBigInteger(deposit)) {
+            return RpcResult.paramError("[deposit] is inValid");
+        }
+
+        MultiSignConsensusDto form = new MultiSignConsensusDto();
+        form.setPubKeys(pubKeys);
+        form.setMinSigns(minSigns);
+        form.setAgentAddress(agentAddress);
+        form.setPackingAddress(packingAddress);
+        form.setRewardAddress(rewardAddress);
+        form.setDeposit(new BigInteger(deposit));
+        form.setCommissionRate(commissionRate);
+        form.setInput(fromDto);
+        io.nuls.core.basic.Result result = NulsSDKTool.createMultiSignConsensusTx(form);
+        RpcResult rpcResult = ResultUtil.getJsonRpcResult(result);
+        return rpcResult;
+    }
+
+    @RpcMethod("multiSignStopAgentOffline")
+    @ApiOperation(description = "离线组装 - 多签账户注销共识节点", order = 555, detailDesc = "组装交易的StopDepositDto信息，可通过查询节点的委托共识列表获取，input的nonce值可为空")
+    @Parameters({
+            @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
+            @Parameter(parameterName = "MultiSignStopConsensusDto", parameterDes = "多签账户离线注销共识节点表单", requestType = @TypeDescriptor(value = MultiSignStopConsensusDto.class))
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "hash", description = "交易hash"),
+            @Key(name = "txHex", description = "交易序列化字符串")
+    }))
+    public RpcResult multiSignStopAgentOffline(List<Object> params) {
+        int chainId, minSigns;
+        List<String> pubKeys;
+        String agentHash, agentAddress, deposit, price;
+        List<Map> mapList;
+        List<StopDepositDto> depositDtoList = new ArrayList<>();
+        try {
+            chainId = (int) params.get(0);
+        } catch (Exception e) {
+            return RpcResult.paramError("[chainId] is inValid");
+        }
+        try {
+            agentHash = (String) params.get(1);
+        } catch (Exception e) {
+            return RpcResult.paramError("[agentHash] is inValid");
+        }
+        try {
+            agentAddress = (String) params.get(2);
+        } catch (Exception e) {
+            return RpcResult.paramError("[agentAddress] is inValid");
+        }
+        try {
+            deposit = params.get(3).toString();
+        } catch (Exception e) {
+            return RpcResult.paramError("[deposit] is inValid");
+        }
+        try {
+            price = params.get(4).toString();
+        } catch (Exception e) {
+            return RpcResult.paramError("[price] is inValid");
+        }
+        try {
+            mapList = (List<Map>) params.get(5);
+            for (Map map : mapList) {
+                StopDepositDto depositDto = new StopDepositDto();
+                depositDto.setDepositHash((String) map.get("depositHash"));
+                Map inputMap = (Map) map.get("input");
+                CoinFromDto fromDto = JSONUtils.map2pojo(inputMap, CoinFromDto.class);
+                depositDto.setInput(fromDto);
+                depositDtoList.add(depositDto);
+            }
+        } catch (Exception e) {
+            return RpcResult.paramError("[depositList] is inValid");
+        }
+        try {
+            pubKeys = (List<String>) params.get(6);
+        } catch (Exception e) {
+            return RpcResult.paramError("[pubKeys] is inValid");
+        }
+        try {
+            minSigns = (int) params.get(7);
+        } catch (Exception e) {
+            return RpcResult.paramError("[minSigns] is inValid");
+        }
+
+        if (!Context.isChainExist(chainId)) {
+            return RpcResult.paramError(String.format("chainId [%s] is invalid", chainId));
+        }
+        if (!AddressTool.validAddress(chainId, agentAddress)) {
+            return RpcResult.paramError("[agentAddress] is inValid");
+        }
+        if (StringUtils.isBlank(agentHash)) {
+            return RpcResult.paramError("[agentHash] is inValid");
+        }
+        if (!ValidateUtil.validateBigInteger(deposit)) {
+            return RpcResult.paramError("[deposit] is inValid");
+        }
+        if (!ValidateUtil.validateBigInteger(price)) {
+            return RpcResult.paramError("[price] is inValid");
+        }
+
+        MultiSignStopConsensusDto form = new MultiSignStopConsensusDto();
+        form.setPubKeys(pubKeys);
+        form.setMinSigns(minSigns);
+        form.setAgentAddress(agentAddress);
+        form.setAgentHash(agentHash);
+        form.setDeposit(new BigInteger(deposit));
+        form.setPrice(new BigInteger(price));
+        form.setDepositList(depositDtoList);
+        io.nuls.core.basic.Result result = NulsSDKTool.createMultiSignStopConsensusTx(form);
+        return ResultUtil.getJsonRpcResult(result);
+    }
+
+
+    @RpcMethod("multiSignDepositToAgentOffline")
+    @ApiOperation(description = "离线组装 - 多签账户委托参与共识", order = 556, detailDesc = "参与共识所需资产可通过查询链信息接口获取(agentChainId和agentAssetId)")
+    @Parameters({
+            @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
+            @Parameter(parameterName = "MultiSignDepositDto", parameterDes = "多签账户离线委托参与共识表单", requestType = @TypeDescriptor(value = MultiSignDepositDto.class))
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "hash", description = "交易hash"),
+            @Key(name = "txHex", description = "交易序列化字符串")
+    }))
+    public RpcResult multiSignDepositToAgentOffline(List<Object> params) {
+        int chainId, minSigns;
+        List<String> pubKeys;
+        String address, agentHash, deposit;
+        Map map;
+        CoinFromDto fromDto;
+        try {
+            chainId = (int) params.get(0);
+        } catch (Exception e) {
+            return RpcResult.paramError("[chainId] is inValid");
+        }
+        try {
+            address = (String) params.get(1);
+        } catch (Exception e) {
+            return RpcResult.paramError("[address] is inValid");
+        }
+        try {
+            deposit = params.get(2).toString();
+        } catch (Exception e) {
+            return RpcResult.paramError("[deposit] is inValid");
+        }
+        try {
+            agentHash = (String) params.get(3);
+        } catch (Exception e) {
+            return RpcResult.paramError("[agentHash] is inValid");
+        }
+        try {
+            map = (Map) params.get(4);
+            fromDto = JSONUtils.map2pojo(map, CoinFromDto.class);
+        } catch (Exception e) {
+            return RpcResult.paramError("[input] is inValid");
+        }
+        try {
+            pubKeys = (List<String>) params.get(5);
+        } catch (Exception e) {
+            return RpcResult.paramError("[pubKeys] is inValid");
+        }
+        try {
+            minSigns = (int) params.get(6);
+        } catch (Exception e) {
+            return RpcResult.paramError("[minSigns] is inValid");
+        }
+
+        if (!Context.isChainExist(chainId)) {
+            return RpcResult.paramError(String.format("chainId [%s] is invalid", chainId));
+        }
+        if (!AddressTool.validAddress(chainId, address)) {
+            return RpcResult.paramError("[address] is inValid");
+        }
+        if (StringUtils.isBlank(agentHash)) {
+            return RpcResult.paramError("[agentHash] is inValid");
+        }
+        if (!ValidateUtil.validateBigInteger(deposit)) {
+            return RpcResult.paramError("[deposit] is inValid");
+        }
+        MultiSignDepositDto depositDto = new MultiSignDepositDto();
+        depositDto.setPubKeys(pubKeys);
+        depositDto.setMinSigns(minSigns);
+        depositDto.setAddress(address);
+        depositDto.setAgentHash(agentHash);
+        depositDto.setDeposit(new BigInteger(deposit));
+        depositDto.setInput(fromDto);
+
+        io.nuls.core.basic.Result result = NulsSDKTool.createMultiSignDepositTxOffline(depositDto);
+        return ResultUtil.getJsonRpcResult(result);
+    }
+
+    @RpcMethod("multiSignWithdrawOffline")
+    @ApiOperation(description = "离线组装 - 多签账户退出共识", order = 557)
+    @Parameters({
+            @Parameter(parameterName = "chainId", requestType = @TypeDescriptor(value = int.class), parameterDes = "链ID"),
+            @Parameter(parameterName = "MultiSignWithDrawDto", parameterDes = "多签账户离线退出共识表单", requestType = @TypeDescriptor(value = MultiSignWithDrawDto.class))
+    })
+    @ResponseData(name = "返回值", description = "返回一个Map", responseType = @TypeDescriptor(value = Map.class, mapKeys = {
+            @Key(name = "hash", description = "交易hash"),
+            @Key(name = "txHex", description = "交易序列化字符串")
+    }))
+    public RpcResult multiSignWithdrawOffline(List<Object> params) {
+        int chainId, minSigns;
+        List<String> pubKeys;
+        String address, depositHash, price;
+        Map map;
+        CoinFromDto fromDto;
+        try {
+            chainId = (int) params.get(0);
+        } catch (Exception e) {
+            return RpcResult.paramError("[chainId] is inValid");
+        }
+        try {
+            address = (String) params.get(1);
+        } catch (Exception e) {
+            return RpcResult.paramError("[address] is inValid");
+        }
+        try {
+            depositHash = (String) params.get(2);
+        } catch (Exception e) {
+            return RpcResult.paramError("[depositHash] is inValid");
+        }
+        try {
+            price = params.get(3).toString();
+        } catch (Exception e) {
+            return RpcResult.paramError("[price] is inValid");
+        }
+        try {
+            map = (Map) params.get(4);
+            fromDto = JSONUtils.map2pojo(map, CoinFromDto.class);
+        } catch (Exception e) {
+            return RpcResult.paramError("[input] is inValid");
+        }
+        try {
+            pubKeys = (List<String>) params.get(5);
+        } catch (Exception e) {
+            return RpcResult.paramError("[pubKeys] is inValid");
+        }
+        try {
+            minSigns = (int) params.get(6);
+        } catch (Exception e) {
+            return RpcResult.paramError("[minSigns] is inValid");
+        }
+
+        if (!Context.isChainExist(chainId)) {
+            return RpcResult.paramError(String.format("chainId [%s] is invalid", chainId));
+        }
+        if (!AddressTool.validAddress(chainId, address)) {
+            return RpcResult.paramError("[address] is inValid");
+        }
+        if (StringUtils.isBlank(depositHash)) {
+            return RpcResult.paramError("[depositHash] is inValid");
+        }
+        if (!ValidateUtil.validateBigInteger(price)) {
+            return RpcResult.paramError("[price] is inValid");
+        }
+
+        MultiSignWithDrawDto withDrawDto = new MultiSignWithDrawDto();
+        withDrawDto.setPubKeys(pubKeys);
+        withDrawDto.setMinSigns(minSigns);
+        withDrawDto.setAddress(address);
+        withDrawDto.setDepositHash(depositHash);
+        withDrawDto.setPrice(new BigInteger(price));
+        withDrawDto.setInput(fromDto);
+
+        io.nuls.core.basic.Result result = NulsSDKTool.createMultiSignWithdrawDepositTxOffline(withDrawDto);
+        return ResultUtil.getJsonRpcResult(result);
+    }
 }
